@@ -1,0 +1,20 @@
+2025-10-30 17:47:46,100 INFO: robots.txt allows /search/cars/toyota/premio? True
+2025-10-30 17:47:46,100 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 1)
+2025-10-30 17:47:46,820 ERROR: HTTP error 403 for https://riyasewana.com/search/cars/toyota/premio
+2025-10-30 17:47:51,821 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 2)
+2025-10-30 17:47:51,933 ERROR: HTTP error 403 for https://riyasewana.com/search/cars/toyota/premio
+2025-10-30 17:48:01,934 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 3)
+2025-10-30 17:48:02,018 ERROR: HTTP error 403 for https://riyasewana.com/search/cars/toyota/premio
+2025-10-30 17:48:02,018 WARNING: No results collected - check selectors and website structure
+2025-10-30 17:51:31,983 INFO: robots.txt allows /search/cars/toyota/premio? True
+2025-10-30 17:51:31,985 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 1)
+2025-10-30 17:51:35,090 WARNING: 403 Forbidden - trying different approach
+2025-10-30 17:51:35,091 INFO: Rotated User-Agent to: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb...
+2025-10-30 17:51:45,091 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 2)
+2025-10-30 17:51:47,085 WARNING: 403 Forbidden - trying different approach
+2025-10-30 17:51:47,086 INFO: Rotated User-Agent to: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Ap...
+2025-10-30 17:51:57,086 INFO: Fetching: https://riyasewana.com/search/cars/toyota/premio (attempt 3)
+2025-10-30 17:51:58,632 WARNING: 403 Forbidden - trying different approach
+2025-10-30 17:51:58,633 INFO: Rotated User-Agent to: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Ap...
+2025-10-30 17:52:08,633 ERROR: Failed to fetch https://riyasewana.com/search/cars/toyota/premio after all retries
+2025-10-30 17:52:08,634 WARNING: No results collected
