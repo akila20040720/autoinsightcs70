@@ -3,19 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://akila20040720.github.io/autoinsight",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
+    "lint": "eslint .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepare": "husky install",
-    "homepage": "https://github.com/akila20040720/autoinsight",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-
-
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.7",
