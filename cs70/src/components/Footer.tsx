@@ -185,13 +185,7 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <div className="legal">
-            © {year} AutoInsight. All rights reserved.All content, trademarks,
-            logos, and data presented on this platform are owned or licensed by
-            AutoInsight and are protected by international copyright, trademark,
-            and intellectual property laws. No part of this site may be
-            reproduced, stored, or transmitted in any form without prior written
-            permission. AutoInsight reserves the right to enforce its rights in
-            cases of unauthorized use.
+            © {year} AutoInsight. All rights reserved.
           </div>
 
           <div className="policies">
