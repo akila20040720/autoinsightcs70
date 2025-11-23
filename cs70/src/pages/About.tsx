@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { style } from "framer-motion/client";
+
 
 interface TeamMember {
   name: string;
