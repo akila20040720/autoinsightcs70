@@ -1,10 +1,455 @@
+import { motion } from "framer-motion";
+import { style } from "framer-motion/client";
+
+interface TeamMember {
+  name: string;
+  role: string;
+  id: string;
+}
+
+interface Milestone {
+  year: string;
+  title: string;
+  desc: string;
+}
+
+interface Value {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
 export default function About() {
+  const teamMembers: TeamMember[] = [
+    { name: "Akila Wijerama", role: "Team Leader", id: "20241303" },
+    { name: "Dulan Nimnaka", role: "Backend Developer", id: "20240503" },
+    { name: "Shaveen Peiris", role: "Frontend Developer", id: "20240515" },
+    { name: "Sanidu Samrasinghe", role: "Data Analyst", id: "20240641" },
+    { name: "Sanara Perera", role: "ML Engineer", id: "20240773" },
+    { name: "Hasandi Peiris", role: "UI/UX Designer", id: "20240642" }
+  ];
+
+  const milestones: Milestone[] = [
+    { year: "2024", title: "Project Inception", desc: "Identified market gap and began research" },
+    { year: "2024", title: "Data Collection", desc: "Established partnerships with major platforms" },
+    { year: "2024", title: "ML Development", desc: "Built price prediction algorithms" },
+    { year: "2025", title: "Platform Launch", desc: "Released AutoInsight to the public" }
+  ];
+
+  const values: Value[] = [
+    { icon: "🎯", title: "Accuracy", desc: "Delivering precise, data-driven insights you can trust" },
+    { icon: "🔍", title: "Transparency", desc: "Making vehicle market data accessible to everyone" },
+    { icon: "💡", title: "Innovation", desc: "Leveraging AI and ML to revolutionize market analysis" },
+    { icon: "🤝", title: "Integrity", desc: "Ethical data collection and user privacy protection" }
+  ];
+
   return (
-    <section className="container" style={{ paddingTop: 30 }}>
-      <h1 style={{ fontSize: 34 }}>About</h1>
-      <p style={{ color: "#c7d1df", marginTop: 12 }}>
-        We build crisp, modern web experiences inspired by platform design principles.
-      </p>
-    </section>
+    <>
+      {/* Hero Section */}
+      <motion.section 
+        className="full-section"
+        style={{ 
+          paddingTop: 140, 
+          paddingBottom: 80,
+          background: 'linear-gradient(135deg, #ffffff 0%, #eef6ff 65%, #ffffff 100%)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
+          <motion.h1 
+            style={{ 
+              fontSize: 'clamp(40px, 7vw, 64px)', 
+              fontWeight: 800, 
+              marginBottom: 24,
+              lineHeight: 1.02,
+              letterSpacing: '-1.2px',
+              background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 50%, #f9d97c 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent'
+            }}
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            About AutoInsight
+          </motion.h1>
+          <motion.p 
+            style={{ 
+              fontSize: 20, 
+              color: 'var(--text-dim)', 
+              maxWidth: 800, 
+              margin: '0 auto',
+              lineHeight: 1.7
+            }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Empowering Sri Lanka's vehicle market with intelligent analytics, real-time insights, and AI-driven predictions
+          </motion.p>
+        </div>
+      </motion.section>
+
+      {/* Mission & Vision Section */}
+      <motion.section 
+        className="full-section section-features"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ maxWidth: 1120, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 40 }}>
+            <motion.div
+              className="project"
+              style={{ 
+                padding: 40,
+                color: '#0b0c10',
+                textAlign: 'left'
+              }}
+              initial={{ opacity: 0, x: -50, y: 50 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, type: "spring", stiffness: 80 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+            >
+              <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
+              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
+                To bridge the information gap in Sri Lanka's vehicle market by providing transparent, 
+                data-driven insights that empower buyers, sellers, and industry stakeholders to make 
+                informed decisions with confidence.
+              </p>
+            </motion.div>
+
+            <motion.div
+              className="project"
+              style={{ 
+                padding: 40,
+                color: '#0b0c10',
+                textAlign: 'left'
+              }}
+              initial={{ opacity: 0, x: 50, y: 50 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, type: "spring", stiffness: 80 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+            >
+              <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
+              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
+                To become Sri Lanka's most trusted vehicle market intelligence platform, setting the 
+                standard for transparency and accuracy while fostering a fair and efficient automotive 
+                ecosystem for all.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Story Section */}
+      <motion.section 
+        className="full-section section-why-choose"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
+          <motion.h2 
+            style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Our Story
+          </motion.h2>
+        </div>
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <motion.div
+            className="project"
+            style={{ 
+              padding: 40,
+              color: '#0b0c10',
+              textAlign: 'left'
+            }}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            whileHover={{ y: -8 }}
+          >
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
+              AutoInsight was born from a simple observation: the Sri Lankan vehicle market lacked 
+              a centralized platform for reliable market intelligence. Buyers struggled to determine 
+              fair prices, sellers couldn't benchmark their listings, and everyone was left navigating 
+              a fragmented landscape of scattered information.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
+              As a team of students at the Informatics Institute of Technology in collaboration with 
+              the University of Westminster, we recognized this gap and set out to create a solution. 
+              Through extensive research, data collection from platforms like Riyasewana, Ikman.lk, 
+              and official CMTA records, we built a comprehensive analytics system.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
+              Today, AutoInsight leverages machine learning, real-time data aggregation, and intuitive 
+              visualizations to provide the market transparency Sri Lanka deserves. Our platform represents 
+              months of development, countless data points analyzed, and a commitment to making vehicle 
+              market information accessible to everyone.
+            </p>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Core Values */}
+      <motion.section 
+        className="full-section section-ratings"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
+          <motion.h2 
+            style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Our Core Values
+          </motion.h2>
+          <motion.p 
+            style={{ color: 'var(--sys-gray)', fontSize: 18, maxWidth: 600, margin: '0 auto' }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            The principles that guide everything we do
+          </motion.p>
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
+          {values.map((value, i) => (
+            <motion.div
+              key={i}
+              className="project"
+              style={{ 
+                padding: 32,
+                color: '#0b0c10',
+                textAlign: 'center'
+              }}
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.1, type: "spring", stiffness: 100 }}
+              whileHover={{ y: -10, scale: 1.05 }}
+            >
+              <div style={{ fontSize: 48, marginBottom: 16 }}>{value.icon}</div>
+              <h3 style={{ fontSize: 20, marginBottom: 12, fontWeight: 600, color: 'var(--primary)' }}>
+                {value.title}
+              </h3>
+              <p style={{ fontSize: 15, lineHeight: 1.6, color: 'var(--sys-gray)' }}>
+                {value.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Team Section */}
+      <motion.section 
+        className="full-section section-data-sources"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
+          <motion.h2 
+            style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Meet Our Team
+          </motion.h2>
+          <motion.p 
+            style={{ color: 'var(--sys-gray)', fontSize: 18, maxWidth: 700, margin: '0 auto', fontWeight: 500 }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster
+          </motion.p>
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
+          {teamMembers.map((member, i) => (
+            <motion.div
+              key={i}
+              className="project"
+              style={{ 
+                padding: 32,
+                color: '#0b0c10',
+                textAlign: 'center'
+              }}
+              initial={{ opacity: 0, x: (i % 2 === 0 ? -1 : 1) * 50, y: 50 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: i * 0.15, type: "spring", stiffness: 80 }}
+              whileHover={{ y: -8, rotate: 2 }}
+            >
+              <div style={{ 
+                width: 80, 
+                height: 80, 
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #3681f7, #8b5cf6)',
+                margin: '0 auto 20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 32,
+                fontWeight: 700,
+                color: '#fff',
+                boxShadow: '0 4px 16px rgba(54, 129, 247, 0.4)'
+              }}>
+                {member.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 600, color: '#0b0c10' }}>
+                {member.name}
+              </h3>
+              <p style={{ fontSize: 14, color: 'var(--primary)', marginBottom: 8, fontWeight: 500 }}>
+                {member.role}
+              </p>
+              <p style={{ fontSize: 13, color: 'var(--sys-gray)' }}>
+                IIT ID: {member.id}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Journey Timeline */}
+      <motion.section 
+        className="full-section section-recent-work"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
+          <motion.h2 
+            style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Our Journey
+          </motion.h2>
+          <motion.p 
+            style={{ color: 'var(--sys-gray)', fontSize: 18, maxWidth: 600, margin: '0 auto' }}
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Key milestones in our development process
+          </motion.p>
+        </div>
+        <div className="grid centered" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
+          {milestones.map((milestone, i) => (
+            <motion.div
+              key={i}
+              className="project"
+              style={{ 
+                padding: 28,
+                color: '#0b0c10',
+                textAlign: 'center'
+              }}
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1, type: "spring", stiffness: 100 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+            >
+              <div style={{ 
+                fontSize: 24, 
+                fontWeight: 700, 
+                color: 'var(--primary)', 
+                marginBottom: 12 
+              }}>
+                {milestone.year}
+              </div>
+              <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 600, color: '#0b0c10' }}>
+                {milestone.title}
+              </h3>
+              <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--sys-gray)' }}>
+                {milestone.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Acknowledgments */}
+      <motion.section 
+        className="full-section section-how-it-works"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 32, position: 'relative', zIndex: 1 }}>
+          <motion.h2 
+            style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            Acknowledgments
+          </motion.h2>
+        </div>
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <motion.div
+            className="project"
+            style={{ 
+              padding: 40,
+              color: '#0b0c10',
+              textAlign: 'left'
+            }}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            whileHover={{ y: -8 }}
+          >
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
+              We extend our sincere gratitude to <strong style={{ color: '#0b0c10' }}>Mr. Banuka Athuraliya</strong>, our module leader, 
+              and <strong style={{ color: '#0b0c10' }}>Mr. Ahtshayan Udayasanthiran</strong>, our project supervisor, for their invaluable 
+              guidance and support throughout this journey.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
+              Special thanks to our industry partners: <strong style={{ color: '#0b0c10' }}>Mr. Rohan Casiechetty</strong> (General Manager, CMTA), 
+              <strong style={{ color: '#0b0c10' }}> Mr. Kusal Arthanayake</strong> (Founder & CEO, Riyasewana), and <strong style={{ color: '#0b0c10' }}>Mr. Shaif Mohamed</strong> 
+              (CEO, Ikman) for providing crucial datasets and industry insights.
+            </p>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
+              We also thank the <strong style={{ color: '#0b0c10' }}>Informatics Institute of Technology</strong> and the <strong style={{ color: '#0b0c10' }}>University of 
+              Westminster</strong> for providing the academic framework and resources that made this project possible.
+            </p>
+          </motion.div>
+        </div>
+      </motion.section>
+    </>
   );
 }
