@@ -43,57 +43,94 @@ export default function About() {
     { icon: "🤝", title: "Integrity", desc: "Ethical data collection and user privacy protection" }
   ];
 
+
   return (
     <>
       {/* Hero Section */}
       <motion.section 
         className="full-section"
-        style={{ 
-          paddingTop: 140, 
-          paddingBottom: 80,
-          background: 'linear-gradient(135deg, #ffffff 0%, #eef6ff 65%, #ffffff 100%)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+        style={{ 
+          background: "transparent",
+          position: 'relative',
+          overflow: 'hidden',
+          minHeight: '100vh',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: "-84px",
+          paddingTop: "120px",
+        }}
       >
+        
+        <motion.div
+          style={{
+           position: "absolute",
+           right: -100,
+           top: "50%",
+           transform: "translateY(-50%)",
+           opacity: 0.1,
+           zIndex: 0,
+          }}
+          animate={{ y: [0, 20]}}
+          transition={{ 
+            duration: 6, 
+            repeat: Infinity, 
+            repeatType:"mirror",
+            ease: "easeInOut"
+          }}
+        >
+          <svg width="500" height="500" viewBox="0 0 500 500" fill="none">
+            <circle cx="250" cy="250" r="180" fill="rgba(54, 129, 247, 0.1)" />
+            <circle cx="250" cy="250" r="120" fill="rgba(139, 92, 246, 0.08)" />
+            <path d="M250 100 Q350 250 250 400 Q150 250 250 100" stroke="rgba(54, 129, 247, 0.2)" strokeWidth="2" fill="none" />
+          </svg>
+        </motion.div>
+        
+        <motion.div
+        style={{
+          position: "absolute",
+          left: -50,
+          bottom: 100,
+          opacity: 0.08,
+          zIndex: 0,
+        }}
+        animate={{ y: [-10, 10, -10], rotate: [0, 5, 0] }}
+        transition={{ duration: 8, repeat: Infinity }}
+      >
+        <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
+           <rect x="50" y="50" width="300" height="300" fill="rgba(249, 217, 124, 0.1)" rx="20" />
+           <rect x="100" y="100" width="200" height="200" fill="rgba(139, 92, 246, 0.08)" rx="10" />
+        </svg>
+      </motion.div>
+
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
           <motion.h1 
-            style={{ 
-              fontSize: 'clamp(40px, 7vw, 64px)', 
-              fontWeight: 800, 
-              marginBottom: 24,
-              lineHeight: 1.02,
-              letterSpacing: '-1.2px',
-              background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 50%, #f9d97c 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent'
-            }}
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}
+          className="h-title glow-title"
+          initial={{ y: 28, opacity: 0, scale:0.94 }}
+          animate={{ y: 0, opacity: 1, scale:1 }}
+          transition={{ duration: 0.9, ease: [0.25,0.9,0.25,1] }}
+            
           >
             About AutoInsight
           </motion.h1>
           <motion.p 
-            style={{ 
-              fontSize: 20, 
-              color: 'var(--text-dim)', 
-              maxWidth: 800, 
-              margin: '0 auto',
-              lineHeight: 1.7
-            }}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          className="h-desc"
+          initial={{ y: 8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.12, duration: 0.6 }}
+            
           >
             Empowering Sri Lanka's vehicle market with intelligent analytics, real-time insights, and AI-driven predictions
           </motion.p>
         </div>
       </motion.section>
+      
+
+
 
       {/* Mission & Vision Section */}
       <motion.section 
