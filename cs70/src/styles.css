@@ -342,6 +342,32 @@ body:before {
     .nav-links { display:none; }
     .menu-toggle { display:flex; }
 }
+
+/* Responsive navigation for new navbar component */
+@media (min-width: 769px) {
+    .desktop-nav {
+        display: flex !important;
+    }
+    
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .mobile-nav-panel {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none !important;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex !important;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .mobile-nav-panel { animation:none !important; }
 }
