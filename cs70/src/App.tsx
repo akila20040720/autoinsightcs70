@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import CustomCursor from "./components/CustomCursor";
 
 export default function App(): React.ReactElement {
   return (
@@ -32,6 +33,7 @@ export default function App(): React.ReactElement {
         </Routes>
       </main>
       <Footer />
+      <CustomCursor />
       {/* <CookieConsent /> */}
     </>
   );
