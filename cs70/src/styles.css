@@ -153,6 +153,20 @@ body.custom-cursor-enabled [onclick] { cursor: none !important; }
     100% { opacity: 0; transform: translate(-50%, -50%) scale(6); }
 }
 
+/* Hide custom cursor on mobile / touch (coarse pointers or narrow viewports) */
+@media (pointer: coarse), (max-width: 820px) {
+    body.custom-cursor-enabled { cursor: auto; }
+    body.custom-cursor-enabled a,
+    body.custom-cursor-enabled button,
+    body.custom-cursor-enabled .cta,
+    body.custom-cursor-enabled input,
+    body.custom-cursor-enabled textarea,
+    body.custom-cursor-enabled select,
+    body.custom-cursor-enabled [role="button"],
+    body.custom-cursor-enabled [onclick] { cursor: auto !important; }
+    .custom-cursor { display: none !important; }
+}
+
 /* Scroll reveal utility */
 .scroll-fade {
     opacity:0;
@@ -245,27 +259,27 @@ body:before {
     text-decoration:none;
     padding:10px 14px;
     border-radius: var(--radius-sm);
-    transition: color var(--anim-short), background var(--anim-short);
+    transition: color var(--anim-short);
 }
-.nav-links a:before {
+.nav-links a:after {
     content:"";
     position:absolute;
-    inset:0;
-    border-radius: inherit;
-    background: linear-gradient(#ffffff,#fafafa);
-    box-shadow: var(--shadow-xs);
-    opacity:0;
-    transition: opacity var(--anim-short), transform var(--anim-short);
-    transform: scale(.94);
-    z-index:-1;
+    left:14px; /* align with horizontal padding */
+    right:14px;
+    bottom:6px;
+    height:3px;
+    border-radius:3px;
+    background: linear-gradient(90deg,#3681f7,#8b5cf6,#f9d97c);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .45s var(--ease);
+    opacity:0.95;
+    pointer-events:none;
 }
-.nav-links a:hover {
-    color: var(--text);
-}
-.nav-links a:hover:before {
-    opacity:1;
-    transform: scale(1);
-}
+.nav-links a:hover,
+.nav-links a:focus-visible { color: var(--text); }
+.nav-links a:hover:after,
+.nav-links a:focus-visible:after { transform: scaleX(1); }
 .nav-links a:focus-visible { outline:none; box-shadow: var(--focus-ring); }
 
 /* Mobile menu toggle (hidden desktop) */
