@@ -270,10 +270,7 @@ export default function About() {
               and official CMTA records, we built a comprehensive analytics system.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
-              Today, AutoInsight leverages machine learning, real-time data aggregation, and intuitive 
-              visualizations to provide the market transparency Sri Lanka deserves. Our platform represents 
-              months of development, countless data points analyzed, and a commitment to making vehicle 
-              market information accessible to everyone.
+              Today, AutoInsight taps into machine learning, real-time data aggregation, and intuitive  visualizations to grant the market transparency that Sri Lanka truly deserves. Our platform represents   months of development, countless data points analyzed, and a commitment to making vehicle    market information accessible to everyone.
             </p>
           </motion.div>
         </div>
