@@ -107,6 +107,8 @@ export default function About() {
         </svg>
       </motion.div>
 
+
+
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
           <motion.h1 
           className="h-title glow-title"
@@ -126,8 +128,45 @@ export default function About() {
           >
             Empowering Sri Lanka's vehicle market with intelligent analytics, real-time insights, and AI-driven predictions
           </motion.p>
+
+          <motion.div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 24,
+            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <a
+              href="#more-about"
+              style={{
+                background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
+                color: "#ffffff",
+                padding: "12px 28px",
+                borderRadius: "var(--radius-pill)",
+                textDecoration: "none",
+                fontWeight: 600,
+                fontSize: 15,
+                boxShadow: "0 6px 18px rgba(54, 129, 247, 0.35)",
+                transition: "all 0.3s var(--ease)",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+               e.currentTarget.style.transform = "translateY(-2px)";
+               e.currentTarget.style.boxShadow = "0 10px 26px rgba(54, 129, 247, 0.45)";
+              }}
+              onMouseLeave={(e) => {
+               e.currentTarget.style.transform = "translateY(0)";
+               e.currentTarget.style.boxShadow = "0 6px 18px rgba(54, 129, 247, 0.35)";
+              }}
+            >
+              Learn More
+           </a>
+          </motion.div>
         </div>
-      </motion.section>
+    </motion.section>
       
 
 
