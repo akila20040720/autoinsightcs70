@@ -14,6 +14,21 @@ interface DataNode {
   pulsePhase: number;
 }
 
+const PALETTE = {
+  primary: "#1A428A",
+  accent: "#00A651",
+  dark: "#1F1F1F",
+  white: "#FFFFFF",
+} as const;
+
+const rgba = (hex: string, alpha: number) => {
+  const value = parseInt(hex.slice(1), 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+
 export default function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const frameRef = useRef<number>(0);
@@ -116,7 +131,7 @@ export default function AnimatedBackground() {
     });
 
     // Draw connections
-    ctx.strokeStyle = 'rgba(52, 211, 235, 0.15)';
+    ctx.strokeStyle = rgba(PALETTE.accent, 0.15);
     ctx.lineWidth = 1;
     nodes.forEach((node, i) => {
       node.connections.forEach((j) => {
@@ -130,14 +145,14 @@ export default function AnimatedBackground() {
           ctx.beginPath();
           ctx.moveTo(node.x, node.y);
           ctx.lineTo(other.x, other.y);
-          ctx.strokeStyle = `rgba(52, 211, 235, ${opacity})`;
+          ctx.strokeStyle = rgba(PALETTE.accent, opacity);
           ctx.stroke();
         }
       });
     });
 
     // Draw data flow along connections
-    ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)';
+    ctx.strokeStyle = rgba(PALETTE.primary, 0.4);
     ctx.lineWidth = 2;
     nodes.forEach((node, i) => {
       node.connections.forEach((j) => {
@@ -151,7 +166,7 @@ export default function AnimatedBackground() {
           
           ctx.beginPath();
           ctx.arc(flowX, flowY, 2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(59, 130, 246, 0.6)';
+          ctx.fillStyle = rgba(PALETTE.primary, 0.6);
           ctx.fill();
         }
       });
@@ -167,9 +182,9 @@ export default function AnimatedBackground() {
         node.x, node.y, 0,
         node.x, node.y, currentRadius * 3
       );
-      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)');
-      gradient.addColorStop(0.5, 'rgba(52, 211, 235, 0.2)');
-      gradient.addColorStop(1, 'rgba(52, 211, 235, 0)');
+      gradient.addColorStop(0, rgba(PALETTE.primary, 0.4));
+      gradient.addColorStop(0.5, rgba(PALETTE.accent, 0.2));
+      gradient.addColorStop(1, rgba(PALETTE.accent, 0));
       
       ctx.beginPath();
       ctx.arc(node.x, node.y, currentRadius * 3, 0, Math.PI * 2);
@@ -179,13 +194,13 @@ export default function AnimatedBackground() {
       // Node core
       ctx.beginPath();
       ctx.arc(node.x, node.y, currentRadius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(147, 197, 253, 0.9)';
+      ctx.fillStyle = rgba(PALETTE.white, 0.9);
       ctx.fill();
 
       // Inner highlight
       ctx.beginPath();
       ctx.arc(node.x - currentRadius * 0.3, node.y - currentRadius * 0.3, currentRadius * 0.4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.fillStyle = rgba(PALETTE.white, 0.6);
       ctx.fill();
     });
 
