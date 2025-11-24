@@ -52,7 +52,7 @@ export default function Navbar() {
   const navItems = [
     { label: "Home", path: "/" },
     { label: "About", path: "/about" },
-    { label: "Services", path: "/services" },
+    { label: "Features", path: "/features" },
     { label: "FAQ", path: "/faq" },
   ];
 
