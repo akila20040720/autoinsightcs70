@@ -1667,23 +1667,7 @@ html {
 /* ============== styles for features page ============== */
 
 /* --- SECTION 1: DARK HERO SECTION --- */
-.features-hero {
-  /* Dark Gradient Background */
-<<<<<<< HEAD
-  background: linear-gradient(135deg, #1A428A 0%, #1A428A 100%);
-=======
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  
->>>>>>> 0b202d2637a9efe055df6022f4c97e60329bfe07
-  padding: 100px 24px;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
+
 
 /* Optional: Add a subtle pattern overlay to the dark section */
 .features-hero::before {
