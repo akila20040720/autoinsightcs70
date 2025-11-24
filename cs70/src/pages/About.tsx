@@ -126,7 +126,7 @@ export default function About() {
           transition={{ delay: 0.12, duration: 0.6 }}
             
           >
-            Empowering Sri Lanka's vehicle market with intelligent analytics, real-time insights, and AI-driven predictions
+            Empowering the vehicle market of Sri Lanka through intelligent analytics, real-time insights, and AI-driven predictions.
           </motion.p>
 
           <motion.div
