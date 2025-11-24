@@ -9,7 +9,7 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Services from "./pages/Services";
+import Services from "./pages/Features";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import CustomCursor from "./components/CustomCursor";
