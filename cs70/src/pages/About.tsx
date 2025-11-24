@@ -180,9 +180,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                To become Sri Lanka's most trusted vehicle market intelligence platform, setting the 
-                standard for transparency and accuracy while fostering a fair and efficient automotive 
-                ecosystem for all.
+                To become Sri Lankan's most trusted vehicle market intelligence platform, setting the standard for transparency and accuracy while fostering a fair and effecience automotive ecosystem for all.
               </p>
             </motion.div>
           </div>
