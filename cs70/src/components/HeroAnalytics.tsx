@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 export default function HeroAnalytics() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const rafRef = useRef<number>();
+    const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
