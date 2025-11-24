@@ -1406,7 +1406,9 @@ html {
 .features-hero {
   /* Dark Gradient Background */
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  
   padding: 100px 24px;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1517,7 +1519,7 @@ html {
     rgba(15, 23, 42, 0.98) 0%, 
     rgba(49, 46, 129, 0.98) 100%
   );
-  
+
   /* Glowing Blue/Cyan Border */
   border-color: rgba(56, 189, 248, 0.5); 
 
@@ -1568,7 +1570,6 @@ html {
   border-radius: 12px; /* var(--radius-md) */
   font-size: 24px;
   margin-bottom: 20px;
-  
   transition: all 0.3s ease;
 }
 
