@@ -500,8 +500,7 @@ export default function About() {
             whileHover={{ y: -8 }}
           >
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              We extend our sincere gratitude to <strong style={{ color: '#0b0c10' }}>Mr. Banuka Athuraliya</strong>, our module leader, 
-              and <strong style={{ color: '#0b0c10' }}>Mr. Ahtshayan Udayasanthiran</strong>, our project supervisor, for their invaluable 
+              We extend our sincere gratitude to <strong style={{ color: '#0b0c10' }}>Mr. Banuka Athuraliya</strong>, our module leader, and <strong style={{ color: '#0b0c10' }}>Mr. Ahtshayan Udayasanthiran</strong>, our project supervisor, for their invaluable 
               guidance and support throughout this journey.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
@@ -510,8 +509,7 @@ export default function About() {
               (CEO, Ikman) for providing crucial datasets and industry insights.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
-              We also thank the <strong style={{ color: '#0b0c10' }}>Informatics Institute of Technology</strong> and the <strong style={{ color: '#0b0c10' }}>University of 
-              Westminster</strong> for providing the academic framework and resources that made this project possible.
+              We also thank the <strong style={{ color: '#0b0c10' }}>Informatics Institute of Technology</strong> and the <strong style={{ color: '#0b0c10' }}>University of Westminster</strong> for providing the academic framework and resources that made this project possible.
             </p>
           </motion.div>
         </div>
