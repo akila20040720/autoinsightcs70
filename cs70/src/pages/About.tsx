@@ -107,6 +107,8 @@ export default function About() {
         </svg>
       </motion.div>
 
+
+
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
           <motion.h1 
           className="h-title glow-title"
@@ -124,10 +126,47 @@ export default function About() {
           transition={{ delay: 0.12, duration: 0.6 }}
             
           >
-            Empowering Sri Lanka's vehicle market with intelligent analytics, real-time insights, and AI-driven predictions
+            Empowering the vehicle market of Sri Lanka through intelligent analytics, real-time insights, and AI-driven predictions.
           </motion.p>
+
+          <motion.div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 24,
+            }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <a
+              href="#more-about"
+              style={{
+                background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
+                color: "#ffffff",
+                padding: "12px 28px",
+                borderRadius: "var(--radius-pill)",
+                textDecoration: "none",
+                fontWeight: 600,
+                fontSize: 15,
+                boxShadow: "0 6px 18px rgba(54, 129, 247, 0.35)",
+                transition: "all 0.3s var(--ease)",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+               e.currentTarget.style.transform = "translateY(-2px)";
+               e.currentTarget.style.boxShadow = "0 10px 26px rgba(54, 129, 247, 0.45)";
+              }}
+              onMouseLeave={(e) => {
+               e.currentTarget.style.transform = "translateY(0)";
+               e.currentTarget.style.boxShadow = "0 6px 18px rgba(54, 129, 247, 0.35)";
+              }}
+            >
+              Learn More
+           </a>
+          </motion.div>
         </div>
-      </motion.section>
+    </motion.section>
       
 
 
@@ -158,9 +197,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                To bridge the information gap in Sri Lanka's vehicle market by providing transparent, 
-                data-driven insights that empower buyers, sellers, and industry stakeholders to make 
-                informed decisions with confidence.
+                Bridge the information gap in the vehicle market of Sri Lanka through the provision of transparent, verifiable, data driven insight to clearly enable buyers, sellers, and industry stakeholders to make informed decisions with confidence.
               </p>
             </motion.div>
 
@@ -180,9 +217,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                To become Sri Lanka's most trusted vehicle market intelligence platform, setting the 
-                standard for transparency and accuracy while fostering a fair and efficient automotive 
-                ecosystem for all.
+                To become Sri Lankan's most trusted vehicle market intelligence platform, setting the standard for transparency and accuracy while fostering a fair and effecience automotive ecosystem for all.
               </p>
             </motion.div>
           </div>
@@ -223,10 +258,7 @@ export default function About() {
             whileHover={{ y: -8 }}
           >
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight was born from a simple observation: the Sri Lankan vehicle market lacked 
-              a centralized platform for reliable market intelligence. Buyers struggled to determine 
-              fair prices, sellers couldn't benchmark their listings, and everyone was left navigating 
-              a fragmented landscape of scattered information.
+              AutoInsight was born out of a single, simple observation: the vehicle market in Sri Lanka had no single, central platform that provided reliable market intelligence. The buyers could not ascertain the fair prices of a vehicle, sellers could not benchmark their listings, and everybody had to work in a fragmented landscape of scattered information.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
               As a team of students at the Informatics Institute of Technology in collaboration with 
@@ -235,10 +267,7 @@ export default function About() {
               and official CMTA records, we built a comprehensive analytics system.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
-              Today, AutoInsight leverages machine learning, real-time data aggregation, and intuitive 
-              visualizations to provide the market transparency Sri Lanka deserves. Our platform represents 
-              months of development, countless data points analyzed, and a commitment to making vehicle 
-              market information accessible to everyone.
+              Today, AutoInsight taps into machine learning, real-time data aggregation, and intuitive  visualizations to grant the market transparency that Sri Lanka truly deserves. Our platform represents   months of development, countless data points analyzed, and a commitment to making vehicle    market information accessible to everyone.
             </p>
           </motion.div>
         </div>
