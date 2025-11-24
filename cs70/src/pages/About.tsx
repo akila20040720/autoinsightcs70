@@ -69,7 +69,6 @@ export default function About() {
       <motion.section 
         className="full-section"
         initial={{ opacity: 0 }}
-        variants={containerVariants}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
@@ -122,7 +121,6 @@ export default function About() {
            <rect x="100" y="100" width="200" height="200" fill="rgba(139, 92, 246, 0.08)" rx="10" />
         </svg>
       </motion.div>
-
 
 
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
