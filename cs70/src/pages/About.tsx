@@ -258,10 +258,7 @@ export default function About() {
             whileHover={{ y: -8 }}
           >
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight was born from a simple observation: the Sri Lankan vehicle market lacked 
-              a centralized platform for reliable market intelligence. Buyers struggled to determine 
-              fair prices, sellers couldn't benchmark their listings, and everyone was left navigating 
-              a fragmented landscape of scattered information.
+              AutoInsight was born out of a single, simple observation: the vehicle market in Sri Lanka had no single, central platform that provided reliable market intelligence. The buyers could not ascertain the fair prices of a vehicle, sellers could not benchmark their listings, and everybody had to work in a fragmented landscape of scattered information.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
               As a team of students at the Informatics Institute of Technology in collaboration with 
