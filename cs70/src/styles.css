@@ -125,12 +125,14 @@ body.custom-cursor-enabled [onclick] { cursor: none !important; }
     height: 22px;
     border: 2px solid #1A428A;
     border-radius: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate3d(-50%, -50%, 0);
     pointer-events: none;
     z-index: 10000;
     mix-blend-mode: difference;
-    transition: width 0.25s ease, height 0.25s ease, background 0.3s ease, border-color 0.3s ease;
+    transition: width 0.15s ease, height 0.15s ease, background 0.2s ease, border-color 0.2s ease;
     will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 .custom-cursor.hovering {
     width: 36px;
