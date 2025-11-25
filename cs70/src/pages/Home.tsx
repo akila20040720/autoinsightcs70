@@ -6,6 +6,7 @@ import FeatureCard from "../components/FeatureCard";
 import WhyChooseCard from "../components/WhyChooseCard";
 import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
+import ChatbotButton from "../components/ChatbotButton";
 
 // Professional icon set — lucide-react (recommended). If you use a different icon library, swap the imports.
 import {
@@ -440,6 +441,9 @@ export default function Home() {
           ))}
         </div>
       </motion.section>
+
+      {/* Chatbot Button */}
+      <ChatbotButton />
     </>
   );
 }
