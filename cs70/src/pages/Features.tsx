@@ -31,6 +31,11 @@ export default function Features() {
           <p className="features-hero-subtitle">
             Explore the powerful tools designed to give you the market advantage.
           </p>
+          <button className="features-hero-button">
+            Browse Features 
+          </button>
+
+          
         </div>
       </section>
 
