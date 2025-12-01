@@ -516,7 +516,7 @@ export default function About() {
             style={{ 
               padding: 40,
               color: '#0b0c10',
-              textAlign: 'left'
+              textAlign: 'center'
             }}
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
