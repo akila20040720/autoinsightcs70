@@ -1,4 +1,4 @@
-
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Hero from "../components/Hero";
 import ProjectCard from "../components/ProjectCard";
@@ -6,10 +6,23 @@ import FeatureCard from "../components/FeatureCard";
 import WhyChooseCard from "../components/WhyChooseCard";
 import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
+import ChatbotButton from "../components/ChatbotButton";
+
+// Professional icon set — lucide-react (recommended). If you use a different icon library, swap the imports.
+import {
+  BarChart2,
+  Search,
+  TrendingUp,
+  MapPin,
+  DollarSign,
+  Smartphone,
+  Target,
+  Zap,
+  Shield,
+  Lightbulb,
+} from "lucide-react";
 
 export default function Home() {
-  
-
   const projects = [
     { title: "Project Dashboard", tag: "Dashboard", desc: "Interactive analytics UI with clean layout." },
     { title: "Marketing Site", tag: "Website", desc: "Landing pages, hero sections and documentation." },
@@ -25,19 +38,19 @@ export default function Home() {
   ];
 
   const features = [
-    { icon: "📊", title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
-    { icon: "🔍", title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
-    { icon: "📈", title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
-    { icon: "🗺️", title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
-    { icon: "💰", title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
-    { icon: "📱", title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
+    { icon: <BarChart2 className="w-6 h-6" />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
+    { icon: <Search className="w-6 h-6" />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
+    { icon: <TrendingUp className="w-6 h-6" />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
+    { icon: <MapPin className="w-6 h-6" />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
+    { icon: <DollarSign className="w-6 h-6" />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
+    { icon: <Smartphone className="w-6 h-6" />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
   ];
 
   const whyChoose = [
-    { icon: "🎯", title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
-    { icon: "⚡", title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
-    { icon: "🔒", title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
-    { icon: "💡", title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
+    { icon: <Target className="w-6 h-6" />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
+    { icon: <Zap className="w-6 h-6" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
+    { icon: <Shield className="w-6 h-6" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
+    { icon: <Lightbulb className="w-6 h-6" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
   ];
 
   const ratings = [
@@ -53,17 +66,43 @@ export default function Home() {
     { name: "CMTA", url: "https://cmta.lk", desc: "Ceylon Motor Traders Association - Official industry data and statistics." }
   ];
 
+  useEffect(() => {
+    const sections = document.querySelectorAll<HTMLElement>(".full-section");
+    if (!sections.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("section-in-view");
+          } else {
+            entry.target.classList.remove("section-in-view");
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    sections.forEach((section, index) => {
+      if (!section.getAttribute("data-scroll-direction")) {
+        section.setAttribute("data-scroll-direction", index % 2 === 0 ? "left" : "right");
+      }
+      observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <Hero center />
-      
-      {/* How It Works Section (Full Width, static light background) */}
+
+      {/* How It Works Section */}
       <motion.section 
         className="full-section section-how-it-works"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -132,13 +171,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Features Section (Full Width) */}
+      {/* Features Section */}
       <motion.section 
         className="full-section section-features"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="right"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -181,13 +217,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Why Choose Section (Full Width) */}
+      {/* Why Choose Section */}
       <motion.section 
         className="full-section section-why-choose"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -231,13 +264,10 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Ratings Section (Full Width) */}
+      {/* Ratings Section */}
       <motion.section 
         className="full-section section-ratings"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="right"
       >
         <motion.div 
           style={{ 
@@ -312,13 +342,10 @@ export default function Home() {
         </motion.div>
       </motion.section>
 
-      {/* Data Sources Section (Full Width) */}
+      {/* Data Sources Section */}
       <motion.section 
         className="full-section section-data-sources"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -382,13 +409,10 @@ export default function Home() {
         </motion.div>
       </motion.section>
 
-      {/* Recent Work Section (Full Width) */}
+      {/* Recent Work Section */}
       <motion.section 
         className="full-section section-recent-work"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        data-scroll-direction="right"
       >
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}
@@ -417,6 +441,9 @@ export default function Home() {
           ))}
         </div>
       </motion.section>
+
+      {/* Chatbot Button */}
+      <ChatbotButton />
     </>
   );
 }

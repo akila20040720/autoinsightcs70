@@ -2,7 +2,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import AnimatedBackground from "./components/AnimatedBackground";
 import AnalyticalBaseBackground from "./components/VehicleBackground";
 import Footer from "./components/Footer";
 // import CookieConsent from "./components/CookieConsent"; // add back if you use it
@@ -18,7 +17,6 @@ export default function App(): React.ReactElement {
   return (
     <>
       <AnalyticalBaseBackground />
-      <AnimatedBackground />
       <Navbar />
       <main style={{ paddingTop: 84 }} className="page-transition">
         <Routes>

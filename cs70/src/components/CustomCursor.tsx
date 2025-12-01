@@ -64,17 +64,18 @@ const CustomCursor: React.FC = () => {
   };
 
   const tick = () => {
-    // Smooth follow (lerp)
-    const speed = 0.18; // smoothing factor
+    // Smooth follow (lerp) - increased speed for more responsiveness
+    const speed = 0.35; // increased from 0.18 for faster response
     current.current.x += (target.current.x - current.current.x) * speed;
     current.current.y += (target.current.y - current.current.y) * speed;
     if (cursorRef.current) {
-      cursorRef.current.style.transform = `translate(${current.current.x}px, ${current.current.y}px)`;
+      // Use translate3d for hardware acceleration
+      cursorRef.current.style.transform = `translate3d(${current.current.x}px, ${current.current.y}px, 0)`;
     }
-    // Continue until close enough
+    // Continue until close enough - tighter threshold for better tracking
     const dx = Math.abs(target.current.x - current.current.x);
     const dy = Math.abs(target.current.y - current.current.y);
-    if (dx < 0.5 && dy < 0.5) {
+    if (dx < 0.3 && dy < 0.3) {
       raf.current = null;
     } else {
       raf.current = requestAnimationFrame(tick);

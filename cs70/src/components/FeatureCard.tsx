@@ -1,9 +1,10 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "../hooks/useInView";
+import type React from "react";
 
 interface FeatureCardProps {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
   delay?: number;

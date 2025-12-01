@@ -156,7 +156,7 @@ export default function Contact() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         style={{
-          background: "linear-gradient(135deg, #0f1115 0%, #1a1d2e 50%, #2a1a3a 100%)",
+          background: "transparent",
           position: "relative",
           overflow: "hidden",
           minHeight: "100vh",

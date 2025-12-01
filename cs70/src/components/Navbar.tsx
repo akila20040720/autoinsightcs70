@@ -60,24 +60,18 @@ export default function Navbar() {
 
   return (
     <header
-      className={`navbar ${scrolled ? "scrolled" : ""}`}
+      className={`navbar navbar-animated ${scrolled ? "scrolled" : ""}`}
       style={{
         position: "fixed",
         inset: "0 0 auto 0",
-        height: "72px",
+        height: "88px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         zIndex: 60,
-        backdropFilter: "blur(12px) saturate(160%)",
-        WebkitBackdropFilter: "blur(12px) saturate(160%)",
-        background: scrolled
-          ? "rgba(15, 17, 21, 0.85)"
-          : "rgba(255, 255, 255, 0.7)",
-        borderBottom: scrolled
-          ? "1px solid rgba(54, 129, 247, 0.15)"
-          : "1px solid rgba(0, 0, 0, 0.08)",
-        transition: "all 0.3s cubic-bezier(0.25, 0.9, 0.25, 1)",
+        background: "transparent",
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
+        transition: "border-color 0.35s cubic-bezier(0.25, 0.9, 0.25, 1)",
       }}
     >
       <div
@@ -104,12 +98,14 @@ export default function Navbar() {
             gap: "10px",
             textDecoration: "none",
             transition: "all 0.3s ease",
-            background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
             minWidth: "fit-content",
-            color: "transparent",
+            /* White pill background for brand readability over hero */
+            background: "rgba(255,255,255,0.96)",
+            color: "#1A428A",
+            padding: "8px 12px",
+            borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            border: "1px solid rgba(0,0,0,0.06)",
           }}
         >
           AutoInsight
@@ -133,11 +129,9 @@ export default function Navbar() {
                 to={item.path}
                 style={{
                   position: "relative",
-                  color: isActive(item.path)
-                    ? "#3681f7"
-                    : scrolled
-                      ? "#d5dae1"
-                      : "#3a3d43",
+                  color: scrolled
+                    ? (isActive(item.path) ? "#1A428A" : "#0b0c10")
+                    : (isActive(item.path) ? "#ffffff" : "rgba(255,255,255,0.92)"),
                   textDecoration: "none",
                   padding: "10px 16px",
                   borderRadius: "8px",
@@ -158,9 +152,11 @@ export default function Navbar() {
                       left: "16px",
                       right: "16px",
                       height: "3px",
-                      background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
+                      background: scrolled
+                        ? "linear-gradient(135deg, #1A428A 0%, #00A651 100%)"
+                        : "linear-gradient(135deg, #ffffff 0%, #e8ebf0 100%)",
                       borderRadius: "2px",
-                      boxShadow: "0 4px 12px rgba(54, 129, 247, 0.4)",
+                      boxShadow: scrolled ? "0 4px 12px rgba(54, 129, 247, 0.25)" : "0 4px 12px rgba(255,255,255,0.35)",
                     }}
                     initial={{ opacity: 0, scaleX: 0.8 }}
                     animate={{ opacity: 1, scaleX: 1 }}
@@ -180,14 +176,16 @@ export default function Navbar() {
           <Link
             to="/contact"
             style={{
-              background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
-              color: "#ffffff",
+              background: scrolled
+                ? "linear-gradient(135deg, #1A428A 0%, #00A651 100%)"
+                : "rgba(255,255,255,0.92)",
+              color: scrolled ? "#ffffff" : "#1A428A",
               padding: "10px 24px",
               borderRadius: "24px",
               textDecoration: "none",
               fontWeight: 600,
               fontSize: "14px",
-              boxShadow: "0 6px 18px rgba(54, 129, 247, 0.35)",
+              boxShadow: scrolled ? "0 6px 18px rgba(54, 129, 247, 0.35)" : "0 6px 18px rgba(255,255,255,0.25)",
               transition: "all 0.3s cubic-bezier(0.25, 0.9, 0.25, 1)",
               display: "inline-flex",
               alignItems: "center",
@@ -212,12 +210,12 @@ export default function Navbar() {
           onClick={() => setOpen((o) => !o)}
           style={{
             background: scrolled
-              ? "rgba(54, 129, 247, 0.15)"
-              : "rgba(54, 129, 247, 0.08)",
+              ? "rgba(255,255,255,0.75)"
+              : "rgba(255,255,255,0.18)",
             border: scrolled
-              ? "1px solid rgba(54, 129, 247, 0.3)"
-              : "1px solid rgba(54, 129, 247, 0.2)",
-            color: scrolled ? "#ffffff" : "#0b0c10",
+              ? "1px solid rgba(0,0,0,0.08)"
+              : "1px solid rgba(255,255,255,0.35)",
+            color: scrolled ? "#1A428A" : "#ffffff",
             width: "44px",
             height: "44px",
             borderRadius: "12px",
@@ -257,17 +255,17 @@ export default function Navbar() {
               }}
               style={{
                 position: "absolute",
-                top: "72px",
+                top: "88px",
                 left: "24px",
                 right: "24px",
                 background: scrolled
-                  ? "rgba(26, 29, 46, 0.95)"
-                  : "rgba(255, 255, 255, 0.95)",
+                  ? "rgba(255,255,255,0.96)"
+                  : "rgba(32,36,48,0.85)",
                 backdropFilter: "blur(20px) saturate(160%)",
                 WebkitBackdropFilter: "blur(20px) saturate(160%)",
                 border: scrolled
-                  ? "1px solid rgba(54, 129, 247, 0.2)"
-                  : "1px solid rgba(54, 129, 247, 0.15)",
+                  ? "1px solid rgba(0,0,0,0.08)"
+                  : "1px solid rgba(255,255,255,0.25)",
                 borderRadius: "16px",
                 padding: "20px",
                 boxShadow: "0 20px 50px rgba(0, 0, 0, 0.15)",
@@ -298,11 +296,9 @@ export default function Navbar() {
                         display: "block",
                         padding: "12px 16px",
                         borderRadius: "12px",
-                        color: isActive(item.path)
-                          ? "#3681f7"
-                          : scrolled
-                            ? "#d5dae1"
-                            : "#3a3d43",
+                        color: scrolled
+                          ? (isActive(item.path) ? "#1A428A" : "#0b0c10")
+                          : (isActive(item.path) ? "#ffffff" : "rgba(255,255,255,0.92)"),
                         textDecoration: "none",
                         fontSize: "15px",
                         fontWeight: 500,
@@ -310,8 +306,8 @@ export default function Navbar() {
                         position: "relative",
                         background: isActive(item.path)
                           ? scrolled
-                            ? "rgba(54, 129, 247, 0.15)"
-                            : "rgba(54, 129, 247, 0.08)"
+                            ? "rgba(26, 66, 138, 0.12)"
+                            : "rgba(255,255,255,0.15)"
                           : "transparent",
                       }}
                     >
@@ -334,13 +330,15 @@ export default function Navbar() {
                       display: "block",
                       padding: "12px 16px",
                       borderRadius: "12px",
-                      background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
-                      color: "#ffffff",
+                      background: scrolled
+                        ? "linear-gradient(135deg, #1A428A 0%, #00A651 100%)"
+                        : "rgba(255,255,255,0.9)",
+                      color: scrolled ? "#ffffff" : "#1A428A",
                       textDecoration: "none",
                       fontSize: "15px",
                       fontWeight: 600,
                       textAlign: "center",
-                      boxShadow: "0 6px 18px rgba(54, 129, 247, 0.3)",
+                      boxShadow: scrolled ? "0 6px 18px rgba(54, 129, 247, 0.3)" : "0 6px 18px rgba(255,255,255,0.25)",
                       transition: "all 0.3s ease",
                     }}
                   >
