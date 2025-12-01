@@ -186,7 +186,7 @@ export default function About() {
               style={{ 
                 padding: 40,
                 color: '#0b0c10',
-                textAlign: 'left'
+                textAlign: 'justify'
               }}
               initial={{ opacity: 0, x: -50, y: 50 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
