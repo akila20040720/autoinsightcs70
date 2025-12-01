@@ -277,7 +277,7 @@ export default function About() {
             style={{ 
               padding: 40,
               color: '#0b0c10',
-              textAlign: 'left',
+              textAlign: 'center',
               marginTop: 20,
               backgroundColor:'white',
               boxShadow:'#eaea75ff',
