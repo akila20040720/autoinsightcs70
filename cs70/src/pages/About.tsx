@@ -140,7 +140,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <a
-              href="#more-about"
+              href="#"
               style={{
                 background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
                 color: "#ffffff",
@@ -271,6 +271,30 @@ export default function About() {
             </p>
           </motion.div>
         </div>
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <motion.div
+            className="project"
+            style={{ 
+              padding: 40,
+              color: '#0b0c10',
+              textAlign: 'left',
+              marginTop: 20,
+              backgroundColor:'white',
+              boxShadow:'#eaea75ff',
+               
+            }}
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
+            whileHover={{ y: -8 }}
+          >
+            <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#eaea75ff' ,textAlign: 'center'}}>About</h2>
+            <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
+              AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. Click “Learn More” to discover the full process behind our data collection, analysis, and dashboard design.
+            </p>
+            </motion.div>
+          </div>
       </motion.section>
 
       {/* Core Values */}
@@ -403,7 +427,7 @@ export default function About() {
         </div>
       </motion.section>
 
-      {/* Journey Timeline */}
+     
       <motion.section 
         className="full-section section-recent-work"
         initial={{ opacity: 0 }}
@@ -464,9 +488,10 @@ export default function About() {
             </motion.div>
           ))}
         </div>
-      </motion.section>
+      
 
-      {/* Acknowledgments */}
+      </motion.section>
+    
       <motion.section 
         className="full-section section-how-it-works"
         initial={{ opacity: 0 }}
