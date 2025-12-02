@@ -65,6 +65,40 @@ export default function About() {
           paddingTop: "120px",
         }}
       >
+        {/* Background Video (placeholder at /pages/video.mp4) */}
+        <video
+          aria-hidden="true"
+          className="about-bg-video"
+          src="pages/video.mp4"
+          playsInline
+          autoPlay
+          muted
+          loop
+          preload="metadata"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 0,
+            filter: 'brightness(0.65) saturate(1.05)',
+            transform: 'translateZ(0)',
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Subtle overlay to ensure text readability over video */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.25) 20%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.25) 100%)',
+            zIndex: 0
+          }}
+        />
         
         <motion.div
           style={{
