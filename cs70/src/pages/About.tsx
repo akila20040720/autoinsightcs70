@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 
-
 interface TeamMember {
   name: string;
   role: string;
@@ -65,11 +64,11 @@ export default function About() {
           paddingTop: "120px",
         }}
       >
-        {/* Background Video (placeholder at /pages/video.mp4) */}
+        {/* Background Video */}
         <video
           aria-hidden="true"
           className="about-bg-video"
-          src="pages/video.mp4"
+          src="/video.mp4"
           playsInline
           autoPlay
           muted
@@ -81,7 +80,7 @@ export default function About() {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            zIndex: 0,
+            zIndex: -1,
             filter: 'brightness(0.65) saturate(1.05)',
             transform: 'translateZ(0)',
             pointerEvents: 'none'
@@ -145,11 +144,14 @@ export default function About() {
 
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto', padding: '0 32px' }}>
           <motion.h1 
-          className="h-title glow-title"
+          className="h-title"
           initial={{ y: 28, opacity: 0, scale:0.94 }}
           animate={{ y: 0, opacity: 1, scale:1 }}
           transition={{ duration: 0.9, ease: [0.25,0.9,0.25,1] }}
-            
+          style={{
+            color: '#ffffff',
+            textShadow: '0 2px 12px rgba(0,0,0,0.4), 0 4px 24px rgba(0,0,0,0.3)'
+          }}
           >
             About AutoInsight
           </motion.h1>
@@ -158,7 +160,10 @@ export default function About() {
           initial={{ y: 8, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.12, duration: 0.6 }}
-            
+          style={{
+            color: 'rgba(255,255,255,0.9)',
+            textShadow: '0 1px 4px rgba(0,0,0,0.3)'
+          }}
           >
             Empowering the vehicle market of Sri Lanka through intelligent analytics, real-time insights, and AI-driven predictions.
           </motion.p>

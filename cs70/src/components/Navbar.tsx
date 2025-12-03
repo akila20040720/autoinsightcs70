@@ -57,10 +57,11 @@ export default function Navbar() {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+  const isAboutPage = location.pathname === "/about";
 
   return (
     <header
-      className={`navbar navbar-animated ${scrolled ? "scrolled" : ""}`}
+      className={`navbar ${isAboutPage ? "" : "navbar-animated"} ${scrolled ? "scrolled" : ""}`}
       style={{
         position: "fixed",
         inset: "0 0 auto 0",
@@ -70,7 +71,7 @@ export default function Navbar() {
         justifyContent: "center",
         zIndex: 60,
         background: "transparent",
-        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
+        borderBottom: (scrolled && !isAboutPage) ? "1px solid rgba(0,0,0,0.06)" : "1px solid transparent",
         transition: "border-color 0.35s cubic-bezier(0.25, 0.9, 0.25, 1)",
       }}
     >
