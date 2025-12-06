@@ -4,6 +4,8 @@ interface TeamMember {
   name: string;
   role: string;
   id: string;
+  linkedin: string;
+  email: string;
 }
 
 interface Milestone {
@@ -20,13 +22,49 @@ interface Value {
 
 export default function About() {
   const teamMembers: TeamMember[] = [
-    { name: "Akila Wijerama", role: "Team Leader", id: "20241303" },
-    { name: "Dulan Nimnaka", role: "Backend Developer", id: "20240503" },
-    { name: "Shaveen Peiris", role: "Frontend Developer", id: "20240515" },
-    { name: "Sanidu Samrasinghe", role: "Data Analyst", id: "20240641" },
-    { name: "Sanara Perera", role: "ML Engineer", id: "20240773" },
-    { name: "Hasandi Peiris", role: "UI/UX Designer", id: "20240642" }
-  ];
+  { 
+    name: "Akila Wijerama", 
+    role: "Team Leader", 
+    id: "20241303",
+    linkedin: "https://linkedin.com/in/akila-wijerama",
+    email: "mailto:akila.20241303@iit.ac.lk"
+  },
+  { 
+    name: "Dulan Nimnaka", 
+    role: "Backend Developer", 
+    id: "20240503",
+    linkedin: "https://linkedin.com/in/dulan-nimnaka",
+    email: "mailto:dulan.20240503@iit.ac.lk"
+  },
+  { 
+    name: "Shaveen Peiris", 
+    role: "Frontend Developer", 
+    id: "20240515",
+    linkedin: "https://linkedin.com/in/shaveen-peiris",
+    email: "mailto:shaveen.20240515@iit.ac.lk"
+  },
+  { 
+    name: "Sanidu Samrasinghe", 
+    role: "Data Analyst", 
+    id: "20240641",
+    linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
+    email: "mailto:sanidu.20240641@iit.ac.lk"
+  },
+  { 
+    name: "Sanara Perera", 
+    role: "ML Engineer", 
+    id: "20240773",
+    linkedin: "https://linkedin.com/in/sanara-perera",
+    email: "mailto:sanara.20240773@iit.ac.lk"
+  },
+  { 
+    name: "Hasandi Peiris", 
+    role: "UI/UX Designer", 
+    id: "20240642",
+    linkedin: "https://linkedin.com/in/hasandi-peiris",
+    email: "mailto:hasandi.20240642@iit.ac.lk"
+  }
+];
 
   const milestones: Milestone[] = [
     { year: "2024", title: "Project Inception", desc: "Identified market gap and began research" },
@@ -462,7 +500,7 @@ export default function About() {
                 }}>
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                {/* Uncomment and use this when you have actual images:
+                {/* 
                 <img 
                   src={`/images/team/${member.name.toLowerCase().replace(' ', '-')}.jpg`}
                   alt={member.name}
@@ -474,7 +512,7 @@ export default function About() {
                 />
                 */}
               </div>
-{/* Content */}
+            {/* Content */}
               <div style={{ padding: 24 }}>
                 <h3 style={{ 
                   fontSize: 22, 
@@ -509,43 +547,45 @@ export default function About() {
                   borderTop: '1px solid rgba(0, 0, 0, 0.08)'
                 }}>
                   <motion.a
-                    href="#"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: 8,
-                      background: 'rgba(54, 129, 247, 0.1)',
-                      color: 'var(--primary)',
-                      textDecoration: 'none',
-                      fontSize: 18
-                    }}
-                    whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    in
-                  </motion.a>
-                  <motion.a
-                    href="#"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: 8,
-                      background: 'rgba(54, 129, 247, 0.1)',
-                      color: 'var(--primary)',
-                      textDecoration: 'none',
-                      fontSize: 18
-                    }}
-                    whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    @
-                  </motion.a>
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  in
+                </motion.a>
+                <motion.a
+                  href={member.email}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  @
+                </motion.a>
                 </div>
               </div>
             </motion.div>
