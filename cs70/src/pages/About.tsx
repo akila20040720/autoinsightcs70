@@ -502,7 +502,7 @@ export default function About() {
                 </div>
                 {/* 
                 <img 
-                  src={`/images/team/${member.name.toLowerCase().replace(' ', '-')}.jpg`}
+                  src={`/images/team/${member.name.toLowerCase().replace(' ','-')}.jpg`}
                   alt={member.name}
                   style={{
                     width: '100%',
