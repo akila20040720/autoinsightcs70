@@ -8,19 +8,24 @@ import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
 import ChatbotButton from "../components/ChatbotButton";
 
-// Professional icon set — lucide-react (recommended). If you use a different icon library, swap the imports.
+// Professional icon set — react-icons/fc (Flat Color Icons)
 import {
-  BarChart2,
-  Search,
-  TrendingUp,
-  MapPin,
-  DollarSign,
-  Smartphone,
-  Target,
-  Zap,
-  Shield,
-  Lightbulb,
-} from "lucide-react";
+  FcBarChart,
+  FcSearch,
+  FcBullish,
+  FcGlobe,
+  FcCurrencyExchange,
+  FcSmartphoneTablet,
+  FcCheckmark,
+  FcFlashOn,
+  FcSafe,
+  FcIdea,
+} from "react-icons/fc";
+
+import riyasewanaLogo from "../assets/logos/riyasewana.png";
+import patpatLogo from "../assets/logos/patpat.png";
+import ikmanLogo from "../assets/logos/ikman.png";
+import cmtaLogo from "../assets/logos/cmta.png";
 
 export default function Home() {
   const projects = [
@@ -38,19 +43,19 @@ export default function Home() {
   ];
 
   const features = [
-    { icon: <BarChart2 className="w-6 h-6" />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
-    { icon: <Search className="w-6 h-6" />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
-    { icon: <TrendingUp className="w-6 h-6" />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
-    { icon: <MapPin className="w-6 h-6" />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
-    { icon: <DollarSign className="w-6 h-6" />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
-    { icon: <Smartphone className="w-6 h-6" />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
+    { icon: <FcBarChart className="w-12 h-12" />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
+    { icon: <FcSearch className="w-12 h-12" />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
+    { icon: <FcBullish className="w-12 h-12" />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
+    { icon: <FcGlobe className="w-12 h-12" />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
+    { icon: <FcCurrencyExchange className="w-12 h-12" />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
+    { icon: <FcSmartphoneTablet className="w-12 h-12" />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
   ];
 
   const whyChoose = [
-    { icon: <Target className="w-6 h-6" />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
-    { icon: <Zap className="w-6 h-6" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
-    { icon: <Shield className="w-6 h-6" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
-    { icon: <Lightbulb className="w-6 h-6" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
+    { icon: <FcCheckmark className="w-12 h-12" />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
+    { icon: <FcFlashOn className="w-12 h-12" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
+    { icon: <FcSafe className="w-12 h-12" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
+    { icon: <FcIdea className="w-12 h-12" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
   ];
 
   const ratings = [
@@ -60,10 +65,10 @@ export default function Home() {
   ];
 
   const dataSources = [
-    { name: "Riyasewana", url: "https://riyasewana.com", desc: "Leading vehicle marketplace in Sri Lanka providing comprehensive listings." },
-    { name: "Patpat.lk", url: "https://patpat.lk", desc: "Popular platform for buying and selling vehicles with verified listings." },
-    { name: "Ikman.lk", url: "https://ikman.lk", desc: "Multi-category marketplace including extensive vehicle listings." },
-    { name: "CMTA", url: "https://cmta.lk", desc: "Ceylon Motor Traders Association - Official industry data and statistics." }
+    { name: "Riyasewana", url: "https://riyasewana.com", desc: "Leading vehicle marketplace in Sri Lanka providing comprehensive listings.", icon: <img src={riyasewanaLogo} alt="Riyasewana" className="w-8 h-8 object-contain" style={{ width: 32, height: 32 }} /> },
+    { name: "Patpat.lk", url: "https://patpat.lk", desc: "Popular platform for buying and selling vehicles with verified listings.", icon: <img src={patpatLogo} alt="Patpat.lk" className="w-8 h-8 object-contain" style={{ width: 32, height: 32 }} /> },
+    { name: "Ikman.lk", url: "https://ikman.lk", desc: "Multi-category marketplace including extensive vehicle listings.", icon: <img src={ikmanLogo} alt="Ikman.lk" className="w-8 h-8 object-contain" style={{ width: 32, height: 32 }} /> },
+    { name: "CMTA", url: "https://cmta.lk", desc: "Ceylon Motor Traders Association - Official industry data and statistics.", icon: <img src={cmtaLogo} alt="CMTA" className="w-8 h-8 object-contain" style={{ width: 32, height: 32 }} /> }
   ];
 
   useEffect(() => {
@@ -381,6 +386,7 @@ export default function Home() {
                 url={source.url}
                 description={source.desc}
                 delay={0}
+                icon={source.icon}
               />
             </motion.div>
           ))}
