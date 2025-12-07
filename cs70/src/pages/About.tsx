@@ -4,6 +4,8 @@ interface TeamMember {
   name: string;
   role: string;
   id: string;
+  linkedin: string;
+  email: string;
 }
 
 interface Milestone {
@@ -20,13 +22,49 @@ interface Value {
 
 export default function About() {
   const teamMembers: TeamMember[] = [
-    { name: "Akila Wijerama", role: "Team Leader", id: "20241303" },
-    { name: "Dulan Nimnaka", role: "Backend Developer", id: "20240503" },
-    { name: "Shaveen Peiris", role: "Frontend Developer", id: "20240515" },
-    { name: "Sanidu Samrasinghe", role: "Data Analyst", id: "20240641" },
-    { name: "Sanara Perera", role: "ML Engineer", id: "20240773" },
-    { name: "Hasandi Peiris", role: "UI/UX Designer", id: "20240642" }
-  ];
+  { 
+    name: "Akila Wijerama", 
+    role: "Team Leader", 
+    id: "20241303",
+    linkedin: "https://linkedin.com/in/akila-wijerama",
+    email: "mailto:akila.20241303@iit.ac.lk"
+  },
+  { 
+    name: "Dulan Nimnaka", 
+    role: "Backend Developer", 
+    id: "20240503",
+    linkedin: "https://linkedin.com/in/dulan-nimnaka",
+    email: "mailto:dulan.20240503@iit.ac.lk"
+  },
+  { 
+    name: "Shaveen Peiris", 
+    role: "Frontend Developer", 
+    id: "20240515",
+    linkedin: "https://linkedin.com/in/shaveen-peiris",
+    email: "mailto:shaveen.20240515@iit.ac.lk"
+  },
+  { 
+    name: "Sanidu Samrasinghe", 
+    role: "Data Analyst", 
+    id: "20240641",
+    linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
+    email: "mailto:sanidu.20240641@iit.ac.lk"
+  },
+  { 
+    name: "Sanara Perera", 
+    role: "ML Engineer", 
+    id: "20240773",
+    linkedin: "https://linkedin.com/in/sanara-perera",
+    email: "mailto:sanara.20240773@iit.ac.lk"
+  },
+  { 
+    name: "Hasandi Peiris", 
+    role: "UI/UX Designer", 
+    id: "20240642",
+    linkedin: "https://linkedin.com/in/hasandi-peiris",
+    email: "mailto:hasandi.20240642@iit.ac.lk"
+  }
+];
 
   const milestones: Milestone[] = [
     { year: "2024", title: "Project Inception", desc: "Identified market gap and began research" },
@@ -420,53 +458,140 @@ export default function About() {
             The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster
           </motion.p>
         </div>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto' }}>
           {teamMembers.map((member, i) => (
             <motion.div
               key={i}
               className="project"
               style={{ 
-                padding: 32,
+                padding: 0,
                 color: '#0b0c10',
-                textAlign: 'center'
+                textAlign: 'left',
+                overflow: 'hidden'
               }}
-              initial={{ opacity: 0, x: (i % 2 === 0 ? -1 : 1) * 50, y: 50 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.15, type: "spring", stiffness: 80 }}
-              whileHover={{ y: -8, rotate: 2 }}
+              transition={{ duration: 0.6, delay: i * 0.1, type: "spring", stiffness: 80 }}
+              whileHover={{ y: -12, boxShadow: '0 20px 40px rgba(54, 129, 247, 0.2)' }}
             >
+              {/* Image Container */}
               <div style={{ 
-                width: 80, 
-                height: 80, 
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #3681f7, #8b5cf6)',
-                margin: '0 auto 20px',
+                width: '100%',
+                height: 320,
+                background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 32,
-                fontWeight: 700,
-                color: '#fff',
-                boxShadow: '0 4px 16px rgba(54, 129, 247, 0.4)'
+                overflow: 'hidden',
+                position: 'relative'
               }}>
-                {member.name.split(' ').map(n => n[0]).join('')}
+                {/* Placeholder - Replace with actual image */}
+                <div style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 64,
+                  fontWeight: 700,
+                  color: 'rgba(255, 255, 255, 0.3)',
+                  background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.8), rgba(139, 92, 246, 0.8))'
+                }}>
+                  {member.name.split(' ').map(n => n[0]).join('')}
+                </div>
+                {/* 
+                <img 
+                  src={`/images/team/${member.name.toLowerCase().replace(' ','-')}.jpg`}
+                  alt={member.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+                */}
               </div>
-              <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 600, color: '#0b0c10' }}>
-                {member.name}
-              </h3>
-              <p style={{ fontSize: 14, color: 'var(--primary)', marginBottom: 8, fontWeight: 500 }}>
-                {member.role}
-              </p>
-              <p style={{ fontSize: 13, color: 'var(--sys-gray)' }}>
-                IIT ID: {member.id}
-              </p>
+            {/* Content */}
+              <div style={{ padding: 24 }}>
+                <h3 style={{ 
+                  fontSize: 22, 
+                  marginBottom: 8, 
+                  fontWeight: 700, 
+                  color: '#0b0c10',
+                  letterSpacing: '-0.5px'
+                }}>
+                  {member.name}
+                </h3>
+                <p style={{ 
+                  fontSize: 15, 
+                  color: 'var(--primary)', 
+                  marginBottom: 12, 
+                  fontWeight: 600 
+                }}>
+                  {member.role}
+                </p>
+                <p style={{ 
+                  fontSize: 13, 
+                  color: 'var(--sys-gray)',
+                  marginBottom: 16 
+                }}>
+                  IIT ID: {member.id}
+                </p>
+
+                {/* Social Icons */}
+                <div style={{ 
+                  display: 'flex', 
+                  gap: 12,
+                  paddingTop: 12,
+                  borderTop: '1px solid rgba(0, 0, 0, 0.08)'
+                }}>
+                  <motion.a
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  in
+                </motion.a>
+                <motion.a
+                  href={member.email}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  @
+                </motion.a>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
-      </motion.section>
-
-     
+      </motion.section>     
       <motion.section 
         className="full-section section-recent-work"
         initial={{ opacity: 0 }}
