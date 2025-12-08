@@ -487,7 +487,7 @@ export default function About() {
               {/* Image Container */}
               <div style={{ 
                 width: '100%',
-                height: 320,
+                height: 220,
                 background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
                 display: 'flex',
                 alignItems: 'center',
