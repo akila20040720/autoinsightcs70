@@ -274,7 +274,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                Transform the
+                Transform the vehicle market  
               </p>
             </motion.div>
 
