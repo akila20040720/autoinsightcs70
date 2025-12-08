@@ -274,7 +274,8 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                Transform the vehicle market  
+                 Transform the vehicle market of Sri Lanka by eliminating information gaps and delivering transparent, 
+                 verifiable, data-driven intelligence that empowers buyers, sellers, and industry stakeholders to make confident, accurate, and forward-thinking decisions.
               </p>
             </motion.div>
 
@@ -294,7 +295,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                To become Sri Lankan's most trusted vehicle market intelligence platform, setting the standard for transparency and accuracy while fostering a fair and effecience automotive ecosystem for all.
+                To become Sri Lanka's most trusted vehicle market intelligence platform, setting the standard for transparency and precision while fostering a fair and efficient automotive ecosystem for all.
               </p>
             </motion.div>
           </div>
@@ -335,16 +336,22 @@ export default function About() {
             whileHover={{ y: -8 }}
           >
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight was born out of a single, simple observation: the vehicle market in Sri Lanka had no single, central platform that provided reliable market intelligence. The buyers could not ascertain the fair prices of a vehicle, sellers could not benchmark their listings, and everybody had to work in a fragmented landscape of scattered information.
+              AutoInsight was born out of a single, clear observation: the vehicle market in Sri Lanka 
+              lacked a unified platform, central platform that provided reliable market intelligence. 
+              The buyers could not determine the fair prices of a vehicle, sellers could not benchmark their listings, 
+              and everyone had to work in a fragmented landscape of scattered information.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              As a team of students at the Informatics Institute of Technology in collaboration with 
-              the University of Westminster, we recognized this gap and set out to create a solution. 
+              As a team of students from the Informatics Institute of Technology in collaboration with 
+              the University of Westminster, we identified this gap and set out to develop a solution. 
               Through extensive research, data collection from platforms like Riyasewana, Ikman.lk, 
-              and official CMTA records, we built a comprehensive analytics system.
+              and official CMTA records, we built a robust and comprehensive analytics system.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
-              Today, AutoInsight taps into machine learning, real-time data aggregation, and intuitive  visualizations to grant the market transparency that Sri Lanka truly deserves. Our platform represents   months of development, countless data points analyzed, and a commitment to making vehicle    market information accessible to everyone.
+              Today, AutoInsight leverages machine learning, real-time data aggregation, 
+              and intuitive  visualizations to grant the unprecedented market transparency 
+              that Sri Lanka truly deserves. Our platform embodies months of dedicated development, 
+              countless data points analyzed, and a commitment to making vehicle market information accessible to everyone.
             </p>
           </motion.div>
         </div>
@@ -368,7 +375,9 @@ export default function About() {
           >
             <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#eaea75ff' ,textAlign: 'center'}}>About</h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. Click “Learn More” to discover the full process behind our data collection, analysis, and dashboard design.
+              AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. 
+              From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. 
+              Click “Learn More” to discover the full process behind our data collection, analysis, and dashboard design.
             </p>
             </motion.div>
           </div>
@@ -399,7 +408,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            The principles that guide everything we do
+            The principles That Guide Everything We Do
           </motion.p>
         </div>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
