@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 
 interface TeamMember {
   name: string;
@@ -7,6 +8,7 @@ interface TeamMember {
   id: string;
   linkedin: string;
   email: string;
+  github: string;
 }
 
 interface Milestone {
@@ -30,6 +32,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
+    github: "https://github.com/akila20040720"
   },
   { 
     name: "Dulan Nimnaka", 
@@ -37,7 +40,8 @@ export default function About() {
     desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
-    email: "mailto:dulan.20240503@iit.ac.lk"
+    email: "mailto:dulan.20240503@iit.ac.lk",
+    github: "https://github.com/dulan-nimnaka"
   },
   { 
     name: "Shaveen Peiris", 
@@ -45,7 +49,8 @@ export default function About() {
     desc: "Builds interactive and user-friendly web interfaces for the platform.",
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
-    email: "mailto:shaveen.20240515@iit.ac.lk"
+    email: "mailto:shaveen.20240515@iit.ac.lk",
+    github: "https://github.com/ShaveenPeiris"
   },
   { 
     name: "Sanidu Samrasinghe", 
@@ -53,7 +58,8 @@ export default function About() {
     desc: "Analyzes datasets to provide actionable insights and support decision-making.",
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
-    email: "mailto:sanidu.20240641@iit.ac.lk"
+    email: "mailto:sanidu.20240641@iit.ac.lk",
+    github: "https://github.com/Sanidu2004"
   },
   { 
     name: "Sanara Perera", 
@@ -61,7 +67,8 @@ export default function About() {
     desc: "Develops machine learning models to predict fair vehicle prices and trends.",
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
-    email: "mailto:sanara.20240773@iit.ac.lk"
+    email: "mailto:sanara.20240773@iit.ac.lk",
+    github:"https://github.com/Sanara-Perera"
   },
   { 
     name: "Hasandi Peiris", 
@@ -69,7 +76,8 @@ export default function About() {
     desc: "Designs visually appealing and user-centric interfaces for the AutoInsight platform.",
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
-    email: "mailto:hasandi.20240642@iit.ac.lk"
+    email: "mailto:hasandi.20240642@iit.ac.lk",
+    github: "https://github.com/hazzvp"
   }
 ];
 
@@ -300,7 +308,7 @@ export default function About() {
               whileHover={{ y: -8, scale: 1.02 }}
             >
               <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
-              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
+              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Vision</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
                 To become Sri Lanka's most trusted vehicle market intelligence platform, setting the standard for transparency and precision while fostering a fair and efficient automotive ecosystem for all.
               </p>
@@ -471,7 +479,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster
+            The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster...
           </motion.p>
         </div>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto' }}>
@@ -588,7 +596,7 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  in
+                  <FaLinkedin size={20}/>
                 </motion.a>
                 <motion.a
                   href={member.email}
@@ -607,7 +615,28 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  @
+                  <FaEnvelope size={20}/>
+                </motion.a>
+                <motion.a
+                  href={member.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <FaGithub size={20}/>
                 </motion.a>
                 </div>
               </div>
