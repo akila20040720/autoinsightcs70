@@ -274,7 +274,7 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                Bridg the information gap in the vehicle market of Sri Lanka through the provision of transparent, verifiable, data driven insight to clearly enable buyers, sellers, and industry stakeholders to make informed decisions with confidence.
+                Transform the information gap in the vehicle market of Sri Lanka through the provision of transparent, verifiable, data driven insight to clearly enable buyers, sellers, and industry stakeholders to make informed decisions with confidence.
               </p>
             </motion.div>
 
