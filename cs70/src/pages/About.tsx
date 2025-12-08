@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 interface TeamMember {
   name: string;
   role: string;
+  desc: string;
   id: string;
   linkedin: string;
   email: string;
@@ -25,13 +26,15 @@ export default function About() {
   { 
     name: "Akila Wijerama", 
     role: "Team Leader", 
+    desc: "Leads the team with strategic vision and ensures smooth project execution.",
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
-    email: "mailto:akila.20241303@iit.ac.lk"
+    email: "mailto:akila.20241303@iit.ac.lk",
   },
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
+    desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk"
@@ -39,6 +42,7 @@ export default function About() {
   { 
     name: "Shaveen Peiris", 
     role: "Frontend Developer", 
+    desc: "Builds interactive and user-friendly web interfaces for the platform.",
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk"
@@ -46,6 +50,7 @@ export default function About() {
   { 
     name: "Sanidu Samrasinghe", 
     role: "Data Analyst", 
+    desc: "Analyzes datasets to provide actionable insights and support decision-making.",
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk"
@@ -53,6 +58,7 @@ export default function About() {
   { 
     name: "Sanara Perera", 
     role: "ML Engineer", 
+    desc: "Develops machine learning models to predict fair vehicle prices and trends.",
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk"
@@ -60,6 +66,7 @@ export default function About() {
   { 
     name: "Hasandi Peiris", 
     role: "UI/UX Designer", 
+    desc: "Designs visually appealing and user-centric interfaces for the AutoInsight platform.",
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk"
@@ -522,7 +529,7 @@ export default function About() {
                 */}
               </div>
             {/* Content */}
-              <div style={{ padding: 16 }}>
+              <div style={{ padding: 16, textAlign: 'center' }}>
                 <h3 style={{ 
                   fontSize: 22, 
                   marginBottom: 8, 
