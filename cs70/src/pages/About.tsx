@@ -482,7 +482,7 @@ export default function About() {
               style={{ 
                 padding: 0,
                 color: '#0b0c10',
-                textAlign: 'left',
+                textAlign: 'center',
                 overflow: 'hidden'
               }}
               initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -546,6 +546,13 @@ export default function About() {
                   fontWeight: 600 
                 }}>
                   {member.role}
+                </p>
+                <p style={{
+                  fontSize:14,
+                  color:'var(--sys-gray)',
+                  marginBottom: 8,
+                }}>
+                  {member.desc}
                 </p>
                 <p style={{ 
                   fontSize: 13, 
