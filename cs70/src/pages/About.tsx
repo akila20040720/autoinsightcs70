@@ -522,7 +522,7 @@ export default function About() {
                 */}
               </div>
             {/* Content */}
-              <div style={{ padding: 24 }}>
+              <div style={{ padding: 16 }}>
                 <h3 style={{ 
                   fontSize: 22, 
                   marginBottom: 8, 
