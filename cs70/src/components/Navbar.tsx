@@ -100,16 +100,14 @@ export default function Navbar() {
             textDecoration: "none",
             transition: "all 0.3s ease",
             minWidth: "fit-content",
-            /* White pill background for brand readability over hero */
-            background: "rgba(255,255,255,0.96)",
-            color: "#1A428A",
-            padding: "8px 12px",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-            border: "1px solid rgba(0,0,0,0.06)",
+            padding: "0",
           }}
         >
-          AutoInsight
+          <img 
+            src="/assets/AutoInsightLogo.png" 
+            alt="AutoInsight Logo" 
+            style={{ height: "64px", width: "auto" }}
+          />
         </Link>
 
         {/* Desktop Navigation */}
