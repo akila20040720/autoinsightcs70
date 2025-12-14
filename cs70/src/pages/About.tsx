@@ -9,6 +9,7 @@ interface TeamMember {
   linkedin: string;
   email: string;
   github: string;
+  image: string;
 }
 
 interface Milestone {
@@ -32,16 +33,18 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-    github: "https://github.com/akila20040720"
+    github: "https://github.com/akila20040720",
+    image: "/assets/akila.jpg"
   },
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
     desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
-    linkedin: "https://linkedin.com/in/dulan-nimnaka",
+    linkedin: "https://linkedin.com/in/dulannimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    github: "https://github.com/dulan-nimnaka"
+    github: "https://github.com/dulan-nimnaka",
+    image: "/assets/dulan.jpg"
   },
   { 
     name: "Shaveen Peiris", 
@@ -50,7 +53,8 @@ export default function About() {
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
-    github: "https://github.com/ShaveenPeiris"
+    github: "https://github.com/ShaveenPeiris",
+    image: "/assets/shaveen.jpg"
   },
   { 
     name: "Sanidu Samrasinghe", 
@@ -59,7 +63,8 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    github: "https://github.com/Sanidu2004"
+    github: "https://github.com/Sanidu2004",
+    image: "/assets/sanidu.jpg"
   },
   { 
     name: "Sanara Perera", 
@@ -68,7 +73,8 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
-    github:"https://github.com/Sanara-Perera"
+    github:"https://github.com/Sanara-Perera",
+    image: "/assets/sanara.jpg"
   },
   { 
     name: "Hasandi Peiris", 
@@ -77,7 +83,8 @@ export default function About() {
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
-    github: "https://github.com/hazzvp"
+    github: "https://github.com/hazzvp",
+    image: "/assets/hasandi.jpg"
   }
 ];
 
@@ -503,18 +510,31 @@ export default function About() {
               <div style={{ 
                 width: '100%',
                 height: 220,
-                background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
+                background: '#f5f5f5',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
                 position: 'relative'
               }}>
-                {/* Placeholder - Replace with actual image */}
+                <img 
+                  src={member.image}
+                  alt={member.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
                 <div style={{
                   width: '100%',
                   height: '100%',
-                  display: 'flex',
+                  display: 'none',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: 64,
@@ -524,17 +544,6 @@ export default function About() {
                 }}>
                   {member.name.split(' ').map(n => n[0]).join('')}
                 </div>
-                {/* 
-                <img 
-                  src={`/images/team/${member.name.toLowerCase().replace(' ','-')}.jpg`}
-                  alt={member.name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
-                */}
               </div>
             {/* Content */}
               <div style={{ padding: 16, textAlign: 'center' }}>
