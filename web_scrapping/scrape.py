@@ -8,6 +8,10 @@ import pandas as pd
 import time
 import re
 from bs4 import BeautifulSoup
+import tkinter as tk
+from tkinter import ttk
+import threading
+import queue
 
 def setup_driver():
     """Setup Chrome driver with optimized options for speed"""
@@ -156,20 +160,26 @@ def scrape_page(driver, page_num):
 
     return vehicles
 
-def scrape_with_selenium():
-    """Scrape using optimized Selenium"""
+def scrape_with_selenium(queue, stop_event):
+    """Scrape using optimized Selenium and put data in queue"""
     driver = setup_driver()
     all_data = []
 
     try:
-        # Scrape all pages - there are about 1783 pages with 40 listings each
-        total_pages = 1  # All pages
+        total_pages = 200  # All pages
 
         for page in range(1, total_pages + 1):
+            if stop_event.is_set():
+                break
+
             print(f"Scraping page {page}...")
             vehicles = scrape_page(driver, page)
             all_data.extend(vehicles)
             print(f"  Found {len(vehicles)} vehicles on page {page}")
+
+            # Put new vehicles in queue for GUI update
+            for vehicle in vehicles:
+                queue.put(vehicle)
 
             # Longer delay between pages to avoid blocking
             time.sleep(0.1)
@@ -177,18 +187,116 @@ def scrape_with_selenium():
     finally:
         driver.quit()
 
-    return all_data
-
-# Main execution
-if __name__ == "__main__":
-    print("Starting optimized Selenium scraping...")
-    data = scrape_with_selenium()
-
-    if data:
-        df = pd.DataFrame(data)
+    # Save to CSV at the end
+    if all_data:
+        df = pd.DataFrame(all_data)
         csv_filename = 'riyasewana_vehicles.csv'
         df.to_csv(csv_filename, index=False, encoding='utf-8')
         print(f"✅ Saved {len(df)} vehicles to {csv_filename}")
-        print(f"Columns: {list(df.columns)}")
-    else:
-        print("❌ No data scraped")
+
+class VehicleTableApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Riyasewana Vehicle Scraper - Real-time Updates")
+        self.root.geometry("1200x700")
+
+        # Create treeview for table
+        self.tree = ttk.Treeview(root, columns=('Type', 'Make', 'Model', 'Year', 'Price', 'Mileage', 'District', 'Date'), show='headings')
+
+        # Define column headings
+        self.tree.heading('Type', text='Vehicle Type')
+        self.tree.heading('Make', text='Make')
+        self.tree.heading('Model', text='Model')
+        self.tree.heading('Year', text='Year')
+        self.tree.heading('Price', text='Price')
+        self.tree.heading('Mileage', text='Mileage')
+        self.tree.heading('District', text='District')
+        self.tree.heading('Date', text='Published Date')
+
+        # Define column widths
+        self.tree.column('Type', width=100)
+        self.tree.column('Make', width=80)
+        self.tree.column('Model', width=150)
+        self.tree.column('Year', width=60)
+        self.tree.column('Price', width=100)
+        self.tree.column('Mileage', width=80)
+        self.tree.column('District', width=100)
+        self.tree.column('Date', width=100)
+
+        # Add scrollbar
+        scrollbar = ttk.Scrollbar(root, orient=tk.VERTICAL, command=self.tree.yview)
+        self.tree.configure(yscroll=scrollbar.set)
+
+        # Pack widgets
+        self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # Status label
+        self.status_label = tk.Label(root, text="Starting scraper...", font=("Arial", 10))
+        self.status_label.pack(side=tk.BOTTOM, fill=tk.X)
+
+        # Start button
+        self.start_button = tk.Button(root, text="Start Scraping", command=self.start_scraping)
+        self.start_button.pack(side=tk.BOTTOM)
+
+        # Stop button
+        self.stop_button = tk.Button(root, text="Stop Scraping", command=self.stop_scraping, state=tk.DISABLED)
+        self.stop_button.pack(side=tk.BOTTOM)
+
+        # Queue for data updates
+        self.queue = queue.Queue()
+        self.stop_event = threading.Event()
+
+        # Start checking for updates
+        self.check_queue()
+
+    def start_scraping(self):
+        self.start_button.config(state=tk.DISABLED)
+        self.stop_button.config(state=tk.NORMAL)
+        self.status_label.config(text="Scraping in progress...")
+
+        # Start scraping thread
+        self.scraping_thread = threading.Thread(target=scrape_with_selenium, args=(self.queue, self.stop_event))
+        self.scraping_thread.start()
+
+    def stop_scraping(self):
+        self.stop_event.set()
+        self.start_button.config(state=tk.NORMAL)
+        self.stop_button.config(state=tk.DISABLED)
+        self.status_label.config(text="Scraping stopped")
+
+    def check_queue(self):
+        """Check for new data in queue and update table"""
+        try:
+            while True:
+                vehicle = self.queue.get_nowait()
+                self.add_vehicle_to_table(vehicle)
+        except queue.Empty:
+            pass
+
+        # Schedule next check
+        self.root.after(100, self.check_queue)
+
+    def add_vehicle_to_table(self, vehicle):
+        """Add a vehicle to the table"""
+        values = (
+            vehicle.get('Vehicle Type', ''),
+            vehicle.get('Make', ''),
+            vehicle.get('Model', ''),
+            vehicle.get('Year', ''),
+            vehicle.get('Price', ''),
+            vehicle.get('Milleage', ''),
+            vehicle.get('District', ''),
+            vehicle.get('published date', '')
+        )
+        self.tree.insert('', tk.END, values=values)
+
+        # Update status
+        item_count = len(self.tree.get_children())
+        self.status_label.config(text=f"Total vehicles scraped: {item_count}")
+
+# Main execution
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = VehicleTableApp(root)
+    root.mainloop()
