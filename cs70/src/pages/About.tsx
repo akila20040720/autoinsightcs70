@@ -39,7 +39,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-     image : image6
+     image : image5
   },
   { 
     name: "Dulan Nimnaka", 
@@ -48,7 +48,7 @@ export default function About() {
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    image : image6
+    image : image5
   },
   { 
     name: "Shaveen Peiris", 
@@ -57,7 +57,7 @@ export default function About() {
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
-    image : image6
+    image : image5
   },
   { 
     name: "Sanidu Samrasinghe", 
@@ -66,7 +66,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    image : image6
+    image : image5
   },
   { 
     name: "Sanara Perera", 
@@ -239,7 +239,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <a
-              href="#"
+              href="about"
               style={{
                 background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
                 color: "#ffffff",
@@ -380,6 +380,7 @@ export default function About() {
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div
             className="project"
+            id="about"
             style={{ 
               padding: 40,
               color: '#0b0c10',
@@ -517,7 +518,7 @@ export default function About() {
                 overflow: 'hidden',
                 position: 'relative'
               }}>
-                {/* Placeholder - Replace with actual image */}
+              
                 
                 { 
                 <img 
