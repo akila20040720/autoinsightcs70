@@ -1,4 +1,10 @@
 import { motion } from "framer-motion";
+/*import image1 from '../images/image1.jpeg';
+import image2 from '../Images/image2.jpeg';
+import image3 from '../images/image3.jpg';
+import image4 from '../images/image4.jpg'; */
+import image5 from '../images/Sanara_20240773.jpeg';
+import image6 from '../images/hasandi_20240642.jpeg';
 
 interface TeamMember {
   name: string;
@@ -6,6 +12,7 @@ interface TeamMember {
   id: string;
   linkedin: string;
   email: string;
+  image: string;
 }
 
 interface Milestone {
@@ -27,42 +34,48 @@ export default function About() {
     role: "Team Leader", 
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
-    email: "mailto:akila.20241303@iit.ac.lk"
+    email: "mailto:akila.20241303@iit.ac.lk",
+     image : image6
   },
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
-    email: "mailto:dulan.20240503@iit.ac.lk"
+    email: "mailto:dulan.20240503@iit.ac.lk",
+    image : image6
   },
   { 
     name: "Shaveen Peiris", 
     role: "Frontend Developer", 
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
-    email: "mailto:shaveen.20240515@iit.ac.lk"
+    email: "mailto:shaveen.20240515@iit.ac.lk",
+    image : image6
   },
   { 
     name: "Sanidu Samrasinghe", 
     role: "Data Analyst", 
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
-    email: "mailto:sanidu.20240641@iit.ac.lk"
+    email: "mailto:sanidu.20240641@iit.ac.lk",
+    image : image6
   },
   { 
     name: "Sanara Perera", 
     role: "ML Engineer", 
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
-    email: "mailto:sanara.20240773@iit.ac.lk"
+    email: "mailto:sanara.20240773@iit.ac.lk",
+    image : image5
   },
   { 
     name: "Hasandi Peiris", 
     role: "UI/UX Designer", 
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
-    email: "mailto:hasandi.20240642@iit.ac.lk"
+    email: "mailto:hasandi.20240642@iit.ac.lk",
+    image : image6
   }
 ];
 
@@ -478,7 +491,7 @@ export default function About() {
               {/* Image Container */}
               <div style={{ 
                 width: '100%',
-                height: 320,
+                height: 350,
                 background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
                 display: 'flex',
                 alignItems: 'center',
@@ -487,30 +500,19 @@ export default function About() {
                 position: 'relative'
               }}>
                 {/* Placeholder - Replace with actual image */}
-                <div style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 64,
-                  fontWeight: 700,
-                  color: 'rgba(255, 255, 255, 0.3)',
-                  background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.8), rgba(139, 92, 246, 0.8))'
-                }}>
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </div>
-                {/* 
+                
+                { 
                 <img 
-                  src={`/images/team/${member.name.toLowerCase().replace(' ','-')}.jpg`}
+                  src={member.image}
                   alt={member.name}
                   style={{
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
+                    height: '130%',
+                    objectFit: 'contain',
+                    objectPosition: 'center',
                   }}
                 />
-                */}
+                }
               </div>
             {/* Content */}
               <div style={{ padding: 24 }}>
