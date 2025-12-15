@@ -9,6 +9,7 @@ import image6 from '../images/hasandi_20240642.jpeg';
 interface TeamMember {
   name: string;
   role: string;
+  desc: string;
   id: string;
   linkedin: string;
   email: string;
@@ -19,12 +20,14 @@ interface Milestone {
   year: string;
   title: string;
   desc: string;
+  
 }
 
 interface Value {
   icon: string;
   title: string;
   desc: string;
+ 
 }
 
 export default function About() {
@@ -32,6 +35,7 @@ export default function About() {
   { 
     name: "Akila Wijerama", 
     role: "Team Leader", 
+    desc: "Leads the team with strategic vision and ensures smooth project execution.",
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
@@ -40,6 +44,7 @@ export default function About() {
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
+    desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
@@ -48,6 +53,7 @@ export default function About() {
   { 
     name: "Shaveen Peiris", 
     role: "Frontend Developer", 
+    desc: "Builds interactive and user-friendly web interfaces for the platform.",
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
@@ -56,6 +62,7 @@ export default function About() {
   { 
     name: "Sanidu Samrasinghe", 
     role: "Data Analyst", 
+    desc: "Analyzes datasets to provide actionable insights and support decision-making.",
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
@@ -64,6 +71,7 @@ export default function About() {
   { 
     name: "Sanara Perera", 
     role: "ML Engineer", 
+    desc: "Develops machine learning models to predict fair vehicle prices and trends.",
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
@@ -72,6 +80,7 @@ export default function About() {
   { 
     name: "Hasandi Peiris", 
     role: "UI/UX Designer", 
+    desc: "Designs visually appealing and user-centric interfaces for the AutoInsight platform.",
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
@@ -287,7 +296,8 @@ export default function About() {
               <div style={{ fontSize: 48, marginBottom: 20 }}>🎯</div>
               <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Mission</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                Bridge the information gap in the vehicle market of Sri Lanka through the provision of transparent, verifiable, data driven insight to clearly enable buyers, sellers, and industry stakeholders to make informed decisions with confidence.
+                 Transform the vehicle market of Sri Lanka by eliminating information gaps and delivering transparent, 
+                 verifiable, data-driven intelligence that empowers buyers, sellers, and industry stakeholders to make confident, accurate, and forward-thinking decisions.
               </p>
             </motion.div>
 
@@ -305,9 +315,9 @@ export default function About() {
               whileHover={{ y: -8, scale: 1.02 }}
             >
               <div style={{ fontSize: 48, marginBottom: 20 }}>🔮</div>
-              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#8b5cf6' }}>Our Vision</h2>
+              <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: 'var(--primary)' }}>Our Vision</h2>
               <p style={{ fontSize: 16, lineHeight: 1.7, color: 'var(--sys-gray)' }}>
-                To become Sri Lankan's most trusted vehicle market intelligence platform, setting the standard for transparency and accuracy while fostering a fair and effecience automotive ecosystem for all.
+                To become Sri Lanka's most trusted vehicle market intelligence platform, setting the standard for transparency and precision while fostering a fair and efficient automotive ecosystem for all.
               </p>
             </motion.div>
           </div>
@@ -348,16 +358,22 @@ export default function About() {
             whileHover={{ y: -8 }}
           >
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight was born out of a single, simple observation: the vehicle market in Sri Lanka had no single, central platform that provided reliable market intelligence. The buyers could not ascertain the fair prices of a vehicle, sellers could not benchmark their listings, and everybody had to work in a fragmented landscape of scattered information.
+              AutoInsight was born out of a single, clear observation: the vehicle market in Sri Lanka 
+              lacked a unified platform, central platform that provided reliable market intelligence. 
+              The buyers could not determine the fair prices of a vehicle, sellers could not benchmark their listings, 
+              and everyone had to work in a fragmented landscape of scattered information.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              As a team of students at the Informatics Institute of Technology in collaboration with 
-              the University of Westminster, we recognized this gap and set out to create a solution. 
+              As a team of students from the Informatics Institute of Technology in collaboration with 
+              the University of Westminster, we identified this gap and set out to develop a solution. 
               Through extensive research, data collection from platforms like Riyasewana, Ikman.lk, 
-              and official CMTA records, we built a comprehensive analytics system.
+              and official CMTA records, we built a robust and comprehensive analytics system.
             </p>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)' }}>
-              Today, AutoInsight taps into machine learning, real-time data aggregation, and intuitive  visualizations to grant the market transparency that Sri Lanka truly deserves. Our platform represents   months of development, countless data points analyzed, and a commitment to making vehicle    market information accessible to everyone.
+              Today, AutoInsight leverages machine learning, real-time data aggregation, 
+              and intuitive  visualizations to grant the unprecedented market transparency 
+              that Sri Lanka truly deserves. Our platform embodies months of dedicated development, 
+              countless data points analyzed, and a commitment to making vehicle market information accessible to everyone.
             </p>
           </motion.div>
         </div>
@@ -381,7 +397,9 @@ export default function About() {
           >
             <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#eaea75ff' ,textAlign: 'center'}}>About</h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
-              AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. Click “Learn More” to discover the full process behind our data collection, analysis, and dashboard design.
+              AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. 
+              From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. 
+              Click “Learn More” to discover the full process behind our data collection, analysis, and dashboard design.
             </p>
             </motion.div>
           </div>
@@ -412,7 +430,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            The principles that guide everything we do
+            The principles That Guide Everything We Do
           </motion.p>
         </div>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 24, position: 'relative', zIndex: 1, maxWidth: 1120, margin: '0 auto' }}>
@@ -468,7 +486,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster
+            The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster...
           </motion.p>
         </div>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto' }}>
@@ -479,7 +497,7 @@ export default function About() {
               style={{ 
                 padding: 0,
                 color: '#0b0c10',
-                textAlign: 'left',
+                textAlign: 'center',
                 overflow: 'hidden'
               }}
               initial={{ opacity: 0, y: 50, scale: 0.95 }}
@@ -515,7 +533,7 @@ export default function About() {
                 }
               </div>
             {/* Content */}
-              <div style={{ padding: 24 }}>
+              <div style={{ padding: 16, textAlign: 'center' }}>
                 <h3 style={{ 
                   fontSize: 22, 
                   marginBottom: 8, 
@@ -532,6 +550,13 @@ export default function About() {
                   fontWeight: 600 
                 }}>
                   {member.role}
+                </p>
+                <p style={{
+                  fontSize:14,
+                  color:'var(--sys-gray)',
+                  marginBottom: 8,
+                }}>
+                  {member.desc}
                 </p>
                 <p style={{ 
                   fontSize: 13, 
@@ -567,7 +592,7 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  in
+           
                 </motion.a>
                 <motion.a
                   href={member.email}
@@ -586,7 +611,28 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  @
+                 
+                </motion.a>
+                <motion.a
+                  
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none',
+                    fontSize: 18
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  
                 </motion.a>
                 </div>
               </div>

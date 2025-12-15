@@ -1,14 +1,16 @@
 import { motion } from "framer-motion";
 import { useInView } from "../hooks/useInView";
+import type React from "react";
 
 interface DataSourceProps {
   name: string;
   url: string;
   description: string;
   delay?: number;
+  icon?: React.ReactNode;
 }
 
-export default function DataSourceCard({ name, url, description, delay = 0 }: DataSourceProps) {
+export default function DataSourceCard({ name, url, description, delay = 0, icon }: DataSourceProps) {
   const { ref, inView } = useInView<HTMLAnchorElement>();
   
   return (
@@ -39,7 +41,7 @@ export default function DataSourceCard({ name, url, description, delay = 0 }: Da
         background: 'linear-gradient(135deg,#e9ecf5,#dde7ff,#f2f6ff)',
         color: '#0b0c10',
         boxShadow: '0 6px 18px -4px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)'
-      }}>🔗</div>
+      }}>{icon || "🔗"}</div>
       <h3 style={{ fontSize: 18, marginBottom: 8, fontWeight: 600, color: '#0b0c10' }}>
         {name}
       </h3>
