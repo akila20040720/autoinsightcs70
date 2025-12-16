@@ -490,6 +490,7 @@ export default function About() {
             The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster...
           </motion.p>
         </div>
+        
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto' }}>
           {teamMembers.map((member, i) => (
             <motion.div
@@ -593,7 +594,7 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-           
+                   in
                 </motion.a>
                 <motion.a
                   href={member.email}
@@ -612,29 +613,9 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                 
+                 @
                 </motion.a>
-                <motion.a
-                  
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 8,
-                    background: 'rgba(54, 129, 247, 0.1)',
-                    color: 'var(--primary)',
-                    textDecoration: 'none',
-                    fontSize: 18
-                  }}
-                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  
-                </motion.a>
+                
                 </div>
               </div>
             </motion.div>
