@@ -239,7 +239,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <a
-              href="about"
+              href="#about"
               style={{
                 background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
                 color: "#ffffff",
@@ -377,10 +377,10 @@ export default function About() {
             </p>
           </motion.div>
         </div>
+        
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div
             className="project"
-            id="about"
             style={{ 
               padding: 40,
               color: '#0b0c10',
