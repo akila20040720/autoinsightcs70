@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 /*import image1 from '../images/image1.jpeg';
 import image3 from '../images/image3.jpg';
 import image4 from '../images/image4.jpg'; */
-import image1 from '../Images/akila_20241303.jpeg';
-import image2 from '../Images/dulan_20240503.jpg';
+import image1 from '../images/akila_20241303.jpeg';
+import image2 from '../images/dulan_20240503.jpg';
 import image5 from '../images/sanara_20240773.jpeg';
 import image6 from '../images/hasandi_20240642.jpeg';
 import image4 from '../images/sanidu_20240641.jpeg';
