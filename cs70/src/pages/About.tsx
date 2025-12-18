@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+/*import image1 from '../images/image1.jpeg';
+import image2 from '../Images/image2.jpeg';
+import image3 from '../images/image3.jpg';
+import image4 from '../images/image4.jpg'; */
+import image5 from '../images/Sanara_20240773.jpeg';
+import image6 from '../images/hasandi_20240642.jpeg';
 
 interface TeamMember {
   name: string;
@@ -8,7 +13,6 @@ interface TeamMember {
   id: string;
   linkedin: string;
   email: string;
-  github: string;
   image: string;
 }
 
@@ -16,12 +20,14 @@ interface Milestone {
   year: string;
   title: string;
   desc: string;
+  
 }
 
 interface Value {
   icon: string;
   title: string;
   desc: string;
+ 
 }
 
 export default function About() {
@@ -33,18 +39,16 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-    github: "https://github.com/akila20040720",
-    image: "/assets/akila.jpg"
+     image : image5
   },
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
     desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
-    linkedin: "https://linkedin.com/in/dulannimnaka",
+    linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    github: "https://github.com/dulan-nimnaka",
-    image: "/assets/dulan.jpg"
+    image : image5
   },
   { 
     name: "Shaveen Peiris", 
@@ -53,8 +57,7 @@ export default function About() {
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
-    github: "https://github.com/ShaveenPeiris",
-    image: "/assets/shaveen.jpg"
+    image : image5
   },
   { 
     name: "Sanidu Samrasinghe", 
@@ -63,8 +66,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    github: "https://github.com/Sanidu2004",
-    image: "/assets/sanidu.jpg"
+    image : image5
   },
   { 
     name: "Sanara Perera", 
@@ -73,8 +75,7 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
-    github:"https://github.com/Sanara-Perera",
-    image: "/assets/sanara.jpg"
+    image : image5
   },
   { 
     name: "Hasandi Peiris", 
@@ -83,8 +84,7 @@ export default function About() {
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
-    github: "https://github.com/hazzvp",
-    image: "/assets/hasandi.jpg"
+    image : image6
   }
 ];
 
@@ -239,7 +239,7 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <a
-              href="#"
+              href="#about"
               style={{
                 background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
                 color: "#ffffff",
@@ -377,6 +377,7 @@ export default function About() {
             </p>
           </motion.div>
         </div>
+        
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div
             className="project"
@@ -489,6 +490,7 @@ export default function About() {
             The dedicated students behind AutoInsight, working under the guidance of IIT and University of Westminster...
           </motion.p>
         </div>
+        
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32, position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto' }}>
           {teamMembers.map((member, i) => (
             <motion.div
@@ -509,41 +511,28 @@ export default function About() {
               {/* Image Container */}
               <div style={{ 
                 width: '100%',
-                height: 220,
-                background: '#f5f5f5',
+                height: 350,
+                background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden',
                 position: 'relative'
               }}>
+              
+                
+                { 
                 <img 
                   src={member.image}
                   alt={member.name}
                   style={{
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = 'flex';
+                    height: '130%',
+                    objectFit: 'contain',
+                    objectPosition: 'center',
                   }}
                 />
-                <div style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'none',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 64,
-                  fontWeight: 700,
-                  color: 'rgba(255, 255, 255, 0.3)',
-                  background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.8), rgba(139, 92, 246, 0.8))'
-                }}>
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </div>
+                }
               </div>
             {/* Content */}
               <div style={{ padding: 16, textAlign: 'center' }}>
@@ -605,7 +594,7 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <FaLinkedin size={20}/>
+                   in
                 </motion.a>
                 <motion.a
                   href={member.email}
@@ -624,29 +613,9 @@ export default function About() {
                   whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <FaEnvelope size={20}/>
+                 @
                 </motion.a>
-                <motion.a
-                  href={member.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderRadius: 8,
-                    background: 'rgba(54, 129, 247, 0.1)',
-                    color: 'var(--primary)',
-                    textDecoration: 'none',
-                    fontSize: 18
-                  }}
-                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <FaGithub size={20}/>
-                </motion.a>
+                
                 </div>
               </div>
             </motion.div>

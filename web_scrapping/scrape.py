@@ -182,7 +182,7 @@ def scrape_with_selenium(queue, stop_event):
                 queue.put(vehicle)
 
             # Longer delay between pages to avoid blocking
-            time.sleep(0.1)
+            time.sleep(0.5)
 
     finally:
         driver.quit()

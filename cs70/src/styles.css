@@ -988,6 +988,7 @@ body:before {
     transform: translateY(-10px) rotateX(6deg);
     box-shadow: var(--shadow-lg);
 }
+
 .project:hover:before { opacity:1; }
 @keyframes projectRise {
     from { opacity:0; transform: translateY(18px); }
