@@ -5,6 +5,7 @@ import image4 from '../images/image4.jpg'; */
 import image2 from '../Images/dulan_20240503.jpg';
 import image5 from '../images/Sanara_20240773.jpeg';
 import image6 from '../images/hasandi_20240642.jpeg';
+import image4 from '../images/sanidu_20240641.png';
 
 interface TeamMember {
   name: string;
@@ -66,7 +67,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    image : image5
+    image : image4
   },
   { 
     name: "Sanara Perera", 
