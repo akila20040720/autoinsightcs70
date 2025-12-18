@@ -1,9 +1,5 @@
 import { motion } from "framer-motion";
-import image1 from '../Images/akila_20241303.jpeg';
-import image2 from '../Images/dulan_20240503.jpg';
-import image3 from '../Images/sanidu_20240641.jpeg';
-import image4 from '../Images/sanara_20240773.jpeg';
-import image5 from '../Images/hasandi_20240642.jpeg';
+
 
 interface TeamMember {
   name: string;
@@ -38,7 +34,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-     image : image1
+     image : 'https://via.placeholder.com/400x350/1A428A/ffffff?text=Akila'
   },
   { 
     name: "Dulan Nimnaka", 
@@ -47,7 +43,7 @@ export default function About() {
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    image : image2
+    image : 'https://via.placeholder.com/400x350/1A428A/ffffff?text=Dulan'
   },
   { 
     name: "Shaveen Peiris", 
@@ -65,7 +61,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    image : image3
+    image : 'https://via.placeholder.com/400x350/1A428A/ffffff?text=Sanidu'
   },
   { 
     name: "Sanara Perera", 
@@ -74,7 +70,7 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
-    image : image4
+    image : 'https://via.placeholder.com/400x350/1A428A/ffffff?text=Sanara'
   },
   { 
     name: "Hasandi Peiris", 
@@ -83,7 +79,7 @@ export default function About() {
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
-    image : image5
+    image : 'https://via.placeholder.com/400x350/1A428A/ffffff?text=Hasandi'
   }
 ];
 
