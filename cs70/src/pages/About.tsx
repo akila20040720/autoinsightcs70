@@ -2,8 +2,9 @@ import { motion } from "framer-motion";
 /*import image1 from '../images/image1.jpeg';
 import image3 from '../images/image3.jpg';
 import image4 from '../images/image4.jpg'; */
+import image1 from '../Images/akila_20241303.jpeg';
 import image2 from '../Images/dulan_20240503.jpg';
-import image5 from '../images/Sanara_20240773.jpeg';
+import image5 from '../images/sanara_20240773.jpeg';
 import image6 from '../images/hasandi_20240642.jpeg';
 import image4 from '../images/sanidu_20240641.jpeg';
 
@@ -40,7 +41,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-     image : image5
+     image : image1
   },
   { 
     name: "Dulan Nimnaka", 
@@ -511,30 +512,25 @@ export default function About() {
             >
               {/* Image Container */}
               <div style={{ 
-                width: '100%',
-                height: 350,
-                background: 'linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                position: 'relative'
-              }}>
-              
-                
-                { 
-                <img 
-                  src={member.image}
-                  alt={member.name}
-                  style={{
-                    width: '100%',
-                    height: '130%',
-                    objectFit: 'contain',
-                    objectPosition: 'center',
-                  }}
-                />
-                }
-              </div>
+  width: '100%',
+  height: 350,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  position: 'relative'
+}}>
+  <img 
+    src={member.image}
+    alt={member.name}
+    style={{
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      objectPosition: 'center',
+    }}
+  />
+</div>
             {/* Content */}
               <div style={{ padding: 16, textAlign: 'center' }}>
                 <h3 style={{ 
