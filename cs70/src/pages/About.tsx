@@ -5,7 +5,7 @@ import image3 from '../images/image3.jpg';
 import image4 from '../images/image4.jpg'; */
 import image5 from '../images/Sanara_20240773.jpeg';
 import image6 from '../images/hasandi_20240642.jpeg';
-import image4 from '../images/sanidu_20240641.png';
+import image4 from '../images/sanidu_20240641.jpeg';
 
 interface TeamMember {
   name: string;
