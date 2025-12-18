@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 /*import image1 from '../images/image1.jpeg';
-import image2 from '../Images/image2.jpeg';
 import image3 from '../images/image3.jpg';
 import image4 from '../images/image4.jpg'; */
+import image2 from '../Images/dulan_20240503.jpg';
 import image5 from '../images/Sanara_20240773.jpeg';
 import image6 from '../images/hasandi_20240642.jpeg';
 
@@ -48,7 +48,7 @@ export default function About() {
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulan-nimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    image : image5
+    image : image2
   },
   { 
     name: "Shaveen Peiris", 
