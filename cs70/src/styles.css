@@ -217,26 +217,28 @@ body:before {
 
 /* ================== Navbar ================== */
 .navbar {
-    position:fixed;
+    position: sticky;
     top: 16px;
-    left: 24px;
-    right: 24px;
-    margin: 0 auto;
+    left: 0;
+    right: 0;
+    margin: 16px auto;
     width: auto;
-    max-width: 1200px;
+    max-width: calc(100% - 48px);
     height:72px;
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:60;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+    z-index:1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     animation: navReveal .9s var(--ease);
     transition: all .4s var(--ease);
+    color: #333;
+    padding: 0 32px;
 }
 /* Animated gradient overlay for navbar (mirrors landing page animation) */
 .navbar.navbar-animated { position:fixed; }
@@ -1211,6 +1213,7 @@ a:focus-visible, button:focus-visible { outline:none; box-shadow: var(--focus-ri
     .h-title { font-size:36px; }
     .navbar { height:64px; }
     .hero { padding-top:140px; gap:34px; }
+
 }
 
 /* Optional floating subtle blobs (decor) */
