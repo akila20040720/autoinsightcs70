@@ -392,6 +392,9 @@ body:before {
         right: 16px;
         top: 16px;
     }
+    .navbar-logo {
+        height: 48px !important;
+    }
 }
 
 /* Responsive navigation for new navbar component */

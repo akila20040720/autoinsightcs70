@@ -106,6 +106,7 @@ export default function Navbar() {
           <img 
             src="/assets/AutoInsightLogo.png" 
             alt="AutoInsight Logo" 
+            className="navbar-logo"
             style={{ height: "64px", width: "auto" }}
           />
         </Link>
