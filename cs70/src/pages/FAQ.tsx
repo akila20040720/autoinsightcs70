@@ -38,13 +38,72 @@ export default function FAQ() {
   ];
 
   const categories = [
-    { value: "all", label: "All Questions", icon: "📚" },
-    { value: "general", label: "General", icon: "❓" },
-    { value: "pricing", label: "Pricing", icon: "💰" },
-    { value: "features", label: "Features", icon: "⭐" },
-    { value: "subscription", label: "Subscription", icon: "👑" },
-    { value: "technical", label: "Technical", icon: "🔧" },
-    { value: "support", label: "Support", icon: "🤝" }
+    { 
+      value: "all", 
+      label: "All Questions", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 640 640" fill="#3a3d43" xmlns="http://www.w3.org/2000/svg">
+          <path d="M320 80C377.4 80 424 126.6 424 184C424 241.4 377.4 288 320 288C262.6 288 216 241.4 216 184C216 126.6 262.6 80 320 80zM96 152C135.8 152 168 184.2 168 224C168 263.8 135.8 296 96 296C56.2 296 24 263.8 24 224C24 184.2 56.2 152 96 152zM0 480C0 409.3 57.3 352 128 352C140.8 352 153.2 353.9 164.9 357.4C132 394.2 112 442.8 112 496L112 512C112 523.4 114.4 534.2 118.7 544L32 544C14.3 544 0 529.7 0 512L0 480zM521.3 544C525.6 534.2 528 523.4 528 512L528 496C528 442.8 508 394.2 475.1 357.4C486.8 353.9 499.2 352 512 352C582.7 352 640 409.3 640 480L640 512C640 529.7 625.7 544 608 544L521.3 544zM472 224C472 184.2 504.2 152 544 152C583.8 152 616 184.2 616 224C616 263.8 583.8 296 544 296C504.2 296 472 263.8 472 224zM160 496C160 407.6 231.6 336 320 336C408.4 336 480 407.6 480 496L480 512C480 529.7 465.7 544 448 544L192 544C174.3 544 160 529.7 160 512L160 496z"/>
+        </svg>
+      )
+    },
+    { 
+      value: "general", 
+      label: "General", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a3d43" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4"></path>
+          <path d="M12 8h.01"></path>
+        </svg>
+      )
+    },
+    { 
+      value: "pricing", 
+      label: "Pricing", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a3d43" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      )
+    },
+    { 
+      value: "features", 
+      label: "Features", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a3d43" stroke="none">
+          <polygon points="12 2 15.09 10.26 24 10.27 17.18 16.27 20.27 24.54 12 18.54 3.73 24.54 6.82 16.27 0 10.27 8.91 10.26 12 2"></polygon>
+        </svg>
+      )
+    },
+    { 
+      value: "subscription", 
+      label: "Subscription", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a3d43" stroke="none">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path>
+        </svg>
+      )
+    },
+    { 
+      value: "technical", 
+      label: "Technical", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#3a3d43" stroke="none">
+          <path d="M20 3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H4V5h16v14zm-8-2l-4-4h3V9h2v4h3l-4 4z"></path>
+        </svg>
+      )
+    },
+    { 
+      value: "support", 
+      label: "Support", 
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a3d43" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      )
+    }
   ];
 
   const filteredFAQs = useMemo(
@@ -330,9 +389,14 @@ export default function FAQ() {
                     cursor: "pointer",
                     transition: "all 0.3s var(--ease)",
                     boxShadow: selectedCategory === cat.value ? "0 4px 12px rgba(54, 129, 247, 0.15)" : "0 2px 6px rgba(0, 0, 0, 0.05)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
                   }}
                 >
-                  <span style={{ marginRight: 6 }}>{cat.icon}</span>
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {typeof cat.icon === "string" ? cat.icon : cat.icon}
+                  </span>
                   {cat.label}
                 </motion.button>
               ))}
