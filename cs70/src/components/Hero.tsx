@@ -59,7 +59,7 @@ export default function Hero({ center }: HeroProps) {
         >
           AutoInsight is a web-based system developed to analyze and visualize vehicle market data in Sri Lanka. The project aims to provide real-time insights into vehicle pricing trends, popular models, and regional market activity using data collected from online platforms such as Riyasewana, Patpat.lk, and Ikman.lk, as well as official data from the Ceylon Motor Traders Association (CMTA).
         </motion.p>
-
+      {/* Add Login */}
         <motion.div
           className="hero-actions"
           initial={{ y: 30, opacity: 0 }}

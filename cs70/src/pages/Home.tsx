@@ -8,7 +8,7 @@ import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
 import ChatbotButton from "../components/ChatbotButton";
 
-// Professional icon set — react-icons/fc (Flat Color Icons)
+
 import {
   FcBarChart,
   FcSearch,
