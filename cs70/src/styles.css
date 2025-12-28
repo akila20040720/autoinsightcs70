@@ -217,19 +217,28 @@ body:before {
 
 /* ================== Navbar ================== */
 .navbar {
-    position:fixed;
-    inset:0 0 auto 0;
-    height:72px; /* Increased from 72px for more visual weight */
+    position: sticky;
+    top: 16px;
+    left: 0;
+    right: 0;
+    margin: 16px auto;
+    width: auto;
+    max-width: calc(100% - 48px);
+    height:72px;
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:60;
-    backdrop-filter: blur(var(--blur)) saturate(160%);
-    -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
-    background: var(--surface-glass);
-    border-bottom:1px solid var(--border);
+    z-index:1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     animation: navReveal .9s var(--ease);
-    transition: background .4s var(--ease), box-shadow .4s var(--ease), height .4s var(--ease);
+    transition: all .4s var(--ease);
+    color: #333;
+    padding: 0 32px;
 }
 /* Animated gradient overlay for navbar (mirrors landing page animation) */
 .navbar.navbar-animated { position:fixed; }
@@ -237,19 +246,26 @@ body:before {
     content:"";
     position:absolute;
     inset:0;
+    border-radius: 20px;
     background: linear-gradient(135deg, var(--hero-blue-start) 0%, var(--hero-blue-mid) 48%, var(--hero-blue-end) 100%);
     background-size:320% 320%;
     animation: landingGradientPan 22s ease-in-out infinite;
-    opacity:.55;
+    opacity:.08;
     pointer-events:none;
     z-index:-1;
     transition: opacity .4s var(--ease);
 }
-.navbar.navbar-animated.scrolled:before { opacity:.18; filter: blur(6px); }
+.navbar.navbar-animated.scrolled {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.navbar.navbar-animated.scrolled:before { opacity:.02; filter: blur(8px); }
 @media (prefers-reduced-motion: reduce) { .navbar.navbar-animated:before { animation:none !important; } }
 .navbar:hover {
-    background: rgba(255,255,255,0.80); /* Slightly brighter glass on hover */
-    box-shadow: 0 8px 28px -6px rgba(0,0,0,0.12), 0 4px 14px rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 @keyframes navReveal {
     from { transform: translateY(-30px); opacity:0; }
@@ -370,7 +386,15 @@ body:before {
 @media (max-width: 780px) {
     .nav-links { display:none; }
     .menu-toggle { display:flex; }
-    .navbar { height:86px; } /* Slightly smaller on mobile to save vertical space */
+    .navbar { 
+        height:80px;
+        left: 16px;
+        right: 16px;
+        top: 16px;
+    }
+    .navbar-logo {
+        height: 48px !important;
+    }
 }
 
 /* Responsive navigation for new navbar component */
@@ -583,10 +607,14 @@ body:before {
     position: relative;
     display: flex;
     justify-content: center;
-    /* Match top padding to navbar height so sections touch */
-    padding: 20px 24px 100px;
-    min-height: calc(100vh - 100px);
+    /* Extend padding-top to cover navbar area */
+    padding: 0 24px 100px;
+    padding-top: 20px;
+    min-height: 100vh;
     overflow: hidden;
+    /* Extend background behind navbar */
+    margin-top: -120px;
+    padding-top: 140px;
 }
 
 .hero-landing {
@@ -1053,8 +1081,9 @@ body:before {
 [data-theme="dark"] .pro-footer .f-col a { color: var(--text-dim); }
 [data-theme="dark"] .pro-footer .f-col a:hover { background:rgba(54,129,247,0.25); color: var(--text); }
 .footer-social { display:flex; flex-direction:column; gap:16px; }
-.footer-social .social-row { display:flex; gap:12px; }
-.footer-social .social { width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:14px; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform .35s var(--ease), box-shadow .35s var(--ease); }
+.footer-social .social-row { display:flex; gap:12px; pointer-events: auto; }
+.footer-social .social { width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:14px; background:#ffffff; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:transform .35s var(--ease), box-shadow .35s var(--ease); text-decoration:none; cursor:pointer; position:relative; z-index:10; pointer-events:auto; color:inherit; border:none; }
+.footer-social .social svg { pointer-events:none; display:block; }
 .footer-social .social:hover { transform:translateY(-4px) scale(1.05); box-shadow:0 10px 28px -6px rgba(54,129,247,0.35); }
 [data-theme="dark"] .footer-social .social { background: var(--surface-glass); }
 .footer-social .footer-contact a { font-size:14px; color:#1A428A; text-decoration:none; font-weight:600; }
@@ -1187,6 +1216,7 @@ a:focus-visible, button:focus-visible { outline:none; box-shadow: var(--focus-ri
     .h-title { font-size:36px; }
     .navbar { height:64px; }
     .hero { padding-top:140px; gap:34px; }
+
 }
 
 /* Optional floating subtle blobs (decor) */
@@ -1675,13 +1705,17 @@ html {
 /* Optional: Add a subtle pattern overlay to the dark section */
 .features-hero {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
   padding: 40px 20px;
+  /* Extend background behind navbar */
+  margin-top: -120px;
+  padding-top: 160px;
+  
 
   background: linear-gradient(
     135deg,
