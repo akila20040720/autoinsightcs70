@@ -218,18 +218,25 @@ body:before {
 /* ================== Navbar ================== */
 .navbar {
     position:fixed;
-    inset:0 0 auto 0;
-    height:72px; /* Increased from 72px for more visual weight */
+    top: 16px;
+    left: 24px;
+    right: 24px;
+    margin: 0 auto;
+    width: auto;
+    max-width: 1200px;
+    height:72px;
     display:flex;
     align-items:center;
     justify-content:center;
     z-index:60;
-    backdrop-filter: blur(var(--blur)) saturate(160%);
-    -webkit-backdrop-filter: blur(var(--blur)) saturate(160%);
-    background: var(--surface-glass);
-    border-bottom:1px solid var(--border);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
     animation: navReveal .9s var(--ease);
-    transition: background .4s var(--ease), box-shadow .4s var(--ease), height .4s var(--ease);
+    transition: all .4s var(--ease);
 }
 /* Animated gradient overlay for navbar (mirrors landing page animation) */
 .navbar.navbar-animated { position:fixed; }
@@ -237,19 +244,26 @@ body:before {
     content:"";
     position:absolute;
     inset:0;
+    border-radius: 20px;
     background: linear-gradient(135deg, var(--hero-blue-start) 0%, var(--hero-blue-mid) 48%, var(--hero-blue-end) 100%);
     background-size:320% 320%;
     animation: landingGradientPan 22s ease-in-out infinite;
-    opacity:.55;
+    opacity:.08;
     pointer-events:none;
     z-index:-1;
     transition: opacity .4s var(--ease);
 }
-.navbar.navbar-animated.scrolled:before { opacity:.18; filter: blur(6px); }
+.navbar.navbar-animated.scrolled {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.navbar.navbar-animated.scrolled:before { opacity:.02; filter: blur(8px); }
 @media (prefers-reduced-motion: reduce) { .navbar.navbar-animated:before { animation:none !important; } }
 .navbar:hover {
-    background: rgba(255,255,255,0.80); /* Slightly brighter glass on hover */
-    box-shadow: 0 8px 28px -6px rgba(0,0,0,0.12), 0 4px 14px rgba(0,0,0,0.06);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 @keyframes navReveal {
     from { transform: translateY(-30px); opacity:0; }
@@ -370,7 +384,12 @@ body:before {
 @media (max-width: 780px) {
     .nav-links { display:none; }
     .menu-toggle { display:flex; }
-    .navbar { height:86px; } /* Slightly smaller on mobile to save vertical space */
+    .navbar { 
+        height:80px;
+        left: 16px;
+        right: 16px;
+        top: 16px;
+    }
 }
 
 /* Responsive navigation for new navbar component */
@@ -583,10 +602,14 @@ body:before {
     position: relative;
     display: flex;
     justify-content: center;
-    /* Match top padding to navbar height so sections touch */
-    padding: 20px 24px 100px;
-    min-height: calc(100vh - 100px);
+    /* Extend padding-top to cover navbar area */
+    padding: 0 24px 100px;
+    padding-top: 20px;
+    min-height: 100vh;
     overflow: hidden;
+    /* Extend background behind navbar */
+    margin-top: -120px;
+    padding-top: 140px;
 }
 
 .hero-landing {
@@ -1676,13 +1699,17 @@ html {
 /* Optional: Add a subtle pattern overlay to the dark section */
 .features-hero {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
   padding: 40px 20px;
+  /* Extend background behind navbar */
+  margin-top: -120px;
+  padding-top: 160px;
+  
 
   background: linear-gradient(
     135deg,
