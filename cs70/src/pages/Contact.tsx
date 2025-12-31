@@ -265,7 +265,7 @@ export default function Contact() {
       <motion.section
         className="full-section"
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f5f0ff 50%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #CAF0F8 50%, #ffffff 100%)",
         }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -318,20 +318,20 @@ export default function Contact() {
                   style={{
                     padding: "32px 24px",
                     background: "#ffffff",
-                    border: "1px solid rgba(54, 129, 247, 0.1)",
+                    border: "1px solid rgba(0, 119, 182, 0.1)",
                     borderRadius: "var(--radius-md)",
                     textAlign: "center",
                     cursor: "pointer",
                     transition: "all 0.4s var(--ease)",
-                    boxShadow: "0 8px 24px rgba(54, 129, 247, 0.08)",
+                    boxShadow: "0 8px 24px rgba(0, 119, 182, 0.08)",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "0 12px 32px rgba(54, 129, 247, 0.2)";
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.3)";
+                    e.currentTarget.style.boxShadow = "0 12px 32px rgba(0, 119, 182, 0.2)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.3)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(54, 129, 247, 0.08)";
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.1)";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 119, 182, 0.08)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.1)";
                   }}
                 >
                   <div style={{ fontSize: 40, marginBottom: 14 }}>{method.icon}</div>
@@ -355,7 +355,7 @@ export default function Contact() {
       <motion.section
         className="full-section"
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #fef3f0 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #ADE8F4 50%, #90E0EF 100%)",
         }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -691,11 +691,11 @@ export default function Contact() {
                   border: "none",
                   borderRadius: "var(--radius-pill)",
                   background: isSubmitting
-                    ? "rgba(54, 129, 247, 0.5)"
-                    : "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
+                    ? "rgba(0, 119, 182, 0.5)"
+                    : "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)",
                   color: "#ffffff",
                   cursor: isSubmitting ? "not-allowed" : "pointer",
-                  boxShadow: "0 6px 18px rgba(54, 129, 247, 0.35)",
+                  boxShadow: "0 6px 18px rgba(0, 119, 182, 0.35)",
                   transition: "all 0.3s var(--ease)",
                 }}
               >
@@ -779,7 +779,7 @@ export default function Contact() {
       <motion.section
         className="full-section"
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f7f0ff 50%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #CAF0F8 50%, #ffffff 100%)",
           textAlign: "center",
           marginBottom: "-80px",
           paddingBottom: "160px",

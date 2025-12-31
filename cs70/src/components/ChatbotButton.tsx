@@ -28,13 +28,13 @@ export default function ChatbotButton() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: "0 4px 20px rgba(54, 129, 247, 0.4)",
+          boxShadow: "0 4px 20px rgba(54, 129, 182, 0.4)",
           zIndex: 1000,
           transition: "all 0.3s ease",
         }}
         whileHover={{ 
           scale: 1.1,
-          boxShadow: "0 6px 30px rgba(54, 129, 247, 0.6)",
+          boxShadow: "0 6px 30px rgba(0, 119, 182, 0.6)",
         }}
         whileTap={{ scale: 0.95 }}
         initial={{ scale: 0, opacity: 0 }}
@@ -89,7 +89,7 @@ export default function ChatbotButton() {
               backdropFilter: "blur(20px)",
               borderRadius: "16px",
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.15)",
-              border: "1px solid rgba(54, 129, 247, 0.2)",
+              border: "1px solid rgba(0, 119, 182, 0.2)",
               zIndex: 999,
               display: "flex",
               flexDirection: "column",
@@ -99,7 +99,7 @@ export default function ChatbotButton() {
             {/* Header */}
             <div
               style={{
-                background: "linear-gradient(135deg, #3681f7 0%, #5a9aff 100%)",
+                background: "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)",
                 padding: "1.25rem",
                 borderRadius: "16px 16px 0 0",
               }}
@@ -248,21 +248,21 @@ export default function ChatbotButton() {
                     flex: 1,
                     padding: "0.75rem",
                     borderRadius: "8px",
-                    border: "1px solid rgba(54, 129, 247, 0.2)",
+                    border: "1px solid rgba(0, 119, 182, 0.2)",
                     fontSize: "0.875rem",
                     outline: "none",
                     transition: "border-color 0.2s ease",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3681f7";
+                    e.currentTarget.style.borderColor = "#0077B6";
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.2)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.2)";
                   }}
                 />
                 <button
                   style={{
-                    background: "linear-gradient(135deg, #3681f7 0%, #5a9aff 100%)",
+                    background: "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)",
                     border: "none",
                     borderRadius: "8px",
                     padding: "0.75rem 1.25rem",

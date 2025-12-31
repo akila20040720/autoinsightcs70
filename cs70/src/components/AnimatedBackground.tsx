@@ -15,9 +15,9 @@ interface DataNode {
 }
 
 const PALETTE = {
-  primary: "#1A428A",
-  accent: "#00A651",
-  dark: "#1F1F1F",
+  primary: "#023e8a",
+  accent: "#00B4D8",
+  dark: "#03045e",
   white: "#FFFFFF",
 } as const;
 
