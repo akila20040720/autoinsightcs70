@@ -18,7 +18,7 @@ export default function App(): React.ReactElement {
     <>
       <AnalyticalBaseBackground />
       <Navbar />
-      <main style={{ paddingTop: 106 }} className="page-transition">
+      <main style={{ paddingTop: 84 }} className="page-transition">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
