@@ -47,9 +47,9 @@ export default function Footer() {
                   >
                     <defs>
                       <linearGradient id="ig" x1="0" y1="0" x2="640" y2="640">
-                        <stop stopColor="#f9d97c" />
-                        <stop offset="0.5" stopColor="#8b5cf6" />
-                        <stop offset="1" stopColor="#3681f7" />
+                        <stop stopColor="#48CAE4" />
+                        <stop offset="0.5" stopColor="#0077B6" />
+                        <stop offset="1" stopColor="#023e8a" />
                       </linearGradient>
                     </defs>
                     <rect width="640" height="640" rx="120" fill="url(#ig)" />
@@ -78,9 +78,9 @@ export default function Footer() {
                   >
                     <defs>
                       <linearGradient id="fb" x1="0" y1="0" x2="640" y2="640">
-                        <stop stopColor="#3681f7" />
-                        <stop offset="0.6" stopColor="#8b5cf6" />
-                        <stop offset="1" stopColor="#f9d97c" />
+                        <stop stopColor="#023e8a" />
+                        <stop offset="0.6" stopColor="#0077B6" />
+                        <stop offset="1" stopColor="#48CAE4" />
                       </linearGradient>
                     </defs>
                     <rect width="640" height="640" rx="120" fill="url(#fb)" />
@@ -109,9 +109,9 @@ export default function Footer() {
                   >
                     <defs>
                       <linearGradient id="in" x1="0" y1="0" x2="640" y2="640">
-                        <stop stopColor="#3681f7" />
-                        <stop offset="0.6" stopColor="#8b5cf6" />
-                        <stop offset="1" stopColor="#f9d97c" />
+                        <stop stopColor="#023e8a" />
+                        <stop offset="0.6" stopColor="#0077B6" />
+                        <stop offset="1" stopColor="#48CAE4" />
                       </linearGradient>
                     </defs>
                     <rect width="640" height="640" rx="120" fill="url(#in)" />
