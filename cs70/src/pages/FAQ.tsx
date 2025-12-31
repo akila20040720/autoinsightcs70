@@ -286,24 +286,24 @@ export default function FAQ() {
             <a
               href="#faq-content"
               style={{
-                background: "linear-gradient(135deg, #3681f7 0%, #8b5cf6 100%)",
+                background: "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)",
                 color: "#ffffff",
                 padding: "12px 28px",
                 borderRadius: "var(--radius-pill)",
                 textDecoration: "none",
                 fontWeight: 600,
                 fontSize: 15,
-                boxShadow: "0 6px 18px rgba(54, 129, 247, 0.35)",
+                boxShadow: "0 6px 18px rgba(0, 119, 182, 0.35)",
                 transition: "all 0.3s var(--ease)",
                 display: "inline-block",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 10px 26px rgba(54, 129, 247, 0.45)";
+                e.currentTarget.style.boxShadow = "0 10px 26px rgba(0, 119, 182, 0.45)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 6px 18px rgba(54, 129, 247, 0.35)";
+                e.currentTarget.style.boxShadow = "0 6px 18px rgba(0, 119, 182, 0.35)";
               }}
             >
               Browse FAQ
@@ -316,7 +316,7 @@ export default function FAQ() {
       <motion.section
         className="full-section"
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f5f0ff 50%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #CAF0F8 50%, #ffffff 100%)",
           padding: "60px 24px",
         }}
         initial={{ opacity: 0 }}
@@ -380,15 +380,15 @@ export default function FAQ() {
                   whileTap={{ scale: 0.95 }}
                   style={{
                     padding: "14px 20px",
-                    border: selectedCategory === cat.value ? "2px solid var(--primary)" : "1px solid rgba(54, 129, 247, 0.2)",
-                    background: selectedCategory === cat.value ? "linear-gradient(135deg, rgba(54, 129, 247, 0.1), rgba(139, 92, 246, 0.08))" : "#ffffff",
+                    border: selectedCategory === cat.value ? "2px solid var(--primary)" : "1px solid rgba(0, 119, 182, 0.2)",
+                    background: selectedCategory === cat.value ? "linear-gradient(135deg, rgba(0, 119, 182, 0.1), rgba(0, 150, 199, 0.08))" : "#ffffff",
                     borderRadius: "var(--radius-md)",
                     color: selectedCategory === cat.value ? "var(--primary)" : "#3a3d43",
                     fontSize: 14,
                     fontWeight: 600,
                     cursor: "pointer",
                     transition: "all 0.3s var(--ease)",
-                    boxShadow: selectedCategory === cat.value ? "0 4px 12px rgba(54, 129, 247, 0.15)" : "0 2px 6px rgba(0, 0, 0, 0.05)",
+                    boxShadow: selectedCategory === cat.value ? "0 4px 12px rgba(0, 119, 182, 0.15)" : "0 2px 6px rgba(0, 0, 0, 0.05)",
                     display: "flex",
                     alignItems: "center",
                     gap: 8,
@@ -410,7 +410,7 @@ export default function FAQ() {
         id="faq-content"
         className="full-section"
         style={{
-          background: "linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #fef3f0 100%)",
+          background: "linear-gradient(135deg, #ffffff 0%, #ADE8F4 50%, #90E0EF 100%)",
           padding: "80px 24px",
         }}
         initial={{ opacity: 0 }}

@@ -154,7 +154,7 @@ export default function Home() {
                   width: 70, 
                   height: 70, 
                   borderRadius: '50%', 
-                  background: 'linear-gradient(135deg, #3681f7 0%, #5a9aff 100%)',
+                  background: 'linear-gradient(135deg, #023e8a 0%, #0077B6 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -325,14 +325,14 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 0.4, type: "spring", stiffness: 100 }}
           whileHover={{ scale: 1.05 }}
         >
-          <div style={{ fontSize: 56, fontWeight: 700, marginBottom: 12, background: 'linear-gradient(135deg, #3681f7 0%, #f9d97c 50%, #3681f7 100%)', backgroundSize: '200% 200%', backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent', animation: 'gradientShift 3s ease infinite' }}>
+          <div style={{ fontSize: 56, fontWeight: 700, marginBottom: 12, background: 'linear-gradient(135deg, #023e8a 0%, #48CAE4 50%, #0077B6 100%)', backgroundSize: '200% 200%', backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent', animation: 'gradientShift 3s ease infinite' }}>
             4.9/5
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16 }}>
             {[1, 2, 3, 4, 5].map((star) => (
               <motion.span 
                 key={star} 
-                style={{ fontSize: 28, color: '#f9d97c' }}
+                style={{ fontSize: 28, color: '#48CAE4' }}
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}

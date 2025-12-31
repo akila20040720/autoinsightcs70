@@ -34,8 +34,8 @@ export default function FeatureCard({ icon, title, description, delay = 0 }: Fea
           display: 'inline-flex',
           padding: '18px',
           borderRadius: '18px',
-          background: 'linear-gradient(135deg,#3681f7 0%,#8b5cf6 50%,#f9d97c 100%)',
-          boxShadow: '0 8px 28px -6px rgba(54,129,247,0.45), 0 4px 14px -4px rgba(139,92,246,0.4)',
+          background: 'linear-gradient( #023e8a 0%, #0077B6 50%, #48CAE4 100%)',
+          boxShadow: '0 8px 28px -6px rgba(0,119,182,0.45), 0 4px 14px -4px rgba(0, 150, 199, 0.4)',
           color: '#fff',
           position: 'relative'
         }}

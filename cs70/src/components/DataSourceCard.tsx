@@ -38,7 +38,7 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
         display: 'inline-flex',
         padding: '14px',
         borderRadius: '14px',
-        background: 'linear-gradient(135deg,#e9ecf5,#dde7ff,#f2f6ff)',
+        background: 'linear-gradient(135deg, #ADE8F4, #90E0EF, #CAF0F8)',
         color: '#0b0c10',
         boxShadow: '0 6px 18px -4px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08)'
       }}>{icon || "🔗"}</div>
