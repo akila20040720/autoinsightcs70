@@ -15,33 +15,33 @@
     --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.12);
     --shadow-lg: 0 14px 46px rgba(0, 0, 0, 0.18);
-    --accent: #1A428A;
-    --primary: #1A428A;
-    --primary-light: #1A428A;
-    --accent-grad: linear-gradient(135deg, #1A428A, #1A428A);
+    --accent: #0077B6;
+    --primary: #023e8a;
+    --primary-light: #0096C7;
+    --accent-grad: linear-gradient(135deg, #023e8a, #0077B6);
     --ease: cubic-bezier(.25, .9, .25, 1);
     --blur: 28px;
     --focus-ring: 0 0 0 3px rgba(10, 132, 255, 0.35);
     --anim-short: .28s var(--ease);
     --anim-med: .6s var(--ease);
-    --hero-blue-start: #0a2fd1;
-    --hero-blue-mid: #2554ff;
-    --hero-blue-end: #7f3dff;
+    --hero-blue-start: #03045e;
+    --hero-blue-mid: #023e8a;
+    --hero-blue-end: #0077B6;
     --hero-pill-bg: rgba(255, 255, 255, 0.08);
     --hero-pill-border: rgba(255, 255, 255, 0.25);
     --hero-text: #f4f6ff;
 
     /* iOS System Colors */
-    --sys-blue: #1A428A;
-    --sys-red: #00A651;
-    --sys-green: #00A651;
-    --sys-orange: #00A651;
-    --sys-yellow: #00A651;
-    --sys-pink: #00A651;
-    --sys-purple: #1A428A;
-    --sys-indigo: #1A428A;
-    --sys-teal: #1A428A;
-    --sys-mint: #00A651;
+    --sys-blue: #0077B6;
+    --sys-red: #023e8a;
+    --sys-green: #00B4D8;
+    --sys-orange: #48CAE4;
+    --sys-yellow: #90E0EF;
+    --sys-pink: #ADE8F4;
+    --sys-purple: #03045e;
+    --sys-indigo: #023e8a;
+    --sys-teal: #0096C7;
+    --sys-mint: #48CAE4;
     --sys-brown: #1F1F1F;
     --sys-gray: #1F1F1F;
 
@@ -53,18 +53,18 @@
     --gradient-gloss: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.35));
     /* Analytical futuristic additions */
     --analytical-bg-gradient:
-        radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 85% 80%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
-        linear-gradient(135deg, #1A428A 0%, #1A428A 50%, #1A428A 100%);
-    --analytical-grid-color: rgba(148, 163, 184, 0.08);
-    --analytical-grid-accent: rgba(59, 130, 246, 0.12);
-    --analytical-neon-blue: #1A428A;
-    --analytical-neon-cyan: #00A651;
-    --analytical-neon-purple: #1A428A;
-    --analytical-card-glow: 0 0 0 1px rgba(59, 130, 246, 0.1), 0 0 20px -4px rgba(59, 130, 246, 0.3), 0 0 40px -8px rgba(139, 92, 246, 0.2);
-    --analytical-network-color: rgba(52, 211, 235, 0.15);
-    --analytical-data-flow: rgba(59, 130, 246, 0.4);
+        radial-gradient(circle at 15% 20%, rgba(3, 4, 94, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 80%, rgba(0, 119, 182, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 150, 199, 0.08) 0%, transparent 60%),
+        linear-gradient(135deg, #03045e 0%, #023e8a 50%, #0077B6 100%);
+    --analytical-grid-color: rgba(0, 180, 216, 0.08);
+    --analytical-grid-accent: rgba(0, 119, 182, 0.12);
+    --analytical-neon-blue: #0077B6;
+    --analytical-neon-cyan: #00B4D8;
+    --analytical-neon-purple: #023e8a;
+    --analytical-card-glow: 0 0 0 1px rgba(0, 119, 182, 0.1), 0 0 20px -4px rgba(0, 119, 182, 0.3), 0 0 40px -8px rgba(0, 150, 199, 0.2);
+    --analytical-network-color: rgba(72, 202, 228, 0.15);
+    --analytical-data-flow: rgba(0, 119, 182, 0.4);
 }
 
 /* Dark theme overrides (activated via data-theme="dark" on <html>) */
@@ -106,7 +106,7 @@ body,
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, var(--hero-blue-start), var(--hero-blue-mid), var(--hero-blue-end));
+    background: linear-gradient(135deg, var(--sys-purple), var(--sys-indigo), var(--sys-blue));
     color: var(--text);
     -webkit-font-smoothing: antialiased;
     line-height: 1.45;
@@ -137,7 +137,7 @@ body.custom-cursor-enabled [onclick] {
     left: 0;
     width: 22px;
     height: 22px;
-    border: 2px solid #1A428A;
+    border: 2px solid #0077B6;
     border-radius: 50%;
     transform: translate3d(-50%, -50%, 0);
     pointer-events: none;
@@ -152,12 +152,12 @@ body.custom-cursor-enabled [onclick] {
 .custom-cursor.hovering {
     width: 36px;
     height: 36px;
-    background: rgba(33, 150, 243, 0.15);
+    background: rgba(0, 180, 216, 0.15);
     backdrop-filter: blur(2px);
 }
 
 .custom-cursor.active {
-    background: #1A428A;
+    background: #0077B6;
     border-color: #fff;
 }
 
@@ -167,7 +167,7 @@ body.custom-cursor-enabled [onclick] {
     left: 50%;
     width: 10px;
     height: 10px;
-    background: #1A428A;
+    background: #0077B6;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     animation: cursorRipple 0.6s ease-out forwards;
