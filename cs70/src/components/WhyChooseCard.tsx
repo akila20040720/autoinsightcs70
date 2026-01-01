@@ -29,8 +29,8 @@ export default function WhyChooseCard({ icon, title, description, delay = 0 }: W
         display: 'inline-flex',
         padding: '18px',
         borderRadius: '50%',
-        background: 'linear-gradient(145deg,#f9d97c 0%, #3681f7 60%)',
-        boxShadow: '0 10px 32px -8px rgba(249,217,124,0.6), 0 4px 18px -6px rgba(54,129,247,0.4)',
+        background: 'linear-gradient(145deg, #48CAE4 0%, #023e8a 60%)',
+        boxShadow: '0 10px 32px -8px rgba(72,202,228,0.6), 0 4px 18px -6px rgba(0,119,182,0.4)',
         color: '#0f172a'
       }}>{icon}</div>
       <h3 style={{ fontSize: 20, marginBottom: 12, fontWeight: 600, color:'#0b0c10' }}>{title}</h3>

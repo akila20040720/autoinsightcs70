@@ -86,7 +86,7 @@ export default function Contact() {
       setTimeout(() => {
         setSubmitStatus("idle");
       }, 3000);
-    } catch (error) {
+    } catch {
       setSubmitStatus("error");
       setTimeout(() => {
         setSubmitStatus("idle");
@@ -182,17 +182,17 @@ export default function Contact() {
         >
           <svg width="500" height="500" viewBox="0 0 500 500" fill="none">
             <g opacity="0.8">
-              <ellipse cx="250" cy="350" rx="180" ry="40" fill="rgba(54, 129, 247, 0.1)" />
+              <ellipse cx="250" cy="350" rx="180" ry="40" fill="rgba(0, 119, 182, 0.1)" />
               <path
                 d="M80 300 Q100 200 120 150 L200 100 Q250 80 300 100 L380 150 Q400 200 420 300"
-                stroke="rgba(54, 129, 247, 0.4)"
+                stroke="rgba(0, 119, 182, 0.4)"
                 strokeWidth="2"
                 fill="none"
               />
-              <circle cx="150" cy="330" r="35" fill="rgba(54, 129, 247, 0.2)" />
-              <circle cx="350" cy="330" r="35" fill="rgba(54, 129, 247, 0.2)" />
-              <rect x="180" y="180" width="140" height="80" rx="10" fill="rgba(54, 129, 247, 0.15)" />
-              <rect x="200" y="150" width="50" height="40" rx="5" fill="rgba(54, 129, 247, 0.2)" />
+              <circle cx="150" cy="330" r="35" fill="rgba(0, 119, 182, 0.2)" />
+              <circle cx="350" cy="330" r="35" fill="rgba(0, 119, 182, 0.2)" />
+              <rect x="180" y="180" width="140" height="80" rx="10" fill="rgba(0, 119, 182, 0.15)" />
+              <rect x="200" y="150" width="50" height="40" rx="5" fill="rgba(0, 119, 182, 0.2)" />
             </g>
           </svg>
         </motion.div>
@@ -212,12 +212,12 @@ export default function Contact() {
           <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
             <path
               d="M50 250 Q70 180 90 150 L160 120 Q200 105 240 120 L310 150 Q330 180 350 250"
-              stroke="rgba(139, 92, 246, 0.3)"
+              stroke="rgba(0, 150, 199, 0.3)"
               strokeWidth="2"
               fill="none"
             />
-            <circle cx="120" cy="280" r="30" fill="rgba(139, 92, 246, 0.15)" />
-            <circle cx="280" cy="280" r="30" fill="rgba(139, 92, 246, 0.15)" />
+            <circle cx="120" cy="280" r="30" fill="rgba(0, 150, 199, 0.15)" />
+            <circle cx="280" cy="280" r="30" fill="rgba(0, 150, 199, 0.15)" />
           </svg>
         </motion.div>
 
@@ -240,7 +240,7 @@ export default function Contact() {
               fontWeight: 800,
               marginBottom: 20,
               color: "#ffffff",
-              textShadow: "0 4px 12px rgba(54, 129, 247, 0.4), 0 2px 8px rgba(139, 92, 246, 0.3)",
+              textShadow: "0 4px 12px rgba(0, 119, 182, 0.4), 0 2px 8px rgba(0, 150, 199, 0.3)",
             }}
             variants={itemVariants}
           >

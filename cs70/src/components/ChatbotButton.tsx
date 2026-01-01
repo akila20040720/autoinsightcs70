@@ -22,7 +22,7 @@ export default function ChatbotButton() {
           width: "60px",
           height: "60px",
           borderRadius: "50%",
-          background: "linear-gradient(135deg, #3681f7 0%, #5a9aff 100%)",
+          background: "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)",
           border: "none",
           cursor: "pointer",
           display: "flex",
@@ -156,7 +156,7 @@ export default function ChatbotButton() {
                   onClick={() => alert("This would navigate to pricing trends")}
                   style={{
                     background: "#fff",
-                    border: "1px solid rgba(54, 129, 247, 0.3)",
+                    border: "1px solid rgba(0, 119, 182, 0.3)",
                     borderRadius: "8px",
                     padding: "0.75rem",
                     cursor: "pointer",
@@ -166,12 +166,12 @@ export default function ChatbotButton() {
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(54, 129, 247, 0.05)";
-                    e.currentTarget.style.borderColor = "#3681f7";
+                    e.currentTarget.style.background = "rgba(0, 119, 182, 0.05)";
+                    e.currentTarget.style.borderColor = "#0077B6";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.3)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.3)";
                   }}
                 >
                   📊 Show me pricing trends
@@ -180,7 +180,7 @@ export default function ChatbotButton() {
                   onClick={() => alert("This would show popular models")}
                   style={{
                     background: "#fff",
-                    border: "1px solid rgba(54, 129, 247, 0.3)",
+                    border: "1px solid rgba(0, 119, 182, 0.3)",
                     borderRadius: "8px",
                     padding: "0.75rem",
                     cursor: "pointer",
@@ -190,12 +190,12 @@ export default function ChatbotButton() {
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(54, 129, 247, 0.05)";
-                    e.currentTarget.style.borderColor = "#3681f7";
+                    e.currentTarget.style.background = "rgba(0, 119, 182, 0.05)";
+                    e.currentTarget.style.borderColor = "#0077B6";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.3)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.3)";
                   }}
                 >
                   🚗 What are the most popular models?
@@ -204,7 +204,7 @@ export default function ChatbotButton() {
                   onClick={() => alert("This would explain features")}
                   style={{
                     background: "#fff",
-                    border: "1px solid rgba(54, 129, 247, 0.3)",
+                    border: "1px solid rgba(0, 119, 182, 0.3)",
                     borderRadius: "8px",
                     padding: "0.75rem",
                     cursor: "pointer",
@@ -214,12 +214,12 @@ export default function ChatbotButton() {
                     transition: "all 0.2s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(54, 129, 247, 0.05)";
-                    e.currentTarget.style.borderColor = "#3681f7";
+                    e.currentTarget.style.background = "rgba(0, 119, 182, 0.05)";
+                    e.currentTarget.style.borderColor = "#0077B6";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "#fff";
-                    e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.3)";
+                    e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.3)";
                   }}
                 >
                   ℹ️ How does AutoInsight work?

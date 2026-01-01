@@ -154,7 +154,7 @@ export default function Navbar() {
                       height: "3px",
                       background: scrolled
                         ? "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)"
-                        : "linear-gradient(135deg, #ffffff 0%, #e8ebf0 100%)",
+                        : "linear-gradient(135deg, #CAF0F8 0%, #90E0EF 100%)",
                       borderRadius: "2px",
                       boxShadow: scrolled ? "0 4px 12px rgba(0, 119, 182, 0.25)" : "0 4px 12px rgba(255,255,255,0.35)",
                     }}
@@ -178,8 +178,8 @@ export default function Navbar() {
             style={{
               background: scrolled
                 ? "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)"
-                : "rgba(255,255,255,0.92)",
-              color: scrolled ? "#ffffff" : "#023e8a",
+                : "rgba(202,240,248,0.92)",
+              color: scrolled ? "#ffffff" : "#03045e",
               padding: "10px 24px",
               borderRadius: "24px",
               textDecoration: "none",
@@ -211,11 +211,11 @@ export default function Navbar() {
           style={{
             background: scrolled
               ? "rgba(255,255,255,0.75)"
-              : "rgba(255,255,255,0.18)",
+              : "rgba(202,240,248,0.18)",
             border: scrolled
               ? "1px solid rgba(0,0,0,0.08)"
-              : "1px solid rgba(255,255,255,0.35)",
-            color: scrolled ? "#023e8a" : "#ffffff",
+              : "1px solid rgba(144,224,239,0.35)",
+            color: scrolled ? "#023e8a" : "#CAF0F8",
             width: "44px",
             height: "44px",
             borderRadius: "12px",
@@ -265,7 +265,7 @@ export default function Navbar() {
                 WebkitBackdropFilter: "blur(20px) saturate(160%)",
                 border: scrolled
                   ? "1px solid rgba(0,0,0,0.08)"
-                  : "1px solid rgba(255,255,255,0.25)",
+                  : "1px solid rgba(144,224,239,0.25)",
                 borderRadius: "16px",
                 padding: "20px",
                 boxShadow: "0 20px 50px rgba(0, 0, 0, 0.15)",
@@ -297,8 +297,8 @@ export default function Navbar() {
                         padding: "12px 16px",
                         borderRadius: "12px",
                         color: scrolled
-                          ? (isActive(item.path) ? "##023e8a" : "#0b0c10")
-                          : (isActive(item.path) ? "#ffffff" : "rgba(255,255,255,0.92)"),
+                          ? (isActive(item.path) ? "#023e8a" : "#0b0c10")
+                          : (isActive(item.path) ? "#CAF0F8" : "rgba(202,240,248,0.92)"),
                         textDecoration: "none",
                         fontSize: "15px",
                         fontWeight: 500,
@@ -306,8 +306,8 @@ export default function Navbar() {
                         position: "relative",
                         background: isActive(item.path)
                           ? scrolled
-                            ? "rgba(26, 66, 138, 0.12)"
-                            : "rgba(255,255,255,0.15)"
+                            ? "rgba(0, 119, 182, 0.12)"
+                            : "rgba(144,224,239,0.15)"
                           : "transparent",
                       }}
                     >
@@ -321,7 +321,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: navItems.length * 0.05 }}
-                  style={{ marginTop: "8px", borderTop: scrolled ? "1px solid rgba(54, 129, 247, 0.15)" : "1px solid rgba(54, 129, 247, 0.1)", paddingTop: "8px" }}
+                  style={{ marginTop: "8px", borderTop: scrolled ? "1px solid rgba(0, 119, 182, 0.15)" : "1px solid rgba(0, 150, 199, 0.1)", paddingTop: "8px" }}
                 >
                   <Link
                     to="/contact"
@@ -332,8 +332,8 @@ export default function Navbar() {
                       borderRadius: "12px",
                       background: scrolled
                         ? "linear-gradient(135deg, #023e8a 0%, #0077B6 100%)"
-                        : "rgba(255,255,255,0.9)",
-                      color: scrolled ? "#ffffff" : "#023e8a",
+                        : "rgba(202,240,248,0.9)",
+                      color: scrolled ? "#ffffff" : "#03045e",
                       textDecoration: "none",
                       fontSize: "15px",
                       fontWeight: 600,

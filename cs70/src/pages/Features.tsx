@@ -66,7 +66,7 @@ export default function Features() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(54, 129, 247, 0.5)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(0, 119, 182, 0.5)" }}
             whileTap={{ scale: 0.95 }}
             onClick={() => {
               const featuresSection = document.querySelector('.features-white-section');
@@ -104,7 +104,7 @@ export default function Features() {
                 whileHover={{ 
                   y: -10, 
                   scale: 1.05,
-                  boxShadow: "0 12px 32px rgba(54, 129, 247, 0.2)",
+                  boxShadow: "0 12px 32px rgba(0, 119, 182, 0.2)",
                   transition: { duration: 0.3 }
                 }}
               >

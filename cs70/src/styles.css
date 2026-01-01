@@ -428,7 +428,7 @@ body:before {
     bottom: 6px;
     height: 3px;
     border-radius: 3px;
-    background: linear-gradient(90deg, #1A428A, #1A428A, #00A651);
+    background: linear-gradient(90deg, #023e8a, #0077B6, #00B4D8);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform .45s var(--ease);
@@ -1465,7 +1465,7 @@ body:before {
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.5px;
-    background: linear-gradient(90deg, #1A428A, #1A428A, #00A651);
+    background: linear-gradient(90deg, #023e8a, #0077B6, #00B4D8);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -1521,7 +1521,7 @@ body:before {
 }
 
 [data-theme="dark"] .pro-footer .f-col a:hover {
-    background: rgba(54, 129, 247, 0.25);
+    background: rgba(0, 119, 182, 0.25);
     color: var(--text);
 }
 
@@ -1563,7 +1563,7 @@ body:before {
 
 .footer-social .social:hover {
     transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 10px 28px -6px rgba(54, 129, 247, 0.35);
+    box-shadow: 0 10px 28px -6px rgba(0, 119, 182, 0.35);
 }
 
 [data-theme="dark"] .footer-social .social {
@@ -1572,7 +1572,7 @@ body:before {
 
 .footer-social .footer-contact a {
     font-size: 14px;
-    color: #1A428A;
+    color: #023e8a;
     text-decoration: none;
     font-weight: 600;
 }
@@ -1609,7 +1609,7 @@ body:before {
 }
 
 .footer-bottom .policies a:hover {
-    color: #1A428A;
+    color: #023e8a;
 }
 
 [data-theme="dark"] .footer-bottom .policies a {
@@ -2037,12 +2037,12 @@ button:focus-visible {
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: radial-gradient(circle, #00A651, #1A428A);
+    background: radial-gradient(circle, #00B4D8, #023e8a);
     top: 0;
     left: 50%;
     margin-left: -11px;
     animation: orbitSpin 13s linear infinite;
-    box-shadow: 0 0 0 2px rgba(249, 217, 124, 0.5), 0 0 18px rgba(54, 129, 247, 0.5);
+    box-shadow: 0 0 0 2px rgba(72, 202, 228, 0.5), 0 0 18px rgba(0, 119, 182, 0.5);
 }
 
 @keyframes orbitSpin {
@@ -2473,10 +2473,10 @@ html {
 
 
     background: linear-gradient(135deg,
-            #1d4ed8 0%,
-            #2563eb 35%,
-            #4f46e5 70%,
-            #9333ea 100%);
+            #03045e 0%,
+            #023e8a 35%,
+            #0077B6 70%,
+            #0096C7 100%);
     color: white;
     overflow: hidden;
 }
@@ -2524,10 +2524,9 @@ html {
     margin-top: 24px;
     padding: 12px 28px;
     background: linear-gradient(135deg,
-            #1d4ed8 0%,
-            #2563eb 35%,
-            #4f46e5 70%,
-            #9333ea 100%);
+            #023e8a 0%,
+            #0077B6 50%,
+            #00B4D8 100%);
     border: none;
     border-radius: 50px;
     backdrop-filter: blur(6px);
@@ -2536,15 +2535,14 @@ html {
     cursor: pointer;
     font-weight: 600;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 119, 182, 0.4);
 }
 
 .features-hero-button:hover {
     background: linear-gradient(135deg,
-            #1d4ed8 0%,
-            #2563eb 35%,
-            #4f46e5 70%,
-            #9333ea 100%);
+            #0077B6 0%,
+            #00B4D8 50%,
+            #48CAE4 100%);
     transform: translateY(-2px);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
 }
@@ -2601,7 +2599,7 @@ html {
     /* Light gray border */
     border-radius: var(--radius-lg, 16px);
     padding: 26px;
-    color: #1A428A;
+    color: #023e8a;
     /* Dark slate text */
 
     /* Layout */
@@ -2625,16 +2623,16 @@ html {
 
     /* THE DARK GRADIENT BACKGROUND ON HOVER */
     background: linear-gradient(135deg,
-            rgba(15, 23, 42, 0.98) 0%,
-            rgba(49, 46, 129, 0.98) 100%);
+            rgba(0, 4, 94, 0.98) 0%,
+            rgba(2, 62, 138, 0.98) 100%);
 
     /* Glowing Blue/Cyan Border */
-    border-color: rgba(56, 189, 248, 0.5);
+    border-color: rgba(0, 180, 216, 0.5);
 
     /* Deep Shadow */
     box-shadow:
         0 20px 40px -6px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(56, 189, 248, 0.2);
+        0 0 0 1px rgba(0, 180, 216, 0.2);
 }
 
 /* SHINE ANIMATION */
@@ -2677,7 +2675,7 @@ html {
     height: 52px;
 
     /* Initial State: Subtle Blue Background */
-    background: rgba(59, 130, 246, 0.08);
+    background: rgba(0, 119, 182, 0.08);
     border-radius: 12px;
     /* var(--radius-md) */
     font-size: 24px;
@@ -2685,12 +2683,12 @@ html {
     transition: all 0.3s ease;
 }
 
-/* HOVER EFFECT: Dark Blue to Magenta */
+/* HOVER EFFECT: Dark Blue to Cyan */
 .feature-card:hover .feature-icon-wrapper {
-    background: linear-gradient(135deg, #1A428A 0%, #1A428A 100%);
+    background: linear-gradient(135deg, #023e8a 0%, #0077B6 100%);
     color: white;
     transform: scale(1.1) rotate(3deg);
-    box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
 }
 
 /* --- TYPOGRAPHY INSIDE CARDS --- */
@@ -2699,7 +2697,7 @@ html {
     font-size: 19px;
     font-weight: 700;
     margin-bottom: 10px;
-    color: #1A428A;
+    color: #023e8a;
     /* Dark text for white background */
     letter-spacing: -0.01em;
     transition: color 0.3s ease;
