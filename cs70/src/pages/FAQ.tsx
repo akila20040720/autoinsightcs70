@@ -14,26 +14,184 @@ export default function FAQ() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const faqData: FAQItem[] = [
+    // General
     {
       id: 1,
       category: "general",
       question: "What is AutoInsight?",
-      answer: "AutoInsight is a comprehensive vehicle market analytics platform designed specifically for Sri Lanka. We provide real-time pricing data, market trends, pricing forecasts, and actionable insights to help buyers, sellers, and dealers make informed decisions in the vehicle market.",
+      answer: "AutoInsight is a vehicle data analytics platform designed to help users understand pricing trends, market demand, and vehicle value in the Sri Lankan automotive market. It combines real-world listing data, historical records, and machine learning insights into one easy-to-use dashboard.",
       icon: "🚗"
     },
     {
       id: 2,
       category: "general",
-      question: "How does AutoInsight collect vehicle data?",
-      answer: "We collect vehicle data from multiple sources including online classified platforms, dealer networks, auction reports, and market surveys. Our advanced algorithms then analyze this data to identify patterns, trends, and pricing benchmarks across different vehicle categories and conditions.",
-      icon: "📊"
+      question: "Who can use AutoInsight?",
+      answer: "AutoInsight is built for vehicle buyers, sellers, motor dealers, analysts, students, and anyone interested in data-driven automotive insights.",
+      icon: "👥"
     },
     {
       id: 3,
       category: "general",
-      question: "Is AutoInsight available for both new and used vehicles?",
-      answer: "Yes, AutoInsight covers both new and used vehicle markets in Sri Lanka. Our platform provides comprehensive insights for all vehicle types including cars, SUVs, vans, motorcycles, and commercial vehicles.",
-      icon: "🔄"
+      question: "Do I need technical knowledge to use AutoInsight?",
+      answer: "No. The platform is designed for both technical and non-technical users, with simple dashboards, visual charts, and clear explanations.",
+      icon: "💡"
+    },
+    {
+      id: 4,
+      category: "general",
+      question: "Is AutoInsight officially connected to vehicle sellers?",
+      answer: "No. AutoInsight is an independent analytics and insight platform and does not sell vehicles directly.",
+      icon: "🔗"
+    },
+    
+    // Pricing
+    {
+      id: 5,
+      category: "pricing",
+      question: "Is AutoInsight free to use?",
+      answer: "Yes. AutoInsight offers free access to limited insights and dashboards. Advanced features require a registered account.",
+      icon: "💰"
+    },
+    {
+      id: 6,
+      category: "pricing",
+      question: "Are price predictions exact values?",
+      answer: "No. Price predictions are estimates, not guaranteed prices. They reflect historical data and market trends to support decision-making.",
+      icon: "📈"
+    },
+    {
+      id: 7,
+      category: "pricing",
+      question: "Why might AutoInsight prices differ from market listings?",
+      answer: "Prices may vary due to negotiation, vehicle condition, urgency of sale, or recent market changes not yet reflected in the data.",
+      icon: "🔍"
+    },
+    {
+      id: 8,
+      category: "pricing",
+      question: "Does AutoInsight charge per prediction?",
+      answer: "No. Predictions are included as part of the platform features and are not charged per use.",
+      icon: "💳"
+    },
+    
+    // Features
+    {
+      id: 9,
+      category: "features",
+      question: "What features does AutoInsight offer?",
+      answer: "AutoInsight includes: Market trend analytics, Vehicle price prediction, Vehicle comparison tools, Regional demand analysis, AI-powered explanations, and User reviews and ratings.",
+      icon: "⚙️"
+    },
+    {
+      id: 10,
+      category: "features",
+      question: "Can I compare multiple vehicles?",
+      answer: "Yes. You can compare up to three vehicles at once based on price trends, specifications, and market behavior.",
+      icon: "⚖️"
+    },
+    {
+      id: 11,
+      category: "features",
+      question: "What is the AI Trend Explanation feature?",
+      answer: "It provides human-readable explanations of charts and predictions, helping users understand why a trend or price estimate exists.",
+      icon: "🤖"
+    },
+    {
+      id: 12,
+      category: "features",
+      question: "Can I save my preferences?",
+      answer: "Yes. Logged-in users can customize preferences such as notifications, display units, and dashboard defaults.",
+      icon: "⚙️"
+    },
+    
+    // Subscription
+    {
+      id: 13,
+      category: "subscription",
+      question: "Do I need a subscription to use AutoInsight?",
+      answer: "No subscription is required for basic usage. Creating a free account unlocks additional analytics and personalization features.",
+      icon: "📦"
+    },
+    {
+      id: 14,
+      category: "subscription",
+      question: "Are there paid plans available?",
+      answer: "Currently, AutoInsight focuses on free and academic use. Future premium plans may be introduced with advanced tools.",
+      icon: "💎"
+    },
+    {
+      id: 15,
+      category: "subscription",
+      question: "Can I cancel my account anytime?",
+      answer: "Yes. Users can delete their account and associated data at any time.",
+      icon: "🚪"
+    },
+    {
+      id: 16,
+      category: "subscription",
+      question: "Will my data be retained after account deletion?",
+      answer: "No. Personal data and user-generated content are removed in accordance with data minimization principles.",
+      icon: "🗑️"
+    },
+    
+    // Technical
+    {
+      id: 17,
+      category: "technical",
+      question: "How does AutoInsight generate price predictions?",
+      answer: "The platform uses machine learning models trained on historical vehicle data, considering factors like model, year, mileage, engine type, and region.",
+      icon: "🧠"
+    },
+    {
+      id: 18,
+      category: "technical",
+      question: "Is AutoInsight using real-time data?",
+      answer: "Data is updated regularly, but it may not always reflect real-time changes or last-minute market shifts.",
+      icon: "⏱️"
+    },
+    {
+      id: 19,
+      category: "technical",
+      question: "Is AutoInsight secure?",
+      answer: "Yes. The platform uses encrypted connections (HTTPS), secure authentication, and protected data storage.",
+      icon: "🔒"
+    },
+    {
+      id: 20,
+      category: "technical",
+      question: "Does AutoInsight store personal seller information?",
+      answer: "No. Only non-personal vehicle attributes are used. Seller names, phone numbers, or contact details are never stored.",
+      icon: "🛡️"
+    },
+    
+    // Support
+    {
+      id: 21,
+      category: "support",
+      question: "How can I get help if something isn't working?",
+      answer: "You can contact support through the platform's contact section or report issues directly from your dashboard.",
+      icon: "🛠️"
+    },
+    {
+      id: 22,
+      category: "support",
+      question: "How can I report incorrect data or predictions?",
+      answer: "Feedback can be submitted through the platform to help improve accuracy and model performance.",
+      icon: "📝"
+    },
+    {
+      id: 23,
+      category: "support",
+      question: "Are reviews moderated?",
+      answer: "Yes. Reviews are automatically checked for spam, abuse, and inappropriate content to maintain quality and trust.",
+      icon: "✅"
+    },
+    {
+      id: 24,
+      category: "support",
+      question: "Does AutoInsight provide customer service advice?",
+      answer: "AutoInsight provides data insights only and does not offer legal, financial, or professional advice.",
+      icon: "💬"
     }
   ];
 
@@ -152,7 +310,7 @@ export default function FAQ() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         style={{
-          background: "transparent",
+          background: "linear-gradient(135deg, #023e8a 0%, #0077B6 50%, #023e8a 100%)",
           position: "relative",
           overflow: "hidden",
           minHeight: "100vh",
@@ -163,41 +321,6 @@ export default function FAQ() {
           paddingTop: "120px",
         }}
       >
-        {/* Background Video */}
-        <video
-          aria-hidden="true"
-          className="faq-bg-video"
-          src="/video.mp4"
-          playsInline
-          autoPlay
-          muted
-          loop
-          preload="metadata"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: -1,
-            filter: 'brightness(0.65) saturate(1.05)',
-            transform: 'translateZ(0)',
-            pointerEvents: 'none'
-          }}
-        />
-
-        {/* Subtle overlay to ensure text readability over video */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.25) 20%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.25) 100%)',
-            zIndex: 0
-          }}
-        />
-
         {/* Animated background elements */}
         <motion.div
           style={{
