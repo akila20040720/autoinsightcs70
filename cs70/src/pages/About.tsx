@@ -34,16 +34,16 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-     image : "images/akilaw_20241303.jpeg"
+     image : "/Images/akilaw_20241303.jpeg"
   },
   { 
     name: "Dulan Nimnaka", 
     role: "Backend Developer", 
     desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
-    linkedin: "https://linkedin.com/in/dulan-nimnaka",
+    linkedin: "https://linkedin.com/in/dulannimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
-    image : "images/dulan_20240503.jpg"
+    image: "/Images/dulan_20240503.jpg"
   },
   { 
     name: "Shaveen Peiris", 
@@ -52,7 +52,7 @@ export default function About() {
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
-    image : "images/shaveen_20240515.jpeg"
+    image: "/Images/shaveen_20240515.jpeg"
   },
   { 
     name: "Sanidu Samrasinghe", 
@@ -61,7 +61,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
-    image : "images/sanidu_20240641.jpeg"
+    image: "/Images/sanidu_20240641.jpeg"
   },
   { 
     name: "Sanara Perera", 
@@ -70,7 +70,7 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
-    image : "images/sanara_20240773.jpeg"
+    image: "/Images/sanara_20240773.jpeg"
   },
   { 
     name: "Hasandi Peiris", 
@@ -79,7 +79,7 @@ export default function About() {
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
-    image : "images/hasandi_20240642.jpeg"
+    image: "/Images/hasandi_20240642.jpeg"
   }
 ];
 
