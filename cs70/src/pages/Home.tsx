@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import Hero from "../components/Hero";
+import FuturisticHero3D from "../components/FuturisticHero3D";
 import ProjectCard from "../components/ProjectCard";
 import FeatureCard from "../components/FeatureCard";
 import WhyChooseCard from "../components/WhyChooseCard";
@@ -43,19 +43,19 @@ export default function Home() {
   ];
 
   const features = [
-    { icon: <FcBarChart className="w-12 h-12" />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
-    { icon: <FcSearch className="w-12 h-12" />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
-    { icon: <FcBullish className="w-12 h-12" />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
-    { icon: <FcGlobe className="w-12 h-12" />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
-    { icon: <FcCurrencyExchange className="w-12 h-12" />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
-    { icon: <FcSmartphoneTablet className="w-12 h-12" />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
+    { icon: <FcBarChart size={48} />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
+    { icon: <FcSearch size={48} />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
+    { icon: <FcBullish size={48} />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
+    { icon: <FcGlobe size={48} />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
+    { icon: <FcCurrencyExchange size={48} />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
+    { icon: <FcSmartphoneTablet size={48} />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
   ];
 
   const whyChoose = [
-    { icon: <FcCheckmark className="w-12 h-12" />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
-    { icon: <FcFlashOn className="w-12 h-12" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
-    { icon: <FcSafe className="w-12 h-12" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
-    { icon: <FcIdea className="w-12 h-12" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
+    { icon: <FcCheckmark size={48} />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
+    { icon: <FcFlashOn size={48} />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
+    { icon: <FcSafe size={48} />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
+    { icon: <FcIdea size={48} />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
   ];
 
   const ratings = [
@@ -102,7 +102,7 @@ export default function Home() {
 
   return (
     <>
-      <Hero center />
+      <FuturisticHero3D />
 
       {/* How It Works Section */}
       <motion.section 
