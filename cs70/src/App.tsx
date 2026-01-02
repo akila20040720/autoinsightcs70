@@ -12,6 +12,7 @@ import Features from "./pages/Features";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import CustomCursor from "./components/CustomCursor";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function App(): React.ReactElement {
   return (
@@ -32,6 +33,7 @@ export default function App(): React.ReactElement {
       </main>
       <Footer />
       <CustomCursor />
+      <ScrollToTop />
       {/* <CookieConsent /> */}
     </>
   );
