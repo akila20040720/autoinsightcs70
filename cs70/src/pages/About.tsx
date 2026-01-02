@@ -70,7 +70,7 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
-    image : "images/Sanara_20240773.jpeg"
+    image : "images/sanara_20240773.jpeg"
   },
   { 
     name: "Hasandi Peiris", 
