@@ -20,58 +20,73 @@ interface Vehicle {
 const vehicles: Vehicle[] = [
   {
     id: 0,
-    name: "Petrol Sedan",
-    category: "Most Popular",
+    name: "Honda Vezel",
+    category: "Best Choice",
     gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    price: "4.5M",
+    price: "19.5M",
     change: "+8.2%",
-    image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&q=80",
+    image: "Vehicles/honda-vezel.jpg",
     stats: {
       listings: "2,340",
-      avgPrice: "LKR 4.5M",
+      avgPrice: "LKR 19.5M",
       trend: "Rising"
     }
   },
   {
     id: 1,
-    name: "Hybrid SUV",
-    category: "Eco-Friendly",
+    name: "Nissan Magnite",
+    category: "Budget Friendly",
     gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-    price: "8.2M",
+    price: "9.2M",
     change: "+12.5%",
-    image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1200&q=80",
+    image: "Vehicles/magnite.jpg",
     stats: {
       listings: "1,856",
-      avgPrice: "LKR 8.2M",
-      trend: "Hot"
+      avgPrice: "LKR 9.2M",
+      trend: "Increasing"
     }
   },
   {
     id: 2,
-    name: "Electric Vehicle",
-    category: "Future Ready",
+    name: "Toyota Yaris",
+    category: "Sub Compact",
     gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-    price: "12M",
-    change: "+24.1%",
-    image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=1200&q=80",
+    price: "82M",
+    change: "-24.1%",
+    image: "Vehicles/yaris.jpg",
     stats: {
       listings: "892",
-      avgPrice: "LKR 12M",
-      trend: "Growing"
+      avgPrice: "LKR 82M",
+      trend: "decreasing"
     }
   },
   {
     id: 3,
-    name: "Commercial",
-    category: "Business Ready",
+    name: "Toyota Raize",
+    category: "Famous Choice",
     gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-    price: "6.8M",
+    price: "13.8M",
     change: "+5.3%",
-    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=1200&q=80",
+    image: "Vehicles/raize.jpg",
     stats: {
       listings: "1,234",
-      avgPrice: "LKR 6.8M",
-      trend: "Stable"
+      avgPrice: "LKR 13.8M",
+      trend: "increasing"
+    }
+  },
+
+  {
+    id: 3,
+    name: "Toyota Premio",
+    category: "Sri Lanka's Favorite",
+    gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+    price: "16.8M",
+    change: "-15.3%",
+    image: "Vehicles/premio.jpg",
+    stats: {
+      listings: "234",
+      avgPrice: "LKR 16.8M",
+      trend: "decreasing"
     }
   }
 ];
