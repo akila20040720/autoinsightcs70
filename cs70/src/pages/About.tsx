@@ -34,7 +34,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
-     image : "images/akilaw_20241303.jpeg"
+     image : "images/akilaW_20241303.jpeg"
   },
   { 
     name: "Dulan Nimnaka", 

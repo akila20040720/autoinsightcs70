@@ -56,7 +56,7 @@ const vehicles: Vehicle[] = [
     image: "Vehicles/yaris.jpg",
     stats: {
       listings: "892",
-      avgPrice: "LKR 82M",
+      avgPrice: "LKR 8.2M",
       trend: "decreasing"
     }
   },
