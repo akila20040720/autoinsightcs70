@@ -100,23 +100,26 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
               {/* Logo Circle */}
               <div className="splash-logo-circle">
                 <div className="splash-logo-inner">
-                  {/* Car Icon SVG */}
-                  <svg
-                    className="splash-car-icon"
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 17h-2v-6l2-2 1-2h10l1 2 2 2v6h-2" />
-                    <circle cx="7" cy="17" r="2" />
-                    <circle cx="17" cy="17" r="2" />
-                    <path d="M5 9l1.5-3h11L19 9" />
-                  </svg>
+                  
+                  {/* AutoInsight logo */}
+                  <img
+                    src="/assets/AutoInsightLogo.png"
+                    alt ="AutoInsight Logo"
+                    className="splash-logo-image"
+                    style={{ 
+                        width: '64px',      
+                        height: '64px',     
+                        objectFit: 'contain',
+                        position: 'relative',
+                        zIndex: 10,
+                        filter: 'drop-shadow(0 4px 12px rgba(255, 255, 255, 0.5))drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) brightness(1.2) contrast(1.1)'
+
+                                 
+                     }}
+                  />
+                
+  
+                  
                   
                   {/* Orbiting Dots */}
                   <div className="splash-orbit-dot splash-orbit-dot-1" />

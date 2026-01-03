@@ -2979,13 +2979,24 @@ html {
   }
 }
 
-/* Car Icon */
-.splash-car-icon {
+/* Logo Image */
+.splash-logo-image {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  animation: splashCarBounce 2s ease-in-out infinite;
+  animation: splashLogoBounce 2s ease-in-out infinite;
+}
+* Enhanced Logo Image Styles */
+.splash-logo-image {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) brightness(1.1);
+  animation: splashLogoBounce 2s ease-in-out infinite;
+  position: relative;
+  z-index: 10;
+  /* If your logo has a dark background, add this: */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
 }
 
-@keyframes splashCarBounce {
+@keyframes splashLogoBounce {
   0%, 100% {
     transform: translateY(0);
   }
@@ -3334,7 +3345,7 @@ html {
     height: 75px;
   }
 
-  .splash-car-icon {
+  .splash-logo-image {
     width: 40px;
     height: 40px;
   }
@@ -3399,7 +3410,7 @@ html {
     height: 60px;
   }
 
-  .splash-car-icon {
+  .splash-logo-image {
     width: 32px;
     height: 32px;
   }
