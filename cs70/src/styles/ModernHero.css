@@ -648,6 +648,11 @@
     padding-top: 140px;
   }
 
+  .hero-container {
+    padding: 0 16px;
+    gap: 40px;
+  }
+
   .main-title {
     font-size: 36px;
   }
@@ -658,18 +663,125 @@
 
   .stats-row {
     gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .stat-number {
     font-size: 24px;
   }
 
-  .quick-stats {
-    grid-template-columns: 1fr;
+  /* Glass Card Mobile Styles */
+  .hero-right {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
 
-  .mini-cards {
+  .glass-card {
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .category-badge {
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .vehicle-showcase {
+    height: 200px;
+    margin-bottom: 16px;
+  }
+
+  .vehicle-img {
+    border-radius: 12px;
+  }
+
+  .vehicle-details {
+    gap: 12px;
+  }
+
+  .vehicle-name {
+    font-size: 22px;
+  }
+
+  .price-section {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .amount {
+    font-size: 28px;
+  }
+
+  .price-change {
+    padding: 4px 10px;
+    font-size: 13px;
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .quick-stat {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    font-size: 20px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .stat-text {
+    font-size: 10px;
+  }
+
+  .view-details-btn {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* Mini Cards Mobile */
+  .mini-cards {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mini-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mini-card {
+    flex: 0 0 calc(33.333% - 8px);
+    min-width: 100px;
+    padding: 8px;
+  }
+
+  .mini-card img {
+    height: 60px;
+  }
+
+  .mini-card-name {
+    font-size: 11px;
+  }
+
+  .mini-card-price {
+    font-size: 10px;
   }
 
   .cta-group {
@@ -681,18 +793,104 @@
     width: 100%;
     justify-content: center;
   }
+
+  .carousel-dots {
+    bottom: 30px;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
+  .hero-container {
+    padding: 0 12px;
+  }
+
   .main-title {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .badge {
+    padding: 10px 18px;
+    font-size: 12px;
+  }
+
+  .badge-icon {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .glass-card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .category-badge {
+    top: 12px;
+    right: 12px;
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+
+  .vehicle-showcase {
+    height: 160px;
+    margin-bottom: 12px;
   }
 
   .vehicle-name {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .amount {
-    font-size: 28px;
+    font-size: 24px;
+  }
+
+  .currency {
+    font-size: 14px;
+  }
+
+  .quick-stats {
+    gap: 8px;
+  }
+
+  .quick-stat {
+    padding: 8px;
+  }
+
+  .view-details-btn {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .mini-card {
+    flex: 0 0 calc(50% - 6px);
+    min-width: 80px;
+  }
+
+  .mini-card img {
+    height: 50px;
+  }
+
+  .stats-row {
+    gap: 16px;
+  }
+
+  .stat-number {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+  }
+
+  .btn-primary, .btn-secondary {
+    padding: 14px 24px;
+    font-size: 15px;
   }
 }
