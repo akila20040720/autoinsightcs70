@@ -600,48 +600,39 @@ export default function FAQ() {
                     onClick={() => setExpandedId(expandedId === faq.id ? null : faq.id)}
                     style={{
                       width: "100%",
-                      padding: "20px 24px",
-                      background: "#ffffff",
-                      border: "1px solid rgba(54, 129, 247, 0.1)",
-                      borderRadius: "var(--radius-md)",
+                      padding: "22px 28px",
+                      background: "#fff",
+                      border: "1.5px solid rgba(54, 129, 247, 0.13)",
+                      borderRadius: "18px",
                       textAlign: "left",
                       cursor: "pointer",
                       transition: "all 0.3s var(--ease)",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+                      boxShadow: "0 6px 18px rgba(54, 129, 247, 0.07)",
                       display: "flex",
                       alignItems: "center",
-                      gap: 16,
+                      gap: 18,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = "0 8px 24px rgba(54, 129, 247, 0.15)";
-                      e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.3)";
+                      e.currentTarget.style.boxShadow = "0 12px 32px rgba(54, 129, 247, 0.13)";
+                      e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.25)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.05)";
-                      e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.1)";
+                      e.currentTarget.style.boxShadow = "0 6px 18px rgba(54, 129, 247, 0.07)";
+                      e.currentTarget.style.borderColor = "rgba(54, 129, 247, 0.13)";
                     }}
                     whileHover={{ y: -2 }}
                   >
-                    <div style={{ fontSize: 24, minWidth: 32 }}>{faq.icon}</div>
+                    {/* Modern chevron icon for expand/collapse */}
+                    <span style={{ minWidth: 32, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3681f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: expandedId === faq.id ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s" }}>
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </span>
                     <div style={{ flex: 1 }}>
-                      <h3 style={{ color: "#0b0c10", fontSize: 16, fontWeight: 600, margin: 0 }}>
+                      <h3 style={{ color: "#0b0c10", fontSize: 18, fontWeight: 700, margin: 0, letterSpacing: "0.01em" }}>
                         {faq.question}
                       </h3>
                     </div>
-                    <motion.div
-                      style={{
-                        fontSize: 20,
-                        color: "var(--primary)",
-                        minWidth: 24,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      animate={{ rotate: expandedId === faq.id ? 180 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      ▼
-                    </motion.div>
                   </motion.button>
 
                   <AnimatePresence initial={false}>
@@ -666,13 +657,14 @@ export default function FAQ() {
                       >
                         <div
                           style={{
-                            padding: "20px 24px",
-                            background: "linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%)",
-                            borderLeft: "4px solid var(--primary)",
+                            padding: "20px 28px",
+                            background: "linear-gradient(135deg, #f9fafb 0%, #eaf4fb 100%)",
+                            borderLeft: "4px solid #3681f7",
                             marginTop: 0,
                             color: "#3a3d43",
-                            fontSize: 15,
+                            fontSize: 16,
                             lineHeight: 1.7,
+                            borderRadius: "0 0 16px 16px",
                           }}
                         >
                           {faq.answer}
