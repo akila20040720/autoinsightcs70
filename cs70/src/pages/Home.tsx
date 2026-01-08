@@ -107,7 +107,6 @@ export default function Home() {
       {/* How It Works Section */}
       <motion.section 
         className="full-section section-how-it-works"
-        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -146,29 +145,27 @@ export default function Home() {
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.15, type: "spring", stiffness: 100 }}
+            
               whileHover={{ y: -10, scale: 1.05, boxShadow: '0 12px 32px rgba(54, 129, 247, 0.2)' }}
             >
-              <motion.div 
+              <div 
                 style={{ 
                   width: 70, 
                   height: 70, 
                   borderRadius: '50%', 
-                  background: 'linear-gradient(135deg, #023e8a 0%, #0077B6 100%)',
+                  background: 'transparent',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontSize: 28,
                   fontWeight: 700,
-                  color: '#fff',
+                  color: '#0077B6',
                   margin: '0 auto 20px',
-                  boxShadow: '0 4px 16px rgba(54, 129, 247, 0.4)'
+                  border: '2px solid #0077B6'
                 }}
-                whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.6 }}
               >
                 {item.step}
-              </motion.div>
+              </div>
               <h3 style={{ fontSize: 20, marginBottom: 12, fontWeight: 600, color: 'var(--primary)' }}>{item.title}</h3>
               <p style={{ color: "var(--sys-gray)", fontSize: 15, lineHeight: 1.6 }}>{item.desc}</p>
             </motion.div>
@@ -179,24 +176,19 @@ export default function Home() {
       {/* Features Section */}
       <motion.section 
         className="full-section section-features"
-        data-scroll-direction="right"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
             style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+           
+           
           >
             Everything You Need in One Place
           </motion.h2>
           <motion.p 
             style={{ color: 'var(--sys-gray)', fontSize: 18, maxWidth: 600, margin: '0 auto' }}
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+          
+           
           >
             Comprehensive features designed to give you complete control over vehicle market analysis
           </motion.p>
@@ -204,12 +196,9 @@ export default function Home() {
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, position: 'relative', zIndex: 1 }}>
           {features.map((feature, i) => (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50, y: 50 }}
-              whileInView={{ opacity: 1, x: 0, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1, type: "spring", stiffness: 80 }}
-              whileHover={{ y: -8, scale: 1.02 }}
+             
+             
+          
             >
               <FeatureCard
                 icon={feature.icon}
@@ -222,10 +211,10 @@ export default function Home() {
         </div>
       </motion.section>
 
+
       {/* Why Choose Section */}
       <motion.section 
         className="full-section section-why-choose"
-        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -272,7 +261,6 @@ export default function Home() {
       {/* Ratings Section */}
       <motion.section 
         className="full-section section-ratings"
-        data-scroll-direction="right"
       >
         <motion.div 
           style={{ 
@@ -350,7 +338,6 @@ export default function Home() {
       {/* Data Sources Section */}
       <motion.section 
         className="full-section section-data-sources"
-        data-scroll-direction="left"
       >
         <div style={{ textAlign: 'center', marginBottom: 48, position: 'relative', zIndex: 1 }}>
           <motion.h2 
@@ -418,7 +405,6 @@ export default function Home() {
       {/* Recent Work Section */}
       <motion.section 
         className="full-section section-recent-work"
-        data-scroll-direction="right"
       >
         <motion.div
           style={{ position: 'relative', zIndex: 1 }}

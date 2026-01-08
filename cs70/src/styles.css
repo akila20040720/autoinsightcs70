@@ -697,30 +697,30 @@ body:before {
     animation: none !important;
 }
 
-/* === Accessible Vibrant Section Variants (subtle, high contrast) === */
+/* === Plain sections with same background color === */
 .full-section.section-how-it-works {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
     position: relative;
 }
 
 .full-section.section-features {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
 }
 
 .full-section.section-why-choose {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
 }
 
 .full-section.section-ratings {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
 }
 
 .full-section.section-data-sources {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
 }
 
 .full-section.section-recent-work {
-    background: linear-gradient(135deg, #ffffff 0%, #F9F9F9 65%, #ffffff 100%);
+    background: #ffffff;
 }
 
 /* Accent gradient top border for visual separation */
@@ -747,18 +747,11 @@ body:before {
     color: var(--text-dim);
 }
 
-/* Optional radial sheen (very subtle) */
+/* Radial sheen removed for plain sections */
 .full-section.section-features:before,
 .full-section.section-why-choose:before,
 .full-section.section-recent-work:before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-        radial-gradient(circle at 20% 25%, rgba(54, 129, 247, 0.08), transparent 55%),
-        radial-gradient(circle at 80% 70%, rgba(249, 217, 124, 0.07), transparent 60%);
-    mix-blend-mode: normal;
+    display: none;
 }
 
 /* ================== Cookie Consent ================== */
