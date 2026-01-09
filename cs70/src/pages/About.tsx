@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Github } from "lucide-react";
 
 
 interface TeamMember {
@@ -8,6 +9,7 @@ interface TeamMember {
   id: string;
   linkedin: string;
   email: string;
+  github: string;
   image: string;
 }
 
@@ -34,6 +36,7 @@ export default function About() {
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
+    github: "https://github.com/akila20040720",
      image : "/images/akila.jpeg"
   },
   { 
@@ -43,6 +46,7 @@ export default function About() {
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulannimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
+    github: "https://github.com/dulan-nimnaka",
     image: "/images/dulan.jpg"
   },
   { 
@@ -52,6 +56,7 @@ export default function About() {
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
+    github: "https://github.com/ShaveenPeiris",
     image: "/images/shaveen.jpeg"
   },
   { 
@@ -61,6 +66,7 @@ export default function About() {
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
+    github: "https://github.com/Sanidu2004",
     image: "/images/sanidu.jpeg"
   },
   { 
@@ -70,6 +76,7 @@ export default function About() {
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
+    github: "https://github.com/Sanara-Perera",
     image: "/images/sanara.jpeg"
   },
   { 
@@ -79,6 +86,7 @@ export default function About() {
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
+    github: "https://github.com/hazzvp",
     image: "/images/hasandi.jpeg"
   }
 ];
@@ -605,7 +613,26 @@ export default function About() {
                 >
                  @
                 </motion.a>
-                
+                <motion.a
+                  href={member.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 8,
+                    background: 'rgba(54, 129, 247, 0.1)',
+                    color: 'var(--primary)',
+                    textDecoration: 'none'
+                  }}
+                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                 <Github size={18} />
+                </motion.a>
                 </div>
               </div>
             </motion.div>
