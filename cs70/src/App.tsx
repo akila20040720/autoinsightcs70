@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Features from "./pages/Features";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import NotFound from "./pages/NotFound";
 import CustomCursor from "./components/CustomCursor";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -64,8 +65,8 @@ export default function App(): React.ReactElement {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
 
-          {/* Any unknown route -> redirect to Home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Any unknown route -> show 404 page */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
