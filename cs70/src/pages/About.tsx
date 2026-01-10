@@ -31,7 +31,7 @@ export default function About() {
   const teamMembers: TeamMember[] = [
   { 
     name: "Akila Wijerama", 
-    role: "Team Leader", 
+    role: "Co-Founder & Team Leader", 
     desc: "Leads the team with strategic vision and ensures smooth project execution.",
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
