@@ -194,7 +194,7 @@ export default function Home() {
           </motion.p>
         </div>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, position: 'relative', zIndex: 1 }}>
-          {features.map((feature, i) => (
+          {features.map((feature) => (
             <motion.div
             >
               <FeatureCard
