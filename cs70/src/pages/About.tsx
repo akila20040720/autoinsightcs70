@@ -61,7 +61,7 @@ export default function About() {
   },
   { 
     name: "Sanidu Samrasinghe", 
-    role: "Data Analyst", 
+    role: "Co-Founder & Full Stack Developer", 
     desc: "Analyzes datasets to provide actionable insights and support decision-making.",
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
@@ -71,7 +71,7 @@ export default function About() {
   },
   { 
     name: "Sanara Perera", 
-    role: "ML Engineer", 
+    role: "Co-Founder & Full Stack Developer", 
     desc: "Develops machine learning models to predict fair vehicle prices and trends.",
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
@@ -81,7 +81,7 @@ export default function About() {
   },
   { 
     name: "Hasandi Peiris", 
-    role: "UI/UX Designer", 
+    role: "Co-Founder & UI/UX Designer", 
     desc: "Designs visually appealing and user-centric interfaces for the AutoInsight platform.",
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
