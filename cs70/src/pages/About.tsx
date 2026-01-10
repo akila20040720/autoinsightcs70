@@ -533,7 +533,7 @@ export default function About() {
   />
 </div>
             {/* Content */}
-              <div style={{ padding: 16, textAlign: 'center' }}>
+              <div style={{ padding: 16, textAlign: 'left' }}>
                 <h3 style={{ 
                   fontSize: 22, 
                   marginBottom: 8, 
@@ -568,6 +568,8 @@ export default function About() {
 
                 {/* Social Icons */}
                 <div style={{ 
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   display: 'flex', 
                   gap: 12,
                   paddingTop: 12,
