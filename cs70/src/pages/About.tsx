@@ -41,7 +41,7 @@ export default function About() {
   },
   { 
     name: "Dulan Nimnaka", 
-    role: "Backend Developer", 
+    role: "Co-Founder & Project Manager", 
     desc: "Handles server-side logic, database design, and API integrations.",
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulannimnaka",
