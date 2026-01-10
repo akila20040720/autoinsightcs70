@@ -51,7 +51,7 @@ export default function About() {
   },
   { 
     name: "Shaveen Peiris", 
-    role: "Frontend Developer", 
+    role: "Co-Founder & Quality Assurance Engineer", 
     desc: "Builds interactive and user-friendly web interfaces for the platform.",
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
