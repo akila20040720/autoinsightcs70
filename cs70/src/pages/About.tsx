@@ -32,7 +32,7 @@ export default function About() {
   { 
     name: "Akila Wijerama", 
     role: "Co-Founder & Team Leader", 
-    desc: "Leads the team with strategic vision and ensures smooth project execution.",
+    desc: "Leads the team with strategic vision, fostering collaboration and ensuring smooth, effective project execution from planning through delivery.",
     id: "20241303",
     linkedin: "https://linkedin.com/in/akila-wijerama",
     email: "mailto:akila.20241303@iit.ac.lk",
@@ -42,7 +42,7 @@ export default function About() {
   { 
     name: "Dulan Nimnaka", 
     role: "Co-Founder & Project Manager", 
-    desc: "Handles server-side logic, database design, and API integrations.",
+    desc: "Oversees planning and coordination, aligning timelines, resources, and team efforts to keep the project focused and on schedule.",
     id: "20240503",
     linkedin: "https://linkedin.com/in/dulannimnaka",
     email: "mailto:dulan.20240503@iit.ac.lk",
@@ -52,7 +52,7 @@ export default function About() {
   { 
     name: "Shaveen Peiris", 
     role: "Co-Founder & Quality Assurance Engineer", 
-    desc: "Builds interactive and user-friendly web interfaces for the platform.",
+    desc: "Safeguards system quality through structured testing, validation, and continuous refinement to ensure a reliable user experience.",
     id: "20240515",
     linkedin: "https://linkedin.com/in/shaveen-peiris",
     email: "mailto:shaveen.20240515@iit.ac.lk",
@@ -62,7 +62,7 @@ export default function About() {
   { 
     name: "Sanidu Samrasinghe", 
     role: "Co-Founder & Full Stack Developer", 
-    desc: "Analyzes datasets to provide actionable insights and support decision-making.",
+    desc: "Drives the technical development by designing, building, and integrating reliable frontend and backend solutions that support project goals.",
     id: "20240641",
     linkedin: "https://linkedin.com/in/sanidu-samrasinghe",
     email: "mailto:sanidu.20240641@iit.ac.lk",
@@ -72,7 +72,7 @@ export default function About() {
   { 
     name: "Sanara Perera", 
     role: "Co-Founder & Full Stack Developer", 
-    desc: "Develops machine learning models to predict fair vehicle prices and trends.",
+    desc: "Drives the technical development by designing, building, and integrating reliable frontend and backend solutions that support project goals.",
     id: "20240773",
     linkedin: "https://linkedin.com/in/sanara-perera",
     email: "mailto:sanara.20240773@iit.ac.lk",
@@ -82,7 +82,7 @@ export default function About() {
   { 
     name: "Hasandi Peiris", 
     role: "Co-Founder & UI/UX Designer", 
-    desc: "Designs visually appealing and user-centric interfaces for the AutoInsight platform.",
+    desc: "Shapes intuitive and engaging user experiences by applying thoughtful design principles, accessibility standards, and usability best practices.",
     id: "20240642",
     linkedin: "https://linkedin.com/in/hasandi-peiris",
     email: "mailto:hasandi.20240642@iit.ac.lk",
