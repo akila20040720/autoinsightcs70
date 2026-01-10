@@ -399,7 +399,7 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2, type: "spring", stiffness: 100 }}
             whileHover={{ y: -8 }}
           >
-            <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700, color: '#eaea75ff' ,textAlign: 'center'}}>About</h2>
+            <h2 style={{ fontSize: 28, marginBottom: 16, fontWeight: 700,  textAlign: 'center'}}>About</h2>
             <p style={{ fontSize: 16, lineHeight: 1.8, color: 'var(--sys-gray)', marginBottom: 20 }}>
               AutoInsight uses real-time scraped data, statistical analysis, and machine learning to reveal accurate market trends in Sri Lanka. 
               From fair-price predictions to model comparisons and mileage analysis, the system offers powerful tools for both everyday users and industry professionals. 
