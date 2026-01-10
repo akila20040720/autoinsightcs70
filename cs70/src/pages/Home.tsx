@@ -196,15 +196,12 @@ export default function Home() {
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24, position: 'relative', zIndex: 1 }}>
           {features.map((feature, i) => (
             <motion.div
-             
-             
-          
             >
               <FeatureCard
                 icon={feature.icon}
                 title={feature.title}
                 description={feature.desc}
-                delay={0}
+              
               />
             </motion.div>
           ))}
