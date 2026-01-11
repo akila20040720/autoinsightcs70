@@ -8,19 +8,18 @@ import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
 import ChatbotButton from "../components/ChatbotButton";
 
-
 import {
-  FcBarChart,
-  FcSearch,
-  FcBullish,
-  FcGlobe,
-  FcCurrencyExchange,
-  FcSmartphoneTablet,
-  FcCheckmark,
-  FcFlashOn,
-  FcSafe,
-  FcIdea,
-} from "react-icons/fc";
+  TrendingUp,
+  Search,
+  BarChart3,
+  Globe,
+  DollarSign,
+  Smartphone,
+  CheckCircle2,
+  Zap,
+  Shield,
+  Lightbulb,
+} from "lucide-react";
 
 import riyasewanaLogo from "../assets/logos/riyasewana.png";
 import patpatLogo from "../assets/logos/patpat.png";
@@ -43,19 +42,19 @@ export default function Home() {
   ];
 
   const features = [
-    { icon: <FcBarChart size={48} />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
-    { icon: <FcSearch size={48} />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
-    { icon: <FcBullish size={48} />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
-    { icon: <FcGlobe size={48} />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
-    { icon: <FcCurrencyExchange size={48} />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
-    { icon: <FcSmartphoneTablet size={48} />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
+    { icon: <BarChart3 size={48} strokeWidth={1.5} color="#3681f7" />, title: "Real-Time Analytics", desc: "Monitor vehicle market trends and pricing in real-time with live data updates." },
+    { icon: <Search size={48} strokeWidth={1.5} color="#3681f7" />, title: "Advanced Search", desc: "Find vehicles by make, model, price range, location, and more with powerful filters." },
+    { icon: <TrendingUp size={48} strokeWidth={1.5} color="#3681f7" />, title: "Trend Analysis", desc: "Visualize market trends, price fluctuations, and popular models over time." },
+    { icon: <Globe size={48} strokeWidth={1.5} color="#3681f7" />, title: "Regional Insights", desc: "Explore vehicle market activity across different regions in Sri Lanka." },
+    { icon: <DollarSign size={48} strokeWidth={1.5} color="#3681f7" />, title: "Price Comparison", desc: "Compare prices across different platforms and sellers to make informed decisions." },
+    { icon: <Smartphone size={48} strokeWidth={1.5} color="#3681f7" />, title: "Mobile Friendly", desc: "Access all features on any device with our responsive, mobile-optimized interface." }
   ];
 
   const whyChoose = [
-    { icon: <FcCheckmark size={48} />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
-    { icon: <FcFlashOn size={48} />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
-    { icon: <FcSafe size={48} />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
-    { icon: <FcIdea size={48} />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
+    { icon: <CheckCircle2 size={48} strokeWidth={1.5} color="#3681f7" />, title: "Accurate Data", desc: "Verified data from trusted sources including CMTA and major marketplaces." },
+    { icon: <Zap size={48} strokeWidth={1.5} color="#3681f7" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
+    { icon: <Shield size={48} strokeWidth={1.5} color="#3681f7" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
+    { icon: <Lightbulb size={48} strokeWidth={1.5} color="#3681f7" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
   ];
 
   const ratings = [
