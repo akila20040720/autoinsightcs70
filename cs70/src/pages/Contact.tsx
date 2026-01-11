@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 interface FormData {
   name: string;
@@ -98,28 +99,28 @@ export default function Contact() {
 
   const contactMethods = [
     {
-      icon: "📧",
+      icon: Mail,
       title: "Email",
-      value: "contact@autoinsight.lk",
-      link: "mailto:contact@autoinsight.lk",
+      value: "info.autoinsight@gmail.com",
+      link: "mailto:info.autoinsight@gmail.com",
       desc: "Send us an email and we'll respond within 24 hours"
     },
     {
-      icon: "📱",
+      icon: Phone,
       title: "Phone",
       value: "+94 (0) 11 234 5678",
       link: "tel:+94112345678",
       desc: "Call us during business hours (9 AM - 6 PM)"
     },
     {
-      icon: "📍",
+      icon: MapPin,
       title: "Location",
       value: "Colombo, Sri Lanka",
       link: "#",
       desc: "Visit our office or arrange a virtual meeting"
     },
     {
-      icon: "💬",
+      icon: MessageCircle,
       title: "Live Chat",
       value: "Available 24/7",
       link: "#",
@@ -334,7 +335,9 @@ export default function Contact() {
                     e.currentTarget.style.borderColor = "rgba(0, 119, 182, 0.1)";
                   }}
                 >
-                  <div style={{ fontSize: 40, marginBottom: 14 }}>{method.icon}</div>
+                  <div style={{ fontSize: 40, marginBottom: 14, display: "flex", justifyContent: "center" }}>
+                    <method.icon size={40} strokeWidth={1.5} color="var(--primary)" />
+                  </div>
                   <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "var(--primary)" }}>
                     {method.title}
                   </h3>
