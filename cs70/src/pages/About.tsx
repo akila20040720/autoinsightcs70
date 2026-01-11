@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { Github, Mail, Linkedin } from "lucide-react";
 
 
 interface TeamMember {
@@ -586,15 +586,17 @@ export default function About() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: 8,
-                    background: 'rgba(54, 129, 247, 0.1)',
-                    color: 'var(--primary)',
+                    background: '#f0f0f0',
+                    color: '#0077b5',
                     textDecoration: 'none',
-                    fontSize: 18
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
                   }}
-                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileHover={{ background: '#0077b5', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  title="LinkedIn"
                 >
-                   in
+                   <Linkedin size={18} />
                 </motion.a>
                 <motion.a
                   href={member.email}
@@ -605,15 +607,17 @@ export default function About() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: 8,
-                    background: 'rgba(54, 129, 247, 0.1)',
-                    color: 'var(--primary)',
+                    background: '#f0f0f0',
+                    color: '#ea4335',
                     textDecoration: 'none',
-                    fontSize: 18
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
                   }}
-                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileHover={{ background: '#ea4335', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  title="Email"
                 >
-                 @
+                 <Mail size={18} />
                 </motion.a>
                 <motion.a
                   href={member.github}
@@ -626,12 +630,15 @@ export default function About() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     borderRadius: 8,
-                    background: 'rgba(54, 129, 247, 0.1)',
-                    color: 'var(--primary)',
-                    textDecoration: 'none'
+                    background: '#f0f0f0',
+                    color: '#0b0c10',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
                   }}
-                  whileHover={{ background: 'var(--primary)', color: '#fff', scale: 1.1 }}
+                  whileHover={{ background: '#0b0c10', color: '#fff', scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
+                  title="GitHub"
                 >
                  <Github size={18} />
                 </motion.a>
