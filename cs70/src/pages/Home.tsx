@@ -403,7 +403,7 @@ export default function Home() {
         className="full-section section-recent-work"
       >
         <motion.div
-          style={{ position: 'relative', zIndex: 1 }}
+          style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}
           initial={{ y: 30, opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
