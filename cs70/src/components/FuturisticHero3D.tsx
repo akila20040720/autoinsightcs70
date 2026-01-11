@@ -389,18 +389,6 @@ export default function FuturisticHero3D() {
           />
         ))}
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div 
-        className="scroll-indicator"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <div className="scroll-text">Scroll to explore</div>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <polyline points="6 9 12 15 18 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </motion.div>
     </div>
   );
 }
