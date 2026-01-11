@@ -17,26 +17,106 @@ export default function WhyChooseCard({ icon, title, description, delay = 0 }: W
     <motion.div
       ref={ref}
       className="project scroll-fade why-vibrant"
-      style={{ textAlign: 'center', padding: '34px 26px', position:'relative', overflow:'hidden' }}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.5, delay }}
-      whileHover={{ scale: 1.08 }}
+      whileHover={{ scale: 1.05 }}
+      style={{
+        textAlign: 'center',
+        padding: '32px 24px',
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+        border: '1px solid rgba(54, 129, 247, 0.1)',
+        borderRadius: '16px',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+        transition: 'all 0.3s ease',
+        backdropFilter: 'blur(10px)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = '0 12px 40px rgba(54, 129, 247, 0.15)';
+        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.3)';
+        e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.06)';
+        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.1)';
+        e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
+      }}
     >
-      <div style={{
-        fontSize: 44,
-        marginBottom: 18,
-        display: 'inline-flex',
-        padding: '18px',
-        borderRadius: '50%',
-        background: 'linear-gradient(145deg, #48CAE4 0%, #023e8a 60%)',
-        boxShadow: '0 10px 32px -8px rgba(72,202,228,0.6), 0 4px 18px -6px rgba(0,119,182,0.4)',
-        color: '#0f172a'
-      }}>{icon}</div>
-      <h3 style={{ fontSize: 20, marginBottom: 12, fontWeight: 600, color:'#0b0c10' }}>{title}</h3>
-      <p style={{ color: '#0b0c10', fontSize: 15, lineHeight: 1.6 }}>{description}</p>
+      {/* Top accent line */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '3px',
+          background: 'linear-gradient(90deg, #3681f7 0%, #8b5cf6 100%)',
+          opacity: 0,
+          borderRadius: '3px'
+        }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+
+      {/* Icon Container */}
+      <motion.div
+        style={{
+          fontSize: 48,
+          marginBottom: 20,
+          display: 'inline-flex',
+          padding: '16px',
+          borderRadius: '12px',
+          background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)',
+          width: 'fit-content',
+          margin: '0 auto 20px auto',
+          position: 'relative'
+        }}
+        whileHover={{ scale: 1.15, rotate: 5 }}
+        transition={{ duration: 0.4, type: 'spring', stiffness: 200 }}
+      >
+        {icon}
+      </motion.div>
+
+      {/* Title */}
+      <h3 style={{
+        fontSize: 20,
+        marginBottom: 12,
+        fontWeight: 700,
+        color: '#0b0c10',
+        letterSpacing: '-0.3px'
+      }}>
+        {title}
+      </h3>
+
+      {/* Description */}
+      <p style={{
+        color: '#3a3d43',
+        fontSize: 14,
+        lineHeight: 1.7,
+        flexGrow: 1
+      }}>
+        {description}
+      </p>
+
+      {/* Bottom gradient accent */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          width: '120px',
+          height: '120px',
+          background: 'radial-gradient(circle, rgba(54, 129, 247, 0.08) 0%, transparent 70%)',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+          filter: 'blur(30px)'
+        }}
+      />
     </motion.div>
   );
 }
-//implemented
-
