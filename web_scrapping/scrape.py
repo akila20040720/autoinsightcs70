@@ -12,6 +12,7 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import queue
+import webbrowser
 
 def setup_driver():
     """Setup Chrome driver with optimized options for speed"""
@@ -49,7 +50,8 @@ def extract_vehicle_data(title, boxtext_divs):
         'Price': None,
         'Milleage': None,
         'District': None,
-        'published date': None
+        'published date': None,
+        'Vehicle URL': None
     }
 
     # Parse title for type, make, model, year
@@ -139,6 +141,9 @@ def scrape_page(driver, page_num):
                 if not title_elem:
                     continue
                 title = title_elem.get('title', '')
+                vehicle_url = title_elem.get('href', '')
+                if vehicle_url and not vehicle_url.startswith('http'):
+                    vehicle_url = 'https://riyasewana.com' + vehicle_url
 
                 # Get boxtext divs
                 boxtext = item.find('div', class_='boxtext')
@@ -148,6 +153,7 @@ def scrape_page(driver, page_num):
 
                 # Extract data
                 vehicle_data = extract_vehicle_data(title, boxtext_divs)
+                vehicle_data['Vehicle URL'] = vehicle_url
                 if vehicle_data['Make'] or vehicle_data['Model']:  # At least some data
                     vehicles.append(vehicle_data)
 
@@ -200,6 +206,9 @@ class VehicleTableApp:
         self.root.title("Riyasewana Vehicle Scraper - Real-time Updates")
         self.root.geometry("1200x700")
 
+        # Store vehicle URLs mapped to tree items
+        self.vehicle_urls = {}
+
         # Create treeview for table
         self.tree = ttk.Treeview(root, columns=('Type', 'Make', 'Model', 'Year', 'Price', 'Mileage', 'District', 'Date'), show='headings')
 
@@ -227,12 +236,15 @@ class VehicleTableApp:
         scrollbar = ttk.Scrollbar(root, orient=tk.VERTICAL, command=self.tree.yview)
         self.tree.configure(yscroll=scrollbar.set)
 
+        # Bind double-click event to open vehicle URL
+        self.tree.bind('<Double-Button-1>', self.on_item_double_click)
+
         # Pack widgets
         self.tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         # Status label
-        self.status_label = tk.Label(root, text="Starting scraper...", font=("Arial", 10))
+        self.status_label = tk.Label(root, text="Starting scraper... (Double-click any row to view on Riyasewana)", font=("Arial", 10))
         self.status_label.pack(side=tk.BOTTOM, fill=tk.X)
 
         # Start button
@@ -289,12 +301,27 @@ class VehicleTableApp:
             vehicle.get('District', ''),
             vehicle.get('published date', '')
         )
-        self.tree.insert('', tk.END, values=values)
+        item = self.tree.insert('', tk.END, values=values)
+        
+        # Store vehicle URL for this item
+        vehicle_url = vehicle.get('Vehicle URL', '')
+        if vehicle_url:
+            self.vehicle_urls[item] = vehicle_url
 
         # Update status
         item_count = len(self.tree.get_children())
-        self.status_label.config(text=f"Total vehicles scraped: {item_count}")
-
+        self.status_label.config(text=f"Total vehicles scraped: {item_count} (Double-click to view on Riyasewana)")
+    def on_item_double_click(self, event):
+        """Handle double-click on table row to open vehicle URL in browser"""
+        selection = self.tree.selection()
+        if selection:
+            item = selection[0]
+            url = self.vehicle_urls.get(item)
+            if url:
+                webbrowser.open(url)
+                self.status_label.config(text=f"Opening: {url}")
+            else:
+                self.status_label.config(text="No URL available for this vehicle")
 # Main execution
 if __name__ == "__main__":
     root = tk.Tk()
