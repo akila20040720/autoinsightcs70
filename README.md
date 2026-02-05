@@ -37,7 +37,7 @@ AutoInsight is a React + TypeScript single-page experience built with Vite that 
 - src/components/: hero, cards, analytics background, chatbot button, cursor, splash, navbar, footer, scroll helper, etc.
 - src/styles.css: design tokens, themes, layout primitives, animation utilities
 - public/: static assets (logos, images, video). Vehicle imagery on the live demo is served from /Vehicles/*.jpg and can be swapped via public/Vehicles
-- data_processing/ and web_scrapping/: offline CSV prep and scraping samples that inform the analytics narrative (respect source site terms)
+- data_processing/ and web_scraping/: offline CSV prep and scraping tools that inform the analytics narrative (respect source site terms)
 
 ## Prerequisites
 - Node.js 18 or newer
