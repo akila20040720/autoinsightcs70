@@ -210,7 +210,8 @@ def scrape_with_selenium(queue, stop_event, progress_callback=None):
     try:
         # Try to scrape many pages - will stop when no more content
         page = 1
-        max_pages = 67000  # Upper limit for safety
+        # Upper limit for safety - Riyasewana typically has far fewer pages, but this prevents infinite loops
+        max_pages = 67000
         
         while page <= max_pages and not stop_event.is_set():
             print(f"Scraping page {page}...")
@@ -493,7 +494,7 @@ class VehicleTableApp:
                 try:
                     webbrowser.open(url)
                     self.status_label.config(text=f"Opening: {url[:50]}...", fg='blue')
-                except:
+                except Exception as e:
                     self.status_label.config(text="Error opening browser", fg='red')
             else:
                 self.status_label.config(text="No URL available for this vehicle", fg='orange')
