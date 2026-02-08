@@ -68,9 +68,10 @@ def setup_driver():
     return driver
 
 def extract_vehicle_data(listing_element):
-    """Extract vehicle data from ikman.lk listing element"""
+    """Extract vehicle data from ikman.lk car listing <a> element"""
+
     data = {
-        'Vehicle Type': 'Car',  # Since we're scraping the cars section
+        'Vehicle Type': 'Car',
         'Make': None,
         'Model': None,
         'Year': None,
@@ -82,88 +83,76 @@ def extract_vehicle_data(listing_element):
     }
 
     try:
-        # Extract title and URL
+        # ===================== URL =====================
+        href = listing_element.get('href')
+        if href:
+            data['Vehicle URL'] = "https://ikman.lk" + href
+
+        # ===================== TITLE =====================
         title_elem = listing_element.find('h2')
         if title_elem:
-            link_elem = title_elem.find('a')
-            if link_elem:
-                title = link_elem.get_text(strip=True)
-                data['Vehicle URL'] = "https://ikman.lk" + link_elem.get('href', '')
-                
-                # Extract make, model, and year from title
-                parts = title.split()
-                if parts:
-                    # Common car makes for better parsing
-                    common_makes = ['Toyota', 'Honda', 'Suzuki', 'Mitsubishi', 'Nissan', 'BMW', 'Audi', 
-                                   'Mercedes', 'Ford', 'Chevrolet', 'Hyundai', 'Kia', 'Volkswagen', 
-                                   'Mazda', 'Subaru', 'Lexus', 'Land', 'Range', 'MG', 'Proton', 'Daihatsu', 'Chery']
-                    
-                    # Try to identify make
-                    for make in common_makes:
-                        if title.startswith(make) or f" {make} " in f" {title} ":
-                            data['Make'] = make
-                            # Remove make from title to get model
-                            model_str = title.replace(make, '', 1).strip()
-                            
-                            # Extract year from model string
-                            year_match = re.search(r'\b(19|20)\d{2}\b', model_str)
-                            if year_match:
-                                data['Year'] = int(year_match.group())
-                                # Remove year from model
-                                model_str = re.sub(r'\b(19|20)\d{2}\b', '', model_str).strip()
-                            
-                            data['Model'] = model_str
-                            break
-                    
-                    # If no make found, use first word as make and rest as model
-                    if not data['Make']:
-                        data['Make'] = parts[0]
-                        model_parts = parts[1:]
-                        # Extract year
-                        for i, part in enumerate(model_parts):
-                            year_match = re.search(r'\b(19|20)\d{2}\b', part)
-                            if year_match:
-                                data['Year'] = int(year_match.group())
-                                model_parts.pop(i)
-                                break
-                        data['Model'] = ' '.join(model_parts) if model_parts else ""
+            title = title_elem.get_text(strip=True)
 
-        # Extract other details
-        details_div = listing_element.find('div', class_=lambda x: x and ('description' in x.lower() or 'details' in x.lower()))
-        if details_div:
-            details_text = details_div.get_text(strip=True, separator=' ')
-            
-            # Extract mileage
-            mileage_match = re.search(r'(\d+(?:,\d{3})*)\s*(?:km|KM|Km)', details_text)
-            if mileage_match:
-                data['Mileage'] = int(mileage_match.group(1).replace(',', ''))
-            
-            # Extract location (look for city names)
-            locations = ['Colombo', 'Galle', 'Anuradhapura', 'Kandy', 'Matara', 'Jaffna', 'Negombo', 'Kurunegala']
-            for location in locations:
-                if location in details_text:
-                    data['Location'] = location
+            # --- Extract Year ---
+            year_match = re.search(r'\b(19|20)\d{2}\b', title)
+            if year_match:
+                data['Year'] = int(year_match.group())
+
+            # --- Make & Model Parsing ---
+            common_makes = [
+                'Toyota','Honda','Suzuki','Mitsubishi','Nissan','BMW','Audi',
+                'Mercedes','Ford','Chevrolet','Hyundai','Kia','Volkswagen',
+                'Mazda','Subaru','Lexus','Land Rover','MG','Proton','Daihatsu','Chery'
+            ]
+
+            for make in common_makes:
+                if title.startswith(make):
+                    data['Make'] = make
+                    model_part = title.replace(make, '', 1)
+
+                    if data['Year']:
+                        model_part = model_part.replace(str(data['Year']), '')
+
+                    data['Model'] = model_part.strip()
                     break
-        
-        # Extract price
-        price_elem = listing_element.find(string=re.compile(r'Rs\s*\d'))
-        if not price_elem:
-            price_elem = listing_element.find(string=re.compile(r'Rs\.'))
-        
-        if price_elem:
-            price_text = price_elem.strip()
-            price_match = re.search(r'Rs\s*([\d,]+(?:\.\d{3})*)', price_text)
-            if price_match:
-                data['Price'] = f"Rs {price_match.group(1)}"
-        
-        # Extract published time
-        time_elem = listing_element.find(string=re.compile(r'just now|\d+\s*(?:minute|hour|day|week|month|year)s?', re.I))
-        if time_elem:
-            data['Published Time'] = time_elem.strip()
+
+            # Fallback
+            if not data['Make']:
+                parts = title.split()
+                data['Make'] = parts[0]
+                data['Model'] = ' '.join(parts[1:])
+
+        # ===================== ALL P TAGS =====================
+        p_tags = listing_element.find_all('p')
+
+        for p in p_tags:
+            text = p.get_text(strip=True)
+
+            # Price
+            if 'Rs' in text:
+                price_match = re.search(r'Rs\.?\s*([\d,]+)', text)
+                if price_match:
+                    data['Price'] = "Rs " + price_match.group(1)
+
+            # Mileage
+            km_match = re.search(r'(\d+(?:,\d{3})*)\s*km', text, re.I)
+            if km_match:
+                data['Mileage'] = int(km_match.group(1).replace(',', ''))
+
+            # Published Time
+            if re.search(r'(minute|hour|day|week|month|year)', text, re.I):
+                data['Published Time'] = text
+
+            # Location (Sri Lanka cities heuristic)
+            if text in [
+                'Colombo','Galle','Kandy','Kurunegala','Negombo',
+                'Jaffna','Matara','Anuradhapura','Batticaloa'
+            ]:
+                data['Location'] = text
 
     except Exception as e:
-        print(f"Error extracting vehicle data: {e}")
-    
+        print("Error extracting listing:", e)
+
     return data
 
 def scrape_page(driver, page_num):
