@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Vehicle Search</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 180px;
+    }
+
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+    }
+
+    .vehicle {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .vehicle h3 {
+      margin: 0 0 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Vehicle Search</h2>
+
+<!-- Search Filters -->
+<input type="text" id="searchMake" placeholder="Make (Toyota)">
+<input type="text" id="searchDistrict" placeholder="District (Colombo)">
+<input type="number" id="searchYear" placeholder="Year (2008)">
+<input type="number" id="searchPrice" placeholder="Max Price">
+<button onclick="filterVehicles()">Search</button>
+
+<hr>
+
+<div id="results"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDXyZUcB1uPnnfmneqzX8uHhbF3X0cP_o",
+  authDomain: "scrapedata-a42ad.firebaseapp.com",
+  databaseURL: "https://scrapedata-a42ad-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "scrapedata-a42ad",
+  storageBucket: "scrapedata-a42ad.firebasestorage.app",
+  messagingSenderId: "759432221195",
+  appId: "1:759432221195:web:94ea33214e16a0406e6d0e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let allVehicles = [];
+
+// 🔥 Load Data From Firebase
+const dbRef = ref(db, "/vehicles");
+
+get(dbRef)
+  .then((snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+
+      // Convert object to array safely
+      allVehicles = Object.values(data);
+
+      console.log("Loaded Vehicles:", allVehicles);
+
+      displayVehicles(allVehicles);
+    } else {
+      document.getElementById("results").innerHTML = "<p>No data found</p>";
+    }
+  })
+  .catch((error) => {
+    console.error("Firebase Error:", error);
+  });
+
+
+// ✅ Display Vehicles Safely
+function displayVehicles(vehicles) {
+
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  if (!vehicles || vehicles.length === 0) {
+    results.innerHTML = "<p>No vehicles found</p>";
+    return;
+  }
+
+  vehicles.forEach(vehicle => {
+
+    const make = vehicle.Make || vehicle.make || "Unknown";
+    const model = vehicle.Model || vehicle.model || "";
+    const district = vehicle.District || vehicle.district || "";
+    const year = vehicle.Year || vehicle.year || "";
+    const price = vehicle.Price || vehicle.price || 0;
+    const url = vehicle["Vehicle URL"] || vehicle.vehicleURL || "#";
+
+    results.innerHTML += `
+      <div class="vehicle">
+        <h3>${make} ${model}</h3>
+        <p><b>District:</b> ${district}</p>
+        <p><b>Year:</b> ${year}</p>
+        <p><b>Price:</b> Rs. ${price ? Number(price).toLocaleString() : "N/A"}</p>
+        <a href="${url}" target="_blank">View Listing</a>
+      </div>
+    `;
+  });
+}
+
+
+// ✅ Filter Function (Case-Insensitive + Safe)
+window.filterVehicles = function() {
+
+  const makeInput = document.getElementById("searchMake").value.toLowerCase();
+  const districtInput = document.getElementById("searchDistrict").value.toLowerCase();
+  const yearInput = document.getElementById("searchYear").value;
+  const maxPriceInput = document.getElementById("searchPrice").value;
+
+  const filtered = allVehicles.filter(vehicle => {
+
+    const make = (vehicle.Make || vehicle.make || "").toLowerCase();
+    const district = (vehicle.District || vehicle.district || "").toLowerCase();
+    const year = vehicle.Year || vehicle.year || "";
+    const price = vehicle.Price || vehicle.price || 0;
+
+    return (
+      (makeInput === "" || make.includes(makeInput)) &&
+      (districtInput === "" || district.includes(districtInput)) &&
+      (yearInput === "" || year == yearInput) &&
+      (maxPriceInput === "" || price <= maxPriceInput)
+    );
+  });
+
+  displayVehicles(filtered);
+};
+
+</script>
+
+</body>
+</html>

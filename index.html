@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Data Test</title>
+</head>
+<body>
+  <h2>Realtime Database Test</h2>
+  <pre id="output"></pre>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-analytics.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDXyZUcB1uPnnfmneqzX8uHhbF3X0cP_o",
+    authDomain: "scrapedata-a42ad.firebaseapp.com",
+    databaseURL: "https://scrapedata-a42ad-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "scrapedata-a42ad",
+    storageBucket: "scrapedata-a42ad.firebasestorage.app",
+    messagingSenderId: "759432221195",
+    appId: "1:759432221195:web:94ea33214e16a0406e6d0e",
+    measurementId: "G-T90V785CEX"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
+  // Initialize Database
+  const db = getDatabase(app);
+
+  // Reference root ("/" = all data)
+  const dbRef = ref(db, "/");
+
+  get(dbRef)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log("Data:", snapshot.val());
+        document.body.innerHTML +=
+          "<pre>" + JSON.stringify(snapshot.val(), null, 2) + "</pre>";
+      } else {
+        document.body.innerHTML += "<p>No data found</p>";
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      document.body.innerHTML += "<p>Error retrieving data</p>";
+    });
+</script>
+</body>
+</html>
