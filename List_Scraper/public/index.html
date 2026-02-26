@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toyota C-HR · Live Riyasewana Scraper</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* (keep your existing beautiful CSS – unchanged) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f5f7fc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .container { max-width: 1100px; width: 100%; background: rgba(255,255,255,0.6); backdrop-filter: blur(4px); border-radius: 36px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 2rem; }
+    .hidden { display: none !important; }
+    .thumbnail-card { background: white; border-radius: 28px; padding: 1.8rem 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.25s; }
+    .thumbnail-card:hover { transform: scale(1.01); border: 1px solid #3b82f6; }
+    .thumbnail-image { width: 140px; height: 120px; background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 18px; display: flex; align-items: center; justify-content: center; color: white; font-size: 2.8rem; }
+    .thumbnail-info h3 { font-size: 1.9rem; font-weight: 600; color: #0b1e33; }
+    .city { display: flex; align-items: center; gap: 6px; color: #475569; font-size: 1.1rem; margin-bottom: 0.7rem; }
+    .price { font-size: 2rem; font-weight: 700; color: #2563eb; background: #dbeafe; display: inline-block; padding: 0.3rem 1.2rem; border-radius: 60px; }
+    .btn { background: white; border: 1px solid #94a3b8; padding: 0.7rem 1.6rem; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+    .btn:hover { background: #2563eb; color: white; }
+    .details-grid { background: white; border-radius: 28px; padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; }
+    .detail-item { display: flex; flex-direction: column; border-bottom: 1px dashed #e2e8f0; padding-bottom: 0.8rem; }
+    .detail-label { font-size: 0.8rem; text-transform: uppercase; color: #64748b; font-weight: 600; margin-bottom: 0.3rem; }
+    .detail-value { font-size: 1.2rem; font-weight: 600; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .description-box { grid-column: 1 / -1; background: #f8fafc; border-radius: 20px; padding: 1.6rem; margin-top: 0.8rem; }
+    .vehicle-header { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); border-radius: 28px; padding: 2rem; margin-bottom: 2rem; color: white; display: flex; align-items: center; gap: 2rem; }
+    .vehicle-icon { width: 100px; height: 100px; background: rgba(255,255,255,0.2); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .vehicle-title { flex: 1; }
+    .vehicle-title h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .vehicle-subtitle { opacity: 0.9; font-size: 1.1rem; }
+    .error-banner { background: #fee2e2; border-left: 6px solid #ef4444; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- THUMBNAIL VIEW -->
+    <div id="thumbnailView" class="view">
+      <div class="thumbnail-card" id="thumbnailClickArea">
+        <div class="thumbnail-image">
+          <i class="fas fa-car"></i>
+        </div>
+        <div class="thumbnail-info">
+          <h3><i class="fas fa-tag" style="color:#2563eb;"></i> Toyota C-HR NGX</h3>
+          <div class="city">
+            <i class="fas fa-map-marker-alt" style="color:#ef4444;"></i> Kandy, Sri Lanka
+          </div>
+          <span class="price"><i class="fas fa-rupee-sign"></i> 11,500,000</span>
+          <div style="margin-top: 16px;">
+            <span class="btn" id="viewDetailsBtn">
+              <i class="fas fa-spider"></i> SCRAPE LIVE DATA
+            </span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 1.2rem; color: #4b5563;">
+        <i class="fas fa-server"></i> Data fetched from your own backend → no mock values.
+      </p>
+    </div>
+
+    <!-- DETAILS VIEW -->
+    <div id="detailsView" class="view hidden">
+      <div class="details-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+        <button id="backBtn" class="btn"><i class="fas fa-arrow-left"></i> Back</button>
+        <h2>📋 Real‑time Scrape</h2>
+      </div>
+      <div id="detailsContent">
+        <!-- Loading -->
+        <div style="display: flex; align-items: center; gap: 16px; background: white; padding: 2rem; border-radius: 30px;">
+          <i class="fas fa-circle-notch fa-spin" style="font-size: 2rem; color: #3b82f6;"></i>
+          <span>Contacting scraper API ...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Use relative URL – works because frontend is served from same origin
+    const API_ENDPOINT = '/api/scrape';
+    
+    // Target listing URL (can be changed to any Riyasewana listing)
+    const LISTING_URL = 'https://riyasewana.com/buy/toyota-chr-ngx-sale-kandy-11198404';
+
+    const thumbnailView = document.getElementById('thumbnailView');
+    const detailsView = document.getElementById('detailsView');
+    const detailsContent = document.getElementById('detailsContent');
+    const thumbnailCard = document.getElementById('thumbnailClickArea');
+    const backBtn = document.getElementById('backBtn');
+
+    async function onThumbnailClick() {
+      thumbnailView.classList.add('hidden');
+      detailsView.classList.remove('hidden');
+
+      detailsContent.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 20px; background: white; border-radius: 30px; padding: 2.5rem; flex-direction: column;">
+          <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: #2563eb;"></i>
+          <span style="font-size: 1.3rem;">🔍 Scraping LIVE from Riyasewana …</span>
+          <span style="font-size: 0.9rem; color: #64748b;">Fetching contact, price, specifications & details</span>
+        </div>
+      `;
+
+      try {
+        // Pass the listing URL as a query parameter
+        const response = await fetch(`${API_ENDPOINT}?url=${encodeURIComponent(LISTING_URL)}`);
+        const json = await response.json();
+
+        if (!json.success) throw new Error(json.error || 'Unknown error');
+
+        renderDetails(json.data, json.scrapedUrl);
+      } catch (err) {
+        detailsContent.innerHTML = `
+          <div class="error-banner">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Scraping failed:</strong> ${err.message}. 
+            Make sure the server is running.
+          </div>
+          <div style="background: white; padding: 2rem; border-radius: 20px;">
+            <p>Start the server with <code>npm start</code> in your project folder.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderDetails(data, scrapedUrl) {
+      const addField = (icon, label, value) => `
+        <div class="detail-item">
+          <span class="detail-label">${label}</span>
+          <span class="detail-value"><i class="fas ${icon}"></i> ${value || '—'}</span>
+        </div>
+      `;
+
+      // Vehicle header with icon
+      let html = `
+        <div class="vehicle-header">
+          <div class="vehicle-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="vehicle-title">
+            <h2>${data.make} ${data.model}</h2>
+            <div class="vehicle-subtitle">
+              <i class="fas fa-calendar-alt"></i> ${data.yom} • 
+              <i class="fas fa-tachometer-alt"></i> ${data.mileage} • 
+              <i class="fas fa-gas-pump"></i> ${data.fuel}
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 2.5rem; font-weight: 700;">${data.price}</div>
+            ${data.contact !== 'Not listed' ? `<div style="opacity: 0.9; margin-top: 0.5rem;"><i class="fas fa-phone"></i> ${data.contact}</div>` : ''}
+          </div>
+        </div>
+      `;
+      
+      html += `<div class="details-grid">`;
+      html += addField('fa-industry', 'MAKE', data.make);
+      html += addField('fa-car', 'MODEL', data.model);
+      html += addField('fa-calendar', 'YEAR OF MANUFACTURE', data.yom);
+      html += addField('fa-tachometer-alt', 'MILEAGE', data.mileage);
+      html += addField('fa-cogs', 'TRANSMISSION', data.gear);
+      html += addField('fa-gas-pump', 'FUEL TYPE', data.fuel);
+      html += addField('fa-microchip', 'ENGINE CAPACITY', data.engine);
+      html += addField('fa-phone-alt', 'CONTACT NUMBER', data.contact);
+      
+      if (data.options && data.options !== 'No additional options listed') {
+        html += `
+          <div class="detail-item" style="grid-column: 1 / -1;">
+            <span class="detail-label">FEATURES & OPTIONS</span>
+            <span class="detail-value" style="font-weight: 400; line-height: 1.8;">
+              <i class="fas fa-list-ul"></i> ${data.options}
+            </span>
+          </div>
+        `;
+      }
+      
+      html += `
+        <div class="description-box">
+          <span class="detail-label">VEHICLE DETAILS</span>
+          <span class="detail-value" style="font-weight: 400; line-height: 1.6;">${data.details || 'No description'}</span>
+        </div>
+      `;
+      
+      if (scrapedUrl) {
+        html += `
+          <div style="grid-column: 1 / -1; padding-top: 1rem; border-top: 1px solid #e2e8f0; margin-top: 1rem; text-align: center;">
+            <a href="${scrapedUrl}" target="_blank" style="color: #2563eb; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;">
+              <i class="fas fa-external-link-alt"></i> View original listing on Riyasewana.com
+            </a>
+          </div>
+        `;
+      }
+      html += `</div>`;
+
+      detailsContent.innerHTML = html;
+    }
+
+    function backToThumbnail() {
+      detailsView.classList.add('hidden');
+      thumbnailView.classList.remove('hidden');
+    }
+
+    thumbnailCard.addEventListener('click', onThumbnailClick);
+    document.getElementById('viewDetailsBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      onThumbnailClick();
+    });
+    backBtn.addEventListener('click', backToThumbnail);
+  </script>
+</body>
+</html>
