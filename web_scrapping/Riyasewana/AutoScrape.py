@@ -16,40 +16,100 @@ import webbrowser
 import csv
 import os
 from datetime import datetime
+import glob
 
 # Global constants
 FIELD_NAMES = ['Vehicle Type', 'Make', 'Model', 'Year', 'Price', 'Milleage', 'District', 'published date', 'Vehicle URL']
 
+def find_latest_csv_with_date():
+    """Find the latest CSV file with a date in the filename and extract the date."""
+    # Get current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # Pattern to match riyasewana_vehicles_YYYY-MM-DD.csv
+    pattern = os.path.join(current_dir, 'riyasewana_vehicles_*.csv')
+    csv_files = glob.glob(pattern)
+    
+    if not csv_files:
+        print("No existing CSV files found with date format.")
+        return None, None
+    
+    # Extract dates from filenames
+    date_files = []
+    for csv_file in csv_files:
+        filename = os.path.basename(csv_file)
+        # Extract date from filename: riyasewana_vehicles_YYYY-MM-DD.csv
+        match = re.search(r'riyasewana_vehicles_(\d{4}-\d{2}-\d{2})\.csv', filename)
+        if match:
+            date_str = match.group(1)
+            try:
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+                date_files.append((date_obj, csv_file))
+            except ValueError:
+                continue
+    
+    if not date_files:
+        print("No valid date found in CSV filenames.")
+        return None, None
+    
+    # Sort by date and get the latest
+    date_files.sort(reverse=True)
+    latest_date, latest_file = date_files[0]
+    
+    print(f"Found existing file: {os.path.basename(latest_file)}")
+    print(f"Extracted start date: {latest_date}")
+    
+    return latest_date, latest_file
+
 def get_csv_filename(end_date=None):
     """Generate CSV filename with end date"""
     if end_date:
-        return f'riyasewana_vehicles_{end_date}.csv'
+        # If end_date is a date object, convert to string
+        if hasattr(end_date, 'strftime'):
+            end_date_str = end_date.strftime('%Y-%m-%d')
+        else:
+            end_date_str = str(end_date)
+        return f'riyasewana_vehicles_{end_date_str}.csv'
     else:
         # Use current date if no end date specified
         current_date = datetime.now().strftime('%Y-%m-%d')
         return f'riyasewana_vehicles_{current_date}.csv'
 
 def get_date_range_from_terminal():
-    """Prompt user for start and end dates in terminal."""
+    """Find start date from existing CSV file and prompt user for end date."""
     print("\n=== Date Range Filter ===")
-    print("Enter dates in YYYY-MM-DD format (leave blank for no bound).")
-    start_str = input("Start date (oldest) [blank for none]: ").strip()
-    end_str = input("End date (newest) [blank for none]: ").strip()
     
-    start_date = None
+    # Find start date from existing file
+    start_date, csv_file = find_latest_csv_with_date()
+    
+    if start_date:
+        print(f"Using start date: {start_date} (from existing CSV)")
+    else:
+        # If no file found, ask for start date
+        print("No existing CSV file found.")
+        start_str = input("Enter start date (YYYY-MM-DD) [blank for none]: ").strip()
+        if start_str:
+            try:
+                start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
+            except ValueError:
+                print("Invalid start date format. Using no start date.")
+                start_date = None
+    
+    # Ask for end date
+    print("\nEnter end date in YYYY-MM-DD format.")
+    end_str = input("End date (newest) [blank for today]: ").strip()
+    
     end_date = None
-    
-    if start_str:
-        try:
-            start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
-        except ValueError:
-            print("Invalid start date format. Ignoring lower bound.")
-    
     if end_str:
         try:
             end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
         except ValueError:
-            print("Invalid end date format. Ignoring upper bound.")
+            print("Invalid end date format. Using today's date.")
+            end_date = datetime.now().date()
+    else:
+        # Default to today if blank
+        end_date = datetime.now().date()
+        print(f"Using today's date: {end_date}")
     
     if start_date and end_date and start_date > end_date:
         print("Warning: Start date is after end date. Swapping them.")
@@ -236,14 +296,13 @@ def scrape_page(driver, page_num, start_date=None, end_date=None):
                     except ValueError:
                         pass
 
-                # Apply date filtering
-                if start_date and pub_date and pub_date < start_date:
-                    continue  # too old
-                if end_date and pub_date and pub_date > end_date:
-                    continue  # too new
-                # If date is missing and any filter is active, skip (can't verify)
-                if (start_date or end_date) and pub_date is None:
-                    continue
+                # Apply date filtering - only filter if we have a date
+                if pub_date:
+                    if start_date and pub_date < start_date:
+                        continue  # too old
+                    if end_date and pub_date > end_date:
+                        continue  # too new
+                # If date is missing, include the vehicle (don't skip it)
 
                 # Only add if we have at least make or model
                 if vehicle_data['Make'] or vehicle_data['Model']:
@@ -267,9 +326,11 @@ def scrape_with_selenium(queue, stop_event, csv_filename, progress_callback=None
     start_time = time.time()
     
     try:
-        # Try to scrape many pages - will stop when no more content or when past date range
+        # Try to scrape many pages - will stop when no more content
         page = 1
         max_pages = 67000  # Upper limit for safety
+        consecutive_empty_pages = 0  # Track empty pages
+        max_consecutive_empty = 5  # Stop after 5 consecutive empty pages
         
         while page <= max_pages and not stop_event.is_set():
             print(f"Scraping page {page}...")
@@ -280,10 +341,15 @@ def scrape_with_selenium(queue, stop_event, csv_filename, progress_callback=None
                 print(f"No items found on page {page}. Stopping.")
                 break
             
-            # If we have a start_date and we got no vehicles but there were items, assume we've passed the range
-            if start_date and not vehicles and has_items:
-                print(f"All items on page {page} are older than {start_date}. Stopping.")
-                break
+            # Track consecutive pages with no vehicles (to avoid stopping too early)
+            if not vehicles and has_items:
+                consecutive_empty_pages += 1
+                print(f"  No vehicles matched filters on page {page} (consecutive: {consecutive_empty_pages})")
+                if consecutive_empty_pages >= max_consecutive_empty:
+                    print(f"Stopped after {max_consecutive_empty} consecutive pages with no matches.")
+                    break
+            else:
+                consecutive_empty_pages = 0  # Reset counter when we find matches
             
             print(f"  Found {len(vehicles)} vehicles within range on page {page}")
             
