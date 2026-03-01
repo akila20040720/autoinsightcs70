@@ -1,0 +1,12 @@
+<script>
+fetch("http://127.0.0.1:5000/vehicles")
+  .then(response => response.json())
+  .then(data => {
+      console.log("Vehicles:", data);
+
+      const div = document.createElement("div");
+      div.innerHTML = "<h3>" + data[0].model + "</h3>";
+      document.body.appendChild(div);
+  })
+  .catch(error => console.error("Error:", error));
+</script>
