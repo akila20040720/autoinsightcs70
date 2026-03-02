@@ -14,6 +14,7 @@ import {
   type Vehicle,
   type VehicleFilters
 } from '../services/vehicleDataService';
+import { VehicleImage } from '../components/VehicleImage';
 import '../styles/SearchResults.css';
 
 interface CarResult {
@@ -449,11 +450,14 @@ const SearchResults: React.FC = () => {
                 <Heart size={18} fill={isFavorite(car.id) ? 'currentColor' : 'none'} />
               </button>
               
-              {car.imageUrl && (
-                <div className="card-image-wrapper">
-                  <img src={car.imageUrl} alt={car.name} className="car-image" />
-                </div>
-              )}
+              <div className="card-image-wrapper">
+                <VehicleImage 
+                  vehicleUrl={car.vehicleUrl} 
+                  alt={car.name} 
+                  className="car-image"
+                  fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
+                />
+              </div>
               <div className="card-content">
                 <div className="flex-row-between">
                   <h4 className="car-title">{car.name}</h4>
@@ -678,7 +682,12 @@ const SearchResults: React.FC = () => {
           <div className="compare-tray-cars">
             {compareList.map(car => (
               <div key={car.id} className="compare-tray-car">
-                {car.imageUrl && <img src={car.imageUrl} alt={car.name} />}
+                <VehicleImage 
+                  vehicleUrl={car.vehicleUrl} 
+                  alt={car.name}
+                  showLoadingState={false}
+                  fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
+                />
                 <span className="compare-tray-car-name">{car.name}</span>
                 <button className="compare-tray-remove" onClick={() => toggleCompare(car)}>
                   <X size={14} />
@@ -725,9 +734,13 @@ const SearchResults: React.FC = () => {
                 <div className="compare-label"></div>
                 {compareList.map(car => (
                   <div key={car.id} className="compare-cell compare-car-header">
-                    {car.imageUrl && (
-                      <img src={car.imageUrl} alt={car.name} className="compare-car-image" />
-                    )}
+                    <VehicleImage 
+                      vehicleUrl={car.vehicleUrl} 
+                      alt={car.name} 
+                      className="compare-car-image"
+                      showLoadingState={false}
+                      fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
+                    />
                     <h3>{car.name}</h3>
                     <span className="compare-year">{car.year}</span>
                   </div>

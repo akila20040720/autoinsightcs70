@@ -9,6 +9,7 @@ import {
   searchVehicles,
   getMarketStats
 } from '../services/vehicleDataService';
+import { VehicleImage } from '../components/VehicleImage';
 import '../styles/VehicleDetail.css';
 
 interface CarResult {
@@ -200,9 +201,11 @@ const VehicleDetail: React.FC = () => {
         {/* Left - Image & Gallery */}
         <div className="detail-gallery">
           <div className="main-image">
-            {car.imageUrl && (
-              <img src={car.imageUrl} alt={car.name} />
-            )}
+            <VehicleImage 
+              vehicleUrl={car.vehicleUrl} 
+              alt={car.name}
+              fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
+            />
             <span className="condition-badge">{car.condition}</span>
           </div>
         </div>
@@ -349,9 +352,13 @@ const VehicleDetail: React.FC = () => {
                 state={{ car: v }}
                 className="similar-card glass-card"
               >
-                {v.imageUrl && (
-                  <img src={v.imageUrl} alt={v.name} className="similar-image" />
-                )}
+                <VehicleImage 
+                  vehicleUrl={v.vehicleUrl} 
+                  alt={v.name} 
+                  className="similar-image"
+                  showLoadingState={false}
+                  fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
+                />
                 <div className="similar-info">
                   <h4>{v.name}</h4>
                   <span className="similar-year">{v.year}</span>
