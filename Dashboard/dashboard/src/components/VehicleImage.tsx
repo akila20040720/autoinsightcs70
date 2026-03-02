@@ -1,7 +1,6 @@
 // Vehicle Image Component with Open Graph image loading
 import React from 'react';
 import { useVehicleImage } from '../hooks/useVehicleImage';
-import { Image } from 'lucide-react';
 
 interface VehicleImageProps {
   vehicleUrl?: string;
