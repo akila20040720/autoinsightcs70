@@ -1,33 +1,6 @@
 // Vehicle Data Service - Parses and provides access to real vehicle dataset
 import csvData from '../data/dataset_with_condition.csv?raw';
 
-// Import local vehicle images
-import toyota1 from '../images/vehicles/Toyota/toyota-1.jpg';
-import toyota2 from '../images/vehicles/Toyota/toyota-2.jpg';
-import toyota3 from '../images/vehicles/Toyota/toyota-3.jpg';
-import honda1 from '../images/vehicles/Honda/honda-1.jpg';
-import honda2 from '../images/vehicles/Honda/honda-2.jpg';
-import suzuki1 from '../images/vehicles/Suzuki/suzuki-1.jpg';
-import suzuki2 from '../images/vehicles/Suzuki/suzuki-2.jpg';
-import nissan1 from '../images/vehicles/Nissan/nissan-1.jpg';
-import nissan2 from '../images/vehicles/Nissan/nissan-2.jpg';
-import mitsubishi1 from '../images/vehicles/Mitsubishi/mitsubishi-1.jpg';
-import bmw1 from '../images/vehicles/BMW/bmw-1.jpg';
-import mercedes1 from '../images/vehicles/Mercedes-Benz/mercedes-1.jpg';
-import audi1 from '../images/vehicles/Audi/audi-1.jpg';
-import mazda1 from '../images/vehicles/Mazda/mazda-1.jpg';
-import kia1 from '../images/vehicles/Kia/kia-1.jpg';
-import hyundai1 from '../images/vehicles/Hyundai/hyundai-1.jpg';
-import ford1 from '../images/vehicles/Ford/ford-1.jpg';
-import landrover1 from '../images/vehicles/Land-Rover/landrover-1.jpg';
-import daihatsu1 from '../images/vehicles/Daihatsu/daihatsu-1.jpg';
-import tata1 from '../images/vehicles/Tata/tata-1.jpg';
-import mahindra1 from '../images/vehicles/Mahindra/mahindra-1.jpg';
-import micro1 from '../images/vehicles/Micro/micro-1.jpg';
-import perodua1 from '../images/vehicles/Perodua/perodua-1.jpg';
-import peugeot1 from '../images/vehicles/Peugeot/peugeot-1.jpg';
-import dfsk1 from '../images/vehicles/DFSK/dfsk-1.jpg';
-
 export interface Vehicle {
   id: string;
   vehicleType: string;
@@ -42,32 +15,6 @@ export interface Vehicle {
   condition: 'Used' | 'Recondition' | 'Brand New';
   imageUrl?: string;
 }
-
-// Local vehicle images mapped by make
-const MAKE_IMAGES: Record<string, string[]> = {
-  Toyota: [toyota1, toyota2, toyota3],
-  Honda: [honda1, honda2],
-  Suzuki: [suzuki1, suzuki2],
-  Nissan: [nissan1, nissan2],
-  Mitsubishi: [mitsubishi1],
-  BMW: [bmw1],
-  'Mercedes-Benz': [mercedes1],
-  Audi: [audi1],
-  Mazda: [mazda1],
-  Kia: [kia1],
-  Hyundai: [hyundai1],
-  Ford: [ford1],
-  'Land-Rover': [landrover1],
-  Daihatsu: [daihatsu1],
-  Tata: [tata1],
-  Mahindra: [mahindra1],
-  Micro: [micro1],
-  Perodua: [perodua1],
-  Peugeot: [peugeot1],
-  DFSK: [dfsk1],
-};
-
-const DEFAULT_IMAGES = [toyota1, honda1];
 
 // Parse CSV data
 function parseCSV(csv: string): Vehicle[] {
@@ -99,10 +46,6 @@ function parseCSV(csv: string): Vehicle[] {
     // Convert price to millions
     const price = Math.round((priceRaw / 1000000) * 100) / 100;
     
-    // Assign image based on make
-    const makeImages = MAKE_IMAGES[make] || DEFAULT_IMAGES;
-    const imageUrl = makeImages[Math.floor(Math.random() * makeImages.length)];
-    
     vehicles.push({
       id: `v-${i}`,
       vehicleType: 'Car',
@@ -115,7 +58,6 @@ function parseCSV(csv: string): Vehicle[] {
       publishedDate,
       vehicleUrl,
       condition: condition || 'Used',
-      imageUrl,
     });
   }
   
