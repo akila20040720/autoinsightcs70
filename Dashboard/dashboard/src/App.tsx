@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import Navbar from './component/Navbar';
+import CarMarketplace from './page/CarMarketplace';
+import SearchResults from './page/SearchResults';
+import VehicleDetail from './page/VehicleDetail';
+import Footer from './component/Footer';
+import './styles/App.css'; 
 
-function App() {
-  const [count, setCount] = useState(0)
+const THEME_KEY = 'autoinsight_theme';
+
+/** Scrolls to top whenever the route changes */
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
+
+const pageTransition = {
+  duration: 0.3,
+  ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
+};
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={pageTransition}
+        style={{ flex: 1 }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<CarMarketplace />} />
+          <Route path="/results" element={<SearchResults />} />
+          <Route path="/vehicle/:id" element={<VehicleDetail />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
 
-export default App
+const App: React.FC = () => {
+  // Theme with localStorage persistence
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved !== null) {
+        return saved === 'dark';
+      }
+      // Default to dark mode
+      return true;
+    } catch {
+      return true;
+    }
+  });
+
+  // Persist theme to localStorage
+  useEffect(() => {
+    localStorage.setItem(THEME_KEY, darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  return (
+    <Router>
+      <ScrollToTop />
+      <div className={`app-layout ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+        
+        <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+        
+        <main className="main-content">
+          <AnimatedRoutes />
+        </main>
+        
+        <Footer />
+        
+      </div>
+    </Router>
+  );
+};
+
+export default App;
