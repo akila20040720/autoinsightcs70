@@ -443,6 +443,30 @@
   }
 }
 
+@media (max-width: 768px) {
+  .vehicle-title {
+    font-size: 1.6rem;
+  }
+
+  .price-section .price {
+    font-size: 1.7rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    flex: 1 1 calc(50% - 0.5rem);
+    justify-content: center;
+  }
+
+  .market-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
   .vehicle-detail-wrapper {
     padding: 1rem;
@@ -452,6 +476,19 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+
+  .btn-back {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .action-btn {
+    flex: 1 1 100%;
   }
   
   .info-header {
