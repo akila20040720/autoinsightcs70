@@ -1,15 +1,24 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, NoSuchDriverException, WebDriverException
 import pandas as pd
 import time
 import re
 from bs4 import BeautifulSoup
+import tkinter as tk
+from tkinter import ttk
+import threading
+import queue
+import webbrowser
 import csv
 import os
+import shutil
 from datetime import datetime
 
 # Global constants
@@ -55,10 +64,117 @@ def setup_driver():
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.set_page_load_timeout(30)
-    driver.set_script_timeout(30)
-    return driver
+    edge_options = EdgeOptions()
+    edge_options.add_argument("--headless")
+    edge_options.add_argument("--disable-gpu")
+    edge_options.add_argument("--no-sandbox")
+    edge_options.add_argument("--disable-dev-shm-usage")
+    edge_options.add_argument("--window-size=1920,1080")
+    edge_options.add_argument("--disable-extensions")
+    edge_options.add_argument("--disable-plugins")
+    edge_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+
+    def apply_timeouts(driver_instance):
+        driver_instance.set_page_load_timeout(30)
+        driver_instance.set_script_timeout(30)
+        return driver_instance
+
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+        return apply_timeouts(driver)
+    except (NoSuchDriverException, WebDriverException) as e:
+        print(f"Default ChromeDriver setup failed: {e}")
+
+        driver_candidates = []
+
+        # User-provided explicit path
+        env_driver_path = os.environ.get("CHROMEDRIVER_PATH")
+        if env_driver_path:
+            driver_candidates.append(env_driver_path)
+
+        # Common local/project locations
+        driver_candidates.extend([
+            os.path.join(os.getcwd(), 'chromedriver.exe'),
+            os.path.join(os.path.dirname(__file__), 'chromedriver.exe'),
+            os.path.join(os.path.dirname(__file__), 'drivers', 'chromedriver.exe'),
+        ])
+
+        # Driver available on system PATH
+        path_driver = shutil.which('chromedriver')
+        if path_driver:
+            driver_candidates.append(path_driver)
+
+        # Deduplicate while preserving order
+        seen = set()
+        unique_candidates = []
+        for path in driver_candidates:
+            norm_path = os.path.normpath(path)
+            if norm_path not in seen:
+                seen.add(norm_path)
+                unique_candidates.append(path)
+
+        last_error = e
+        for driver_path in unique_candidates:
+            if not driver_path or not os.path.exists(driver_path):
+                continue
+            try:
+                print(f"Trying ChromeDriver from: {driver_path}")
+                service = Service(executable_path=driver_path)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
+                return apply_timeouts(driver)
+            except Exception as candidate_error:
+                last_error = candidate_error
+
+        print("Chrome setup failed. Trying Microsoft Edge WebDriver fallback...")
+
+        # Try Edge via Selenium Manager first
+        try:
+            driver = webdriver.Edge(options=edge_options)
+            print("Using Microsoft Edge WebDriver.")
+            return apply_timeouts(driver)
+        except Exception as edge_error:
+            last_error = edge_error
+
+        # Try explicit Edge driver paths
+        edge_candidates = []
+        env_edge_path = os.environ.get("EDGEDRIVER_PATH")
+        if env_edge_path:
+            edge_candidates.append(env_edge_path)
+
+        edge_candidates.extend([
+            os.path.join(os.getcwd(), 'msedgedriver.exe'),
+            os.path.join(os.path.dirname(__file__), 'msedgedriver.exe'),
+            os.path.join(os.path.dirname(__file__), 'drivers', 'msedgedriver.exe'),
+        ])
+
+        path_edge_driver = shutil.which('msedgedriver')
+        if path_edge_driver:
+            edge_candidates.append(path_edge_driver)
+
+        seen = set()
+        unique_edge_candidates = []
+        for path in edge_candidates:
+            norm_path = os.path.normpath(path)
+            if norm_path not in seen:
+                seen.add(norm_path)
+                unique_edge_candidates.append(path)
+
+        for edge_path in unique_edge_candidates:
+            if not edge_path or not os.path.exists(edge_path):
+                continue
+            try:
+                print(f"Trying EdgeDriver from: {edge_path}")
+                service = EdgeService(executable_path=edge_path)
+                driver = webdriver.Edge(service=service, options=edge_options)
+                print("Using Microsoft Edge WebDriver.")
+                return apply_timeouts(driver)
+            except Exception as edge_path_error:
+                last_error = edge_path_error
+
+        raise RuntimeError(
+            "Unable to start browser driver. Install Chrome/Edge and matching WebDriver, then set "
+            "CHROMEDRIVER_PATH or EDGEDRIVER_PATH, or place chromedriver.exe/msedgedriver.exe in the project folder."
+        ) from last_error
 
 def extract_vehicle_data(title, boxtext_divs):
     """Extract vehicle data from title and boxtext divs"""
@@ -137,9 +253,9 @@ def scrape_page(driver, page_num):
         url = f"https://riyasewana.com/search?page={page_num}"
         driver.get(url)
 
-        # Wait for the content to load
-        WebDriverWait(driver, 15).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "ul li.item"))
+        # Wait for the content to load (supports old and new listing layouts)
+        WebDriverWait(driver, 20).until(
+            lambda d: len(d.find_elements(By.CSS_SELECTOR, "li.v-card, li.item")) > 0
         )
 
         # Add additional wait for content to fully render
@@ -148,38 +264,80 @@ def scrape_page(driver, page_num):
         # Get page source and parse
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # Find all vehicle items
-        items = soup.find_all('li', class_='item')
+        # Find all vehicle items (new and legacy layouts)
+        items = soup.select('li.v-card, li.item')
 
         for item in items:
             try:
-                # Get title
-                title_elem = item.find('h2', class_='more')
-                if not title_elem:
-                    continue
-                    
-                title_link = title_elem.find('a')
-                if not title_link:
-                    continue
-                    
-                title = title_link.get('title', '').strip()
-                if not title:
-                    continue
-                    
-                vehicle_url = title_link.get('href', '')
-                if vehicle_url and not vehicle_url.startswith('http'):
-                    vehicle_url = 'https://riyasewana.com' + vehicle_url
+                classes = item.get('class', [])
 
-                # Get boxtext divs
-                boxtext = item.find('div', class_='boxtext')
-                if not boxtext:
-                    continue
-                    
-                boxtext_divs = boxtext.find_all('div', class_='boxintxt')
+                # New layout: li.v-card
+                if 'v-card' in classes:
+                    title_link = item.select_one('.v-card-title a') or item.find('a', href=True)
+                    if not title_link:
+                        continue
 
-                # Extract data
-                vehicle_data = extract_vehicle_data(title, boxtext_divs)
-                vehicle_data['Vehicle URL'] = vehicle_url
+                    title = (title_link.get('title') or title_link.get_text(strip=True) or '').strip()
+                    if not title:
+                        continue
+
+                    vehicle_url = title_link.get('href', '')
+                    if vehicle_url and vehicle_url.startswith('//'):
+                        vehicle_url = 'https:' + vehicle_url
+                    elif vehicle_url and vehicle_url.startswith('/'):
+                        vehicle_url = 'https://riyasewana.com' + vehicle_url
+
+                    vehicle_data = extract_vehicle_data(title, [])
+
+                    price_elem = item.select_one('.v-card-price')
+                    if price_elem:
+                        vehicle_data['Price'] = price_elem.get_text(' ', strip=True)
+
+                    meta_elem = item.select_one('.v-card-meta')
+                    if meta_elem:
+                        meta_text = meta_elem.get_text(' ', strip=True)
+                        km_match = re.search(r'(\d+(?:,\d{3})*)\s*km', meta_text, re.IGNORECASE)
+                        if km_match:
+                            vehicle_data['Milleage'] = int(km_match.group(1).replace(',', ''))
+
+                        district = re.sub(r'\s*\d+(?:,\d{3})*\s*km\s*', ' ', meta_text, flags=re.IGNORECASE)
+                        district = district.replace('·', ' ').strip()
+                        district = re.sub(r'\s+', ' ', district)
+                        if district:
+                            vehicle_data['District'] = district
+
+                    date_elem = item.select_one('.v-card-date')
+                    if date_elem:
+                        vehicle_data['published date'] = date_elem.get_text(' ', strip=True)
+
+                    vehicle_data['Vehicle URL'] = vehicle_url
+
+                # Legacy layout: li.item
+                else:
+                    title_elem = item.find('h2', class_='more')
+                    if not title_elem:
+                        continue
+
+                    title_link = title_elem.find('a')
+                    if not title_link:
+                        continue
+
+                    title = title_link.get('title', '').strip()
+                    if not title:
+                        continue
+
+                    vehicle_url = title_link.get('href', '')
+                    if vehicle_url and not vehicle_url.startswith('http'):
+                        vehicle_url = 'https://riyasewana.com' + vehicle_url
+
+                    boxtext = item.find('div', class_='boxtext')
+                    if not boxtext:
+                        continue
+
+                    boxtext_divs = boxtext.find_all('div', class_='boxintxt')
+
+                    vehicle_data = extract_vehicle_data(title, boxtext_divs)
+                    vehicle_data['Vehicle URL'] = vehicle_url
                 
                 # Only add if we have at least make or model
                 if vehicle_data['Make'] or vehicle_data['Model']:
@@ -196,90 +354,313 @@ def scrape_page(driver, page_num):
 
     return vehicles
 
-def scrape_with_selenium():
-    """Scrape using optimized Selenium and display progress in terminal"""
-    driver = setup_driver()
+def scrape_with_selenium(queue, stop_event, progress_callback=None):
+    """Scrape using optimized Selenium and put data in queue"""
+    driver = None
     total_vehicles_scraped = 0
     start_time = time.time()
     
-    print("\n" + "="*70)
-    print("🚗 RIYASEWANA VEHICLE SCRAPER - TERMINAL MODE")
-    print("="*70 + "\n")
-    
     try:
+        driver = setup_driver()
+
         # Try to scrape many pages - will stop when no more content
         page = 1
         max_pages = 67000  # Upper limit for safety
         
-        while page <= max_pages:
-            print(f"\n📄 Scraping page {page}...")
+        while page <= max_pages and not stop_event.is_set():
+            print(f"Scraping page {page}...")
             
             vehicles = scrape_page(driver, page)
             
             if not vehicles:
-                print(f"❌ No vehicles found on page {page}. Stopping.")
+                print(f"No vehicles found on page {page}. Stopping.")
                 break
             
-            print(f"✅ Found {len(vehicles)} vehicles on page {page}")
+            print(f"  Found {len(vehicles)} vehicles on page {page}")
             
             # Process each vehicle
-            for idx, vehicle in enumerate(vehicles, 1):
+            for vehicle in vehicles:
+                if stop_event.is_set():
+                    break
+                    
                 # Save to CSV immediately
                 save_vehicle_to_csv(vehicle)
+                
+                # Put in queue for GUI update
+                queue.put(vehicle)
                 total_vehicles_scraped += 1
                 
-                # Display vehicle info in terminal
-                print(f"  [{idx}] {vehicle.get('Year', 'N/A')} {vehicle.get('Make', 'N/A')} {vehicle.get('Model', 'N/A')} - {vehicle.get('Price', 'N/A')}")
-                
-                # Display progress stats every 10 vehicles
-                if total_vehicles_scraped % 10 == 0:
+                # Update progress every 10 vehicles
+                if total_vehicles_scraped % 10 == 0 and progress_callback:
                     elapsed = time.time() - start_time
                     vehicles_per_second = total_vehicles_scraped / elapsed if elapsed > 0 else 0
-                    print(f"\n📊 Progress: {total_vehicles_scraped} vehicles | Page: {page} | Speed: {vehicles_per_second:.2f} veh/sec")
+                    progress_callback(total_vehicles_scraped, vehicles_per_second, page)
             
-            # Display page summary
-            elapsed = time.time() - start_time
-            vehicles_per_second = total_vehicles_scraped / elapsed if elapsed > 0 else 0
-            print(f"\n📈 Total so far: {total_vehicles_scraped} vehicles | Time: {elapsed:.1f}s | Speed: {vehicles_per_second:.2f} veh/sec")
+            # Update progress for this page
+            if progress_callback:
+                elapsed = time.time() - start_time
+                vehicles_per_second = total_vehicles_scraped / elapsed if elapsed > 0 else 0
+                progress_callback(total_vehicles_scraped, vehicles_per_second, page)
             
             # Random delay between pages to avoid rate limiting
             delay = 1 + (time.time() % 2)  # Random between 1-3 seconds
             time.sleep(delay)
             
             page += 1
+            
+            # Occasionally check if we should stop
+            if page % 10 == 0 and stop_event.is_set():
+                break
                 
-    except KeyboardInterrupt:
-        print(f"\n\n⚠️ Scraping interrupted by user!")
-        
     except Exception as e:
-        print(f"\n❌ Error in scraping: {e}")
+        print(f"Error in scraping thread: {e}")
         
     finally:
-        driver.quit()
+        if driver:
+            driver.quit()
         
         # Final summary
         elapsed = time.time() - start_time
-        print("\n" + "="*70)
-        print("📋 SCRAPING SUMMARY")
-        print("="*70)
-        print(f"✅ Total vehicles scraped: {total_vehicles_scraped}")
-        print(f"⏱️  Time elapsed: {elapsed:.2f} seconds")
         if elapsed > 0:
             vehicles_per_second = total_vehicles_scraped / elapsed
-            print(f"⚡ Average speed: {vehicles_per_second:.2f} vehicles/second")
-        print(f"💾 Data saved to: {CSV_FILENAME}")
-        print("="*70 + "\n")
+            print(f"\n✅ Scraping completed!")
+            print(f"   Total vehicles: {total_vehicles_scraped}")
+            print(f"   Time elapsed: {elapsed:.2f} seconds")
+            print(f"   Speed: {vehicles_per_second:.2f} vehicles/second")
+            print(f"   Saved to: {CSV_FILENAME}")
+
+class VehicleTableApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Riyasewana Vehicle Scraper - Real-time Updates")
+        self.root.geometry("1300x750")
+
+        # Store vehicle URLs mapped to tree items
+        self.vehicle_urls = {}
+        self.total_scraped = 0
+
+        # Create main frame
+        main_frame = tk.Frame(root)
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Create progress frame
+        progress_frame = tk.Frame(main_frame)
+        progress_frame.pack(fill=tk.X, pady=(0, 10))
+        
+        # Progress label
+        self.progress_label = tk.Label(progress_frame, text="Ready to start scraping...", font=("Arial", 10))
+        self.progress_label.pack(side=tk.LEFT)
+        
+        # Speed label
+        self.speed_label = tk.Label(progress_frame, text="", font=("Arial", 10))
+        self.speed_label.pack(side=tk.RIGHT)
+
+        # Create treeview for table
+        tree_frame = tk.Frame(main_frame)
+        tree_frame.pack(fill=tk.BOTH, expand=True)
+        
+        self.tree = ttk.Treeview(tree_frame, columns=('Type', 'Make', 'Model', 'Year', 'Price', 'Mileage', 'District', 'Date', 'URL'), show='headings')
+        
+        # Define column headings
+        columns = [
+            ('Type', 'Vehicle Type', 100),
+            ('Make', 'Make', 80),
+            ('Model', 'Model', 150),
+            ('Year', 'Year', 60),
+            ('Price', 'Price', 120),
+            ('Mileage', 'Mileage', 80),
+            ('District', 'District', 100),
+            ('Date', 'Published Date', 100),
+            ('URL', 'URL Short', 100)
+        ]
+        
+        for col_id, heading, width in columns:
+            self.tree.heading(col_id, text=heading)
+            self.tree.column(col_id, width=width)
+
+        # Add scrollbars
+        v_scrollbar = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=self.tree.yview)
+        h_scrollbar = ttk.Scrollbar(tree_frame, orient=tk.HORIZONTAL, command=self.tree.xview)
+        self.tree.configure(yscrollcommand=v_scrollbar.set, xscrollcommand=h_scrollbar.set)
+
+        # Grid layout
+        self.tree.grid(row=0, column=0, sticky='nsew')
+        v_scrollbar.grid(row=0, column=1, sticky='ns')
+        h_scrollbar.grid(row=1, column=0, sticky='ew')
+        
+        tree_frame.grid_rowconfigure(0, weight=1)
+        tree_frame.grid_columnconfigure(0, weight=1)
+
+        # Bind double-click event
+        self.tree.bind('<Double-Button-1>', self.on_item_double_click)
+
+        # Create button frame
+        button_frame = tk.Frame(main_frame)
+        button_frame.pack(fill=tk.X, pady=(10, 0))
+        
+        # Start button
+        self.start_button = tk.Button(button_frame, text="▶️ Start Scraping", command=self.start_scraping, 
+                                     bg='green', fg='white', font=("Arial", 10, 'bold'), padx=20)
+        self.start_button.pack(side=tk.LEFT, padx=(0, 10))
+        
+        # Stop button
+        self.stop_button = tk.Button(button_frame, text="■ Stop Scraping", command=self.stop_scraping, 
+                                    bg='red', fg='white', font=("Arial", 10, 'bold'), padx=20, state=tk.DISABLED)
+        self.stop_button.pack(side=tk.LEFT, padx=(0, 10))
+        
+        # Clear button
+        self.clear_button = tk.Button(button_frame, text="🗑️ Clear Table", command=self.clear_table, 
+                                     bg='orange', fg='white', font=("Arial", 10), padx=20)
+        self.clear_button.pack(side=tk.LEFT)
+        
+        # Export button
+        self.export_button = tk.Button(button_frame, text="💾 Export CSV", command=self.export_csv, 
+                                      bg='blue', fg='white', font=("Arial", 10), padx=20)
+        self.export_button.pack(side=tk.RIGHT)
+
+        # Status label
+        self.status_label = tk.Label(main_frame, text="Double-click any row to view on Riyasewana", 
+                                    font=("Arial", 9), fg='gray')
+        self.status_label.pack(side=tk.BOTTOM, fill=tk.X, pady=(5, 0))
+
+        # Queue for data updates
+        self.queue = queue.Queue()
+        self.stop_event = threading.Event()
+
+        # Setup CSV file
+        setup_csv_file()
+
+        # Start checking for updates
+        self.check_queue()
+
+    def update_progress(self, total_vehicles, vehicles_per_second, current_page):
+        """Update progress display"""
+        self.total_scraped = total_vehicles
+        self.progress_label.config(text=f"Scraped: {total_vehicles:,} vehicles | Page: {current_page}")
+        self.speed_label.config(text=f"Speed: {vehicles_per_second:.2f} vehicles/sec")
+
+    def start_scraping(self):
+        self.start_button.config(state=tk.DISABLED)
+        self.stop_button.config(state=tk.NORMAL)
+        self.status_label.config(text="Scraping in progress...", fg='green')
+        
+        # Reset stop event
+        self.stop_event.clear()
+
+        # Start scraping thread
+        self.scraping_thread = threading.Thread(
+            target=scrape_with_selenium, 
+            args=(self.queue, self.stop_event, self.update_progress)
+        )
+        self.scraping_thread.daemon = True
+        self.scraping_thread.start()
+
+    def stop_scraping(self):
+        self.stop_event.set()
+        self.start_button.config(state=tk.NORMAL)
+        self.stop_button.config(state=tk.DISABLED)
+        self.status_label.config(text=f"Scraping stopped. Total: {self.total_scraped:,} vehicles", fg='red')
+
+    def clear_table(self):
+        """Clear the table view"""
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        self.vehicle_urls.clear()
+        self.total_scraped = 0
+        self.progress_label.config(text="Table cleared")
+        self.status_label.config(text="Table cleared. Ready to start scraping...", fg='gray')
+
+    def export_csv(self):
+        """Export current table view to a new CSV file"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        export_filename = f'vehicles_export_{timestamp}.csv'
+        
+        # Collect data from table
+        data = []
+        for item in self.tree.get_children():
+            values = self.tree.item(item)['values']
+            url = self.vehicle_urls.get(item, '')
+            # Convert values back to dict format
+            vehicle_data = {
+                'Vehicle Type': values[0],
+                'Make': values[1],
+                'Model': values[2],
+                'Year': values[3],
+                'Price': values[4],
+                'Milleage': values[5],
+                'District': values[6],
+                'published date': values[7],
+                'Vehicle URL': url
+            }
+            data.append(vehicle_data)
+        
+        # Save to CSV
+        if data:
+            df = pd.DataFrame(data)
+            df.to_csv(export_filename, index=False, encoding='utf-8')
+            self.status_label.config(text=f"Exported {len(data)} vehicles to {export_filename}", fg='blue')
+            print(f"Exported {len(data)} vehicles to {export_filename}")
+
+    def check_queue(self):
+        """Check for new data in queue and update table"""
+        try:
+            while True:
+                vehicle = self.queue.get_nowait()
+                self.add_vehicle_to_table(vehicle)
+        except queue.Empty:
+            pass
+
+        # Schedule next check
+        self.root.after(100, self.check_queue)
+
+    def add_vehicle_to_table(self, vehicle):
+        """Add a vehicle to the table"""
+        # Create shortened URL for display
+        url_display = vehicle.get('Vehicle URL', '')
+        if len(url_display) > 30:
+            url_display = url_display[:27] + "..."
+        
+        values = (
+            vehicle.get('Vehicle Type', ''),
+            vehicle.get('Make', ''),
+            vehicle.get('Model', ''),
+            vehicle.get('Year', ''),
+            vehicle.get('Price', ''),
+            vehicle.get('Milleage', ''),
+            vehicle.get('District', ''),
+            vehicle.get('published date', ''),
+            url_display
+        )
+        
+        item = self.tree.insert('', tk.END, values=values)
+        
+        # Store full vehicle URL for this item
+        vehicle_url = vehicle.get('Vehicle URL', '')
+        if vehicle_url:
+            self.vehicle_urls[item] = vehicle_url
+
+    def on_item_double_click(self, event):
+        """Handle double-click on table row to open vehicle URL in browser"""
+        selection = self.tree.selection()
+        if selection:
+            item = selection[0]
+            url = self.vehicle_urls.get(item)
+            if url:
+                try:
+                    webbrowser.open(url)
+                    self.status_label.config(text=f"Opening: {url[:50]}...", fg='blue')
+                except:
+                    self.status_label.config(text="Error opening browser", fg='red')
+            else:
+                self.status_label.config(text="No URL available for this vehicle", fg='orange')
 
 # Main execution
 if __name__ == "__main__":
-    try:
-        # Setup CSV file
-        setup_csv_file()
-        
-        # Start scraping
-        scrape_with_selenium()
-        
-    except KeyboardInterrupt:
-        print("\n\n⚠️ Program interrupted by user. Exiting...\n")
-    except Exception as e:
-        print(f"\n❌ Fatal error: {e}\n")
+    root = tk.Tk()
+    app = VehicleTableApp(root)
+    
+    # Set window icon and make it resizable
+    root.resizable(True, True)
+    
+    # Start the GUI
+    root.mainloop()
