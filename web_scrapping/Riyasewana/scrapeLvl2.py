@@ -20,10 +20,102 @@ import csv
 import os
 import shutil
 from datetime import datetime
+from urllib.parse import urlparse, parse_qs
 
 # Global constants
 CSV_FILENAME = 'riyasewana_vehicles.csv'
 FIELD_NAMES = ['Vehicle Type', 'Make', 'Model', 'Year', 'Price', 'Milleage', 'District', 'published date', 'Vehicle URL']
+SEARCH_URL_TEMPLATE = "https://riyasewana.com/search/cars/toyota?page={page_num}"
+
+ALLOWED_TYPE_SLUGS = ['cars', 'vans', 'pickups', 'suvs']
+
+
+def get_search_make(url):
+    """Extract make slug from a Riyasewana search URL."""
+    match = re.search(r'/search/[^/]+/([^/?#]+)', url)
+    if not match:
+        return None
+    return match.group(1).strip().lower()
+
+
+def slugify_search_part(value):
+    """Convert user input to URL slug format."""
+    text = (value or '').strip().lower()
+    text = re.sub(r'[\s_]+', '-', text)
+    text = re.sub(r'[^a-z0-9-]', '', text)
+    text = re.sub(r'-{2,}', '-', text).strip('-')
+    return text
+
+
+def build_search_url_template(filters):
+    """Build Riyasewana search URL template from selected filters."""
+    vehicle_type = (filters.get('vehicle_type') or 'cars').strip().lower()
+    if vehicle_type not in ALLOWED_TYPE_SLUGS:
+        vehicle_type = 'cars'
+
+    make = slugify_search_part(filters.get('make'))
+    model = slugify_search_part(filters.get('model'))
+    year = (filters.get('year') or '').strip()
+
+    path_parts = ['https://riyasewana.com/search', vehicle_type]
+    if make:
+        path_parts.append(make)
+    if model:
+        path_parts.append(model)
+
+    query_parts = []
+    if year:
+        query_parts.append(f"year={year}")
+    query_parts.append('page={page_num}')
+
+    return f"{'/'.join(path_parts)}?{'&'.join(query_parts)}"
+
+
+def parse_search_filters(url):
+    """Extract search filters from Riyasewana URL."""
+    parsed = urlparse(url)
+    path_parts = [p for p in parsed.path.split('/') if p]
+
+    result = {
+        'vehicle_type': None,
+        'make': None,
+        'model': None,
+        'year': None
+    }
+
+    if 'search' in path_parts:
+        idx = path_parts.index('search')
+        if idx + 1 < len(path_parts):
+            result['vehicle_type'] = path_parts[idx + 1].lower()
+        if idx + 2 < len(path_parts):
+            result['make'] = path_parts[idx + 2].lower()
+        if idx + 3 < len(path_parts):
+            result['model'] = path_parts[idx + 3].lower()
+
+    query = parse_qs(parsed.query)
+    year = (query.get('year') or [None])[0]
+    if year:
+        result['year'] = str(year).strip()
+
+    return result
+
+
+def normalize_match_text(value):
+    """Normalize text for loose matching."""
+    normalized = (value or '').lower().replace('-', ' ')
+    normalized = re.sub(r'[^a-z0-9\s]', ' ', normalized)
+    return re.sub(r'\s+', ' ', normalized).strip()
+
+
+def vehicle_type_from_slug(type_slug):
+    """Map URL type slug to display type."""
+    mapping = {
+        'cars': 'Car',
+        'vans': 'Van',
+        'pickups': 'Pickup',
+        'suvs': 'SUV'
+    }
+    return mapping.get((type_slug or '').lower())
 
 def setup_csv_file():
     """Create CSV file with headers if it doesn't exist"""
@@ -246,11 +338,16 @@ def extract_vehicle_data(title, boxtext_divs):
 
     return data
 
-def scrape_page(driver, page_num):
+def scrape_page(driver, page_num, search_url_template):
     """Scrape a single page and return vehicle data"""
     vehicles = []
     try:
-        url = f"https://riyasewana.com/search/toyota?page={page_num}"
+        url = search_url_template.format(page_num=page_num)
+        target_filters = parse_search_filters(url)
+        target_make = target_filters.get('make')
+        target_model = target_filters.get('model')
+        target_year = target_filters.get('year')
+        target_vehicle_type = target_filters.get('vehicle_type')
         driver.get(url)
 
         # Wait for the content to load (supports old and new listing layouts)
@@ -269,6 +366,7 @@ def scrape_page(driver, page_num):
 
         for item in items:
             try:
+                title = ''
                 classes = item.get('class', [])
 
                 # New layout: li.v-card
@@ -338,10 +436,31 @@ def scrape_page(driver, page_num):
 
                     vehicle_data = extract_vehicle_data(title, boxtext_divs)
                     vehicle_data['Vehicle URL'] = vehicle_url
+
+                # Enforce make from URL and skip unrelated listings from mixed result blocks
+                normalized_title = normalize_match_text(title)
+
+                if target_make:
+                    if normalize_match_text(target_make) not in normalized_title:
+                        continue
+                    vehicle_data['Make'] = target_make.replace('-', ' ').title()
+
+                if target_model and normalize_match_text(target_model) not in normalized_title:
+                    continue
+
+                if target_model and not vehicle_data.get('Model'):
+                    vehicle_data['Model'] = target_model.replace('-', ' ').title()
+
+                if target_year:
+                    if str(vehicle_data.get('Year') or '') != str(target_year):
+                        continue
+
+                if target_vehicle_type:
+                    url_type = vehicle_type_from_slug(target_vehicle_type)
+                    if url_type:
+                        vehicle_data['Vehicle Type'] = url_type
                 
-                # Only add if we have at least make or model
-                if vehicle_data['Make'] or vehicle_data['Model']:
-                    vehicles.append(vehicle_data)
+                vehicles.append(vehicle_data)
 
             except Exception as e:
                 print(f"Error parsing item on page {page_num}: {e}")
@@ -354,7 +473,7 @@ def scrape_page(driver, page_num):
 
     return vehicles
 
-def scrape_with_selenium(queue, stop_event, progress_callback=None):
+def scrape_with_selenium(queue, stop_event, search_url_template, progress_callback=None):
     """Scrape using optimized Selenium and put data in queue"""
     driver = None
     total_vehicles_scraped = 0
@@ -370,7 +489,7 @@ def scrape_with_selenium(queue, stop_event, progress_callback=None):
         while page <= max_pages and not stop_event.is_set():
             print(f"Scraping page {page}...")
             
-            vehicles = scrape_page(driver, page)
+            vehicles = scrape_page(driver, page, search_url_template)
             
             if not vehicles:
                 print(f"No vehicles found on page {page}. Stopping.")
@@ -454,6 +573,37 @@ class VehicleTableApp:
         # Speed label
         self.speed_label = tk.Label(progress_frame, text="", font=("Arial", 10))
         self.speed_label.pack(side=tk.RIGHT)
+
+        # Search filter frame
+        filter_frame = tk.LabelFrame(main_frame, text="Search Filters", padx=10, pady=8)
+        filter_frame.pack(fill=tk.X, pady=(0, 10))
+
+        self.type_var = tk.StringVar(value='cars')
+        self.make_var = tk.StringVar(value='toyota')
+        self.model_var = tk.StringVar(value='')
+        self.year_var = tk.StringVar(value='')
+
+        tk.Label(filter_frame, text="Type").grid(row=0, column=0, sticky='w', padx=(0, 6))
+        self.type_combo = ttk.Combobox(
+            filter_frame,
+            textvariable=self.type_var,
+            values=ALLOWED_TYPE_SLUGS,
+            state='readonly',
+            width=10
+        )
+        self.type_combo.grid(row=0, column=1, padx=(0, 16), sticky='w')
+
+        tk.Label(filter_frame, text="Make").grid(row=0, column=2, sticky='w', padx=(0, 6))
+        self.make_entry = tk.Entry(filter_frame, textvariable=self.make_var, width=18)
+        self.make_entry.grid(row=0, column=3, padx=(0, 16), sticky='w')
+
+        tk.Label(filter_frame, text="Model").grid(row=0, column=4, sticky='w', padx=(0, 6))
+        self.model_entry = tk.Entry(filter_frame, textvariable=self.model_var, width=18)
+        self.model_entry.grid(row=0, column=5, padx=(0, 16), sticky='w')
+
+        tk.Label(filter_frame, text="Year").grid(row=0, column=6, sticky='w', padx=(0, 6))
+        self.year_entry = tk.Entry(filter_frame, textvariable=self.year_var, width=8)
+        self.year_entry.grid(row=0, column=7, sticky='w')
 
         # Create treeview for table
         tree_frame = tk.Frame(main_frame)
@@ -540,9 +690,26 @@ class VehicleTableApp:
         self.speed_label.config(text=f"Speed: {vehicles_per_second:.2f} vehicles/sec")
 
     def start_scraping(self):
+        filters = {
+            'vehicle_type': self.type_var.get().strip().lower(),
+            'make': self.make_var.get().strip(),
+            'model': self.model_var.get().strip(),
+            'year': self.year_var.get().strip()
+        }
+
+        if not filters['make']:
+            self.status_label.config(text="Make is required (e.g., toyota)", fg='orange')
+            return
+
+        if filters['year'] and not re.fullmatch(r'\d{4}', filters['year']):
+            self.status_label.config(text="Year must be 4 digits (e.g., 2018)", fg='orange')
+            return
+
+        search_url_template = build_search_url_template(filters)
+
         self.start_button.config(state=tk.DISABLED)
         self.stop_button.config(state=tk.NORMAL)
-        self.status_label.config(text="Scraping in progress...", fg='green')
+        self.status_label.config(text=f"Scraping in progress... {search_url_template}", fg='green')
         
         # Reset stop event
         self.stop_event.clear()
@@ -550,7 +717,7 @@ class VehicleTableApp:
         # Start scraping thread
         self.scraping_thread = threading.Thread(
             target=scrape_with_selenium, 
-            args=(self.queue, self.stop_event, self.update_progress)
+            args=(self.queue, self.stop_event, search_url_template, self.update_progress)
         )
         self.scraping_thread.daemon = True
         self.scraping_thread.start()
