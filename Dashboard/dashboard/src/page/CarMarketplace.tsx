@@ -372,6 +372,7 @@ const CarMarketplace: React.FC = () => {
                   vehicleUrl={car.vehicleUrl} 
                   alt={`${car.brand} ${car.model}`} 
                   className="car-image"
+                  lazy
                   fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
                 />
               </div>
@@ -457,6 +458,7 @@ const CarMarketplace: React.FC = () => {
                     vehicleUrl={car.vehicleUrl} 
                     alt={`${car.make} ${car.model}`} 
                     className="car-image"
+                    lazy
                     fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
                   />
                 </div>

@@ -1,5 +1,5 @@
 // Vehicle Image Component with Open Graph image loading
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useVehicleImage } from '../hooks/useVehicleImage';
 
 interface VehicleImageProps {
@@ -19,14 +19,49 @@ export const VehicleImage: React.FC<VehicleImageProps> = ({
   lazy = false,
   showLoadingState = true,
 }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [shouldFetch, setShouldFetch] = useState(!lazy);
+
+  useEffect(() => {
+    if (!lazy) {
+      setShouldFetch(true);
+      return;
+    }
+
+    if (shouldFetch) {
+      return;
+    }
+
+    const node = containerRef.current;
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldFetch(true);
+          }
+        });
+      },
+      {
+        rootMargin: '200px 0px',
+      }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [lazy, shouldFetch]);
+
   const { imageUrl, isLoading } = useVehicleImage({
     vehicleUrl,
     fallbackImage,
-    lazy,
+    shouldFetch,
   });
   
   return (
-    <div className={`vehicle-image-container ${className}`} style={{ position: 'relative' }}>
+    <div ref={containerRef} className={`vehicle-image-container ${className}`} style={{ position: 'relative' }}>
       {isLoading && showLoadingState && (
         <div 
           style={{
@@ -70,6 +105,8 @@ export const VehicleImage: React.FC<VehicleImageProps> = ({
         src={imageUrl}
         alt={alt}
         loading={lazy ? 'lazy' : 'eager'}
+        decoding="async"
+        fetchPriority={lazy ? 'low' : 'high'}
         onError={(e) => {
           // Fallback to default image on error
           const target = e.target as HTMLImageElement;
@@ -90,11 +127,14 @@ export const VehicleImage: React.FC<VehicleImageProps> = ({
 };
 
 // Add keyframes for spinner animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
-document.head.appendChild(style);
+if (typeof document !== 'undefined' && !document.getElementById('vehicle-image-spinner-style')) {
+  const style = document.createElement('style');
+  style.id = 'vehicle-image-spinner-style';
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+}
