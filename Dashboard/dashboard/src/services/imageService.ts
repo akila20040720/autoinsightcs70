@@ -1,13 +1,16 @@
 // Image Service - Fetches Open Graph images from vehicle URLs
 const IMAGE_CACHE_KEY = 'autoinsight_image_cache';
 const CACHE_EXPIRY_DAYS = 7;
+const REQUEST_TIMEOUT_MS = 6000;
 
 interface ImageCache {
   [url: string]: {
-    imageUrl: string;
+    imageUrl: string | null;
     timestamp: number;
   };
 }
+
+const inFlightRequests = new Map<string, Promise<string | null>>();
 
 // Load cache from localStorage
 function loadCache(): ImageCache {
@@ -42,6 +45,43 @@ function saveCache(cache: ImageCache): void {
 
 const imageCache: ImageCache = loadCache();
 
+function hasCacheEntry(url: string): boolean {
+  return Object.prototype.hasOwnProperty.call(imageCache, url);
+}
+
+function cacheImage(url: string, imageUrl: string | null): void {
+  imageCache[url] = {
+    imageUrl,
+    timestamp: Date.now(),
+  };
+  saveCache(imageCache);
+}
+
+function normalizeImageUrl(sourcePageUrl: string, imageUrl: string): string {
+  try {
+    return new URL(imageUrl, sourcePageUrl).toString();
+  } catch {
+    return imageUrl;
+  }
+}
+
+async function fetchWithTimeout(resource: string, timeoutMs: number): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(resource, {
+      method: 'GET',
+      headers: {
+        Accept: 'text/html',
+      },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 // Extract Open Graph image from HTML
 function extractOGImage(html: string): string | null {
   // Look for og:image meta tag
@@ -65,49 +105,51 @@ function extractOGImage(html: string): string | null {
 
 // Fetch Open Graph image from URL
 export async function fetchOGImage(url: string): Promise<string | null> {
-  // Check cache first
-  if (imageCache[url]) {
-    return imageCache[url].imageUrl;
-  }
-  
   if (!url || !url.startsWith('http')) {
     return null;
   }
-  
-  try {
-    // Use CORS proxy to fetch the page
-    // You can use allorigins.win, corsproxy.io, or your own proxy
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-    
-    const response = await fetch(proxyUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'text/html',
-      },
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const html = await response.text();
-    const imageUrl = extractOGImage(html);
-    
-    if (imageUrl) {
-      // Cache the result
-      imageCache[url] = {
-        imageUrl,
-        timestamp: Date.now(),
-      };
-      saveCache(imageCache);
-      return imageUrl;
-    }
-    
-    return null;
-  } catch (error) {
-    console.warn(`Failed to fetch OG image for ${url}:`, error);
-    return null;
+
+  // Check cache first (includes previous misses)
+  if (hasCacheEntry(url)) {
+    return imageCache[url].imageUrl;
   }
+
+  // De-duplicate concurrent requests for the same URL
+  const activeRequest = inFlightRequests.get(url);
+  if (activeRequest) {
+    return activeRequest;
+  }
+
+  const requestPromise = (async () => {
+    try {
+      // Use CORS proxy to fetch the page
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+      const response = await fetchWithTimeout(proxyUrl, REQUEST_TIMEOUT_MS);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const html = await response.text();
+      const extractedImageUrl = extractOGImage(html);
+      const normalizedImageUrl = extractedImageUrl
+        ? normalizeImageUrl(url, extractedImageUrl)
+        : null;
+
+      cacheImage(url, normalizedImageUrl);
+      return normalizedImageUrl;
+    } catch (error) {
+      // Cache miss so we don't repeatedly retry slow or blocked URLs
+      cacheImage(url, null);
+      console.warn(`Failed to fetch OG image for ${url}:`, error);
+      return null;
+    } finally {
+      inFlightRequests.delete(url);
+    }
+  })();
+
+  inFlightRequests.set(url, requestPromise);
+  return requestPromise;
 }
 
 // Batch fetch images for multiple URLs
@@ -115,8 +157,8 @@ export async function fetchOGImages(urls: string[]): Promise<Map<string, string 
   const results = new Map<string, string | null>();
   
   // Filter out cached URLs
-  const uncachedUrls = urls.filter(url => !imageCache[url]);
-  const cachedUrls = urls.filter(url => imageCache[url]);
+  const uncachedUrls = urls.filter(url => !hasCacheEntry(url));
+  const cachedUrls = urls.filter(url => hasCacheEntry(url));
   
   // Add cached results immediately
   cachedUrls.forEach(url => {

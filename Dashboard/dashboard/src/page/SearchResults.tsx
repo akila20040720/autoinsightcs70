@@ -455,6 +455,7 @@ const SearchResults: React.FC = () => {
                   vehicleUrl={car.vehicleUrl} 
                   alt={car.name} 
                   className="car-image"
+                  lazy
                   fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
                 />
               </div>
@@ -685,6 +686,7 @@ const SearchResults: React.FC = () => {
                 <VehicleImage 
                   vehicleUrl={car.vehicleUrl} 
                   alt={car.name}
+                  lazy
                   showLoadingState={false}
                   fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
                 />
@@ -738,6 +740,7 @@ const SearchResults: React.FC = () => {
                       vehicleUrl={car.vehicleUrl} 
                       alt={car.name} 
                       className="compare-car-image"
+                      lazy
                       showLoadingState={false}
                       fallbackImage="https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80"
                     />

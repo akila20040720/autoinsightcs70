@@ -5,7 +5,7 @@ import { fetchOGImage, getCachedImage, DEFAULT_CAR_IMAGE } from '../services/ima
 interface UseVehicleImageOptions {
   vehicleUrl?: string;
   fallbackImage?: string;
-  lazy?: boolean;
+  shouldFetch?: boolean;
 }
 
 interface UseVehicleImageResult {
@@ -15,7 +15,7 @@ interface UseVehicleImageResult {
 }
 
 export function useVehicleImage(options: UseVehicleImageOptions): UseVehicleImageResult {
-  const { vehicleUrl, fallbackImage = DEFAULT_CAR_IMAGE, lazy = false } = options;
+  const { vehicleUrl, fallbackImage = DEFAULT_CAR_IMAGE, shouldFetch = true } = options;
   
   const [imageUrl, setImageUrl] = useState<string>(() => {
     // Check if we have a cached image immediately
@@ -28,10 +28,21 @@ export function useVehicleImage(options: UseVehicleImageOptions): UseVehicleImag
   
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!vehicleUrl) {
+      setImageUrl(fallbackImage);
+      setIsLoading(false);
+      setError(false);
+      return;
+    }
+
+    const cached = getCachedImage(vehicleUrl);
+    setImageUrl(cached ?? fallbackImage);
+  }, [vehicleUrl, fallbackImage]);
   
   useEffect(() => {
-    // Don't fetch if no URL or lazy loading is enabled
-    if (!vehicleUrl || lazy) {
+    if (!vehicleUrl || !shouldFetch) {
       return;
     }
     
@@ -68,7 +79,7 @@ export function useVehicleImage(options: UseVehicleImageOptions): UseVehicleImag
     return () => {
       isMounted = false;
     };
-  }, [vehicleUrl, lazy]);
+  }, [vehicleUrl, shouldFetch]);
   
   return { imageUrl, isLoading, error };
 }
