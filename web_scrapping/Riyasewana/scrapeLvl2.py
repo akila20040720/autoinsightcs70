@@ -22,6 +22,16 @@ import shutil
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
+try:
+    from webdriver_manager.chrome import ChromeDriverManager
+except Exception:
+    ChromeDriverManager = None
+
+try:
+    from webdriver_manager.microsoft import EdgeChromiumDriverManager
+except Exception:
+    EdgeChromiumDriverManager = None
+
 # Global constants
 CSV_FILENAME = 'riyasewana_vehicles.csv'
 FIELD_NAMES = ['Vehicle Type', 'Make', 'Model', 'Year', 'Price', 'Milleage', 'District', 'published date', 'Vehicle URL']
@@ -136,6 +146,54 @@ def save_vehicle_to_csv(vehicle_data):
     except Exception as e:
         print(f"Error saving to CSV: {e}")
 
+
+def find_browser_binary(browser_name):
+    """Find a browser executable path from env vars and common Windows locations."""
+    env_map = {
+        'chrome': ['CHROME_BINARY', 'GOOGLE_CHROME_BIN'],
+        'edge': ['EDGE_BINARY', 'MS_EDGE_BINARY']
+    }
+
+    candidates = []
+    for env_var in env_map.get(browser_name, []):
+        value = os.environ.get(env_var)
+        if value:
+            candidates.append(value)
+
+    if os.name == 'nt':
+        program_files = [
+            os.environ.get('PROGRAMFILES'),
+            os.environ.get('PROGRAMFILES(X86)'),
+            os.environ.get('LOCALAPPDATA'),
+        ]
+
+        if browser_name == 'chrome':
+            for base in program_files:
+                if not base:
+                    continue
+                candidates.append(os.path.join(base, 'Google', 'Chrome', 'Application', 'chrome.exe'))
+        elif browser_name == 'edge':
+            for base in program_files:
+                if not base:
+                    continue
+                candidates.append(os.path.join(base, 'Microsoft', 'Edge', 'Application', 'msedge.exe'))
+
+    for path in candidates:
+        if path and os.path.exists(path):
+            return path
+
+    return None
+
+
+def add_browser_binary_if_found(options, browser_name):
+    """Set Selenium binary location if we can discover an installed browser."""
+    binary_path = find_browser_binary(browser_name)
+    if binary_path:
+        options.binary_location = binary_path
+        print(f"Using {browser_name} binary: {binary_path}")
+    return options
+
+
 def setup_driver():
     """Setup Chrome driver with optimized options for speed"""
     chrome_options = Options()
@@ -155,6 +213,7 @@ def setup_driver():
     }
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+    add_browser_binary_if_found(chrome_options, 'chrome')
 
     edge_options = EdgeOptions()
     edge_options.add_argument("--headless")
@@ -165,6 +224,7 @@ def setup_driver():
     edge_options.add_argument("--disable-extensions")
     edge_options.add_argument("--disable-plugins")
     edge_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+    add_browser_binary_if_found(edge_options, 'edge')
 
     def apply_timeouts(driver_instance):
         driver_instance.set_page_load_timeout(30)
@@ -217,6 +277,20 @@ def setup_driver():
             except Exception as candidate_error:
                 last_error = candidate_error
 
+        # Automatic download/install fallback for Chrome driver
+        if ChromeDriverManager:
+            try:
+                print("Trying webdriver-manager for ChromeDriver...")
+                manager_path = ChromeDriverManager().install()
+                service = Service(executable_path=manager_path)
+                driver = webdriver.Chrome(service=service, options=chrome_options)
+                print("Using webdriver-manager ChromeDriver.")
+                return apply_timeouts(driver)
+            except Exception as manager_error:
+                last_error = manager_error
+        else:
+            print("webdriver-manager not installed for Chrome fallback. Install with: pip install webdriver-manager")
+
         print("Chrome setup failed. Trying Microsoft Edge WebDriver fallback...")
 
         # Try Edge via Selenium Manager first
@@ -263,9 +337,24 @@ def setup_driver():
             except Exception as edge_path_error:
                 last_error = edge_path_error
 
+        # Automatic download/install fallback for Edge driver
+        if EdgeChromiumDriverManager:
+            try:
+                print("Trying webdriver-manager for EdgeDriver...")
+                manager_path = EdgeChromiumDriverManager().install()
+                service = EdgeService(executable_path=manager_path)
+                driver = webdriver.Edge(service=service, options=edge_options)
+                print("Using webdriver-manager EdgeDriver.")
+                return apply_timeouts(driver)
+            except Exception as edge_manager_error:
+                last_error = edge_manager_error
+        else:
+            print("webdriver-manager not installed for Edge fallback. Install with: pip install webdriver-manager")
+
         raise RuntimeError(
-            "Unable to start browser driver. Install Chrome/Edge and matching WebDriver, then set "
-            "CHROMEDRIVER_PATH or EDGEDRIVER_PATH, or place chromedriver.exe/msedgedriver.exe in the project folder."
+            "Unable to start browser driver. Ensure Chrome or Edge is installed and usable. "
+            "You can set CHROME_BINARY/EDGE_BINARY and CHROMEDRIVER_PATH/EDGEDRIVER_PATH, "
+            "or install webdriver-manager (pip install webdriver-manager) for automatic driver download."
         ) from last_error
 
 def extract_vehicle_data(title, boxtext_divs):
