@@ -527,3 +527,349 @@
 .btn-glow-blue:active {
   transform: translateY(0);
 }
+/* --- CAR SHOWCASE GRID --- */
+.inventory-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  margin-bottom: 2rem;
+}
+
+.section-title h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.car-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 2rem;
+}
+
+/* --- GLASS CAR CARD --- */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-card);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-panel);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.card-image-wrapper {
+  position: relative;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.car-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.glass-card:hover .car-image {
+  transform: scale(1.05);
+}
+
+.floating-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.car-title {
+  font-size: 1.4rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.price-display {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.currency {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.trend-pill {
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.trend-pill.positive {
+  background: var(--success-green);
+  color: var(--success-text);
+}
+
+.trend-pill.negative {
+  background: var(--danger-red);
+  color: var(--danger-text);
+}
+
+/* 3 Stat Boxes inside the card */
+.stats-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-box {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.8rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.glass-card:hover .stat-box {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.stat-icon {
+  font-size: 1.2rem;
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.stat-text strong {
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.stat-text span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.btn-glass-purple {
+  width: 100%;
+  background: rgba(99, 102, 241, 0.08);
+  color: #a78bfa;
+  border: 1px solid rgba(99, 102, 241, 0.20);
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.light-theme .btn-glass-purple {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+}
+
+.btn-glass-purple:hover {
+  background: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  transform: translateY(-2px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .marketplace-wrapper {
+    padding: 1.5rem 1rem;
+  }
+
+  .glass-panel {
+    padding: 1.5rem 1.25rem;
+    border-radius: 16px;
+  }
+
+  .filter-intro h2 {
+    font-size: 1.6rem;
+  }
+
+  .filter-row,
+  .filter-row.three-col {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .filter-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .search-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .car-showcase-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- SAVED VEHICLES SECTION --- */
+.saved-section {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.saved-section .section-title h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.saved-section .heart-icon {
+  color: #ef4444;
+}
+
+.saved-grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.saved-card {
+  position: relative;
+}
+
+.remove-saved-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.remove-saved-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+.saved-tag {
+  background: linear-gradient(135deg, #ef4444, #f97316) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Empty saved state */
+.empty-saved-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-panel);
+  border: 2px dashed var(--glass-border);
+  border-radius: 20px;
+}
+
+.empty-saved-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(249, 115, 22, 0.1));
+  border-radius: 50%;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.empty-saved-state h4 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-saved-state p {
+  color: var(--text-muted);
+  max-width: 320px;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.5;
+}
+
+.empty-saved-state .btn-glass-purple {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flex-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.year-badge {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-blue);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
