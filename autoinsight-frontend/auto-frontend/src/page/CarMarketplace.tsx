@@ -153,70 +153,82 @@ const CarMarketplace: React.FC = () => {
     <div className="marketplace-wrapper">
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-background">
-          <div className="hero-gradient-orb hero-orb-1"></div>
-          <div className="hero-gradient-orb hero-orb-2"></div>
-        </div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <Zap size={14} />
-            <span>AI Powered Car Discovery</span>
-          </div>
+        <div className="hero-left">
+          <p className="hero-eyebrow">{TOTAL_LISTINGS.toLocaleString()}+ vehicles across Sri Lanka</p>
           <h1 className="hero-title">
-            Find Your Next Car<br />
-            <span className="hero-highlight">In 60 Seconds</span>
+            The smarter way to<br />
+            buy your next car.
           </h1>
           <p className="hero-subtitle">
-            Skip the hassle. Our smart search analyzes thousands of listings to match you 
-            with the perfect vehicle fast, transparent, and stress free.
+            Browse real listings from {BRANDS.length}+ brands and {ALL_DISTRICTS.length} districts.
+            Compare prices, check trends, and find the right deal — all in one place.
           </p>
-          <div className="hero-cta-group">
-            <button className="hero-cta-primary" onClick={handleSearch}>
-              <Search size={18} />
-              Start Searching Now
-            </button>
-            <button className="hero-cta-secondary" onClick={() => document.querySelector('.filter-section')?.scrollIntoView({ behavior: 'smooth' })}>
-              <SlidersHorizontal size={16} />
-              Use Filters
+
+          <div className="hero-quick-search">
+            <div className="hero-search-fields">
+              <div className="hero-search-select">
+                <Car size={15} />
+                <select name="brand" value={filters.brand} onChange={handleFilterChange}>
+                  <option value="All">Any Make</option>
+                  {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                </select>
+              </div>
+              <div className="hero-search-select">
+                <Settings2 size={15} />
+                <select name="model" value={filters.model} onChange={handleFilterChange} disabled={filters.brand === 'All'}>
+                  <option value="All">Any Model</option>
+                  {availableModels.map(model => <option key={model} value={model}>{model}</option>)}
+                </select>
+              </div>
+              <button className="hero-search-btn" onClick={handleSearch}>
+                <Search size={18} />
+                Search
+              </button>
+            </div>
+            <button
+              className="hero-filters-link"
+              onClick={() => document.querySelector('.filter-section')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              <SlidersHorizontal size={14} />
+              Advanced filters
             </button>
           </div>
-          <div className="hero-stats">
-            <div className="hero-stat">
-              <div className="hero-stat-icon">
-                <Car size={18} />
-              </div>
-              <div className="hero-stat-info">
-                <span className="hero-stat-value">{TOTAL_LISTINGS.toLocaleString()}+</span>
-                <span className="hero-stat-label">Active Listings</span>
-              </div>
+
+          <div className="hero-trust-row">
+            <div className="hero-trust-item">
+              <Shield size={15} />
+              <span>Verified data</span>
             </div>
-            <div className="hero-stat">
-              <div className="hero-stat-icon">
-                <Shield size={18} />
-              </div>
-              <div className="hero-stat-info">
-                <span className="hero-stat-value">{BRANDS.length}+</span>
-                <span className="hero-stat-label">Car Brands</span>
-              </div>
+            <div className="hero-trust-item">
+              <Flame size={15} />
+              <span>Live market trends</span>
             </div>
-            <div className="hero-stat">
-              <div className="hero-stat-icon">
-                <MapPin size={18} />
-              </div>
-              <div className="hero-stat-info">
-                <span className="hero-stat-value">{ALL_DISTRICTS.length}+</span>
-                <span className="hero-stat-label">Districts</span>
-              </div>
+            <div className="hero-trust-item">
+              <Clock size={15} />
+              <span>Updated daily</span>
             </div>
-            <div className="hero-stat">
-              <div className="hero-stat-icon">
-                <Clock size={18} />
-              </div>
-              <div className="hero-stat-info">
-                <span className="hero-stat-value">~60s</span>
-                <span className="hero-stat-label">Avg. Search Time</span>
-              </div>
+          </div>
+        </div>
+
+        <div className="hero-right">
+          <div className="hero-image-grid">
+            <div className="hero-img-card hero-img-main">
+              <img src={new URL('../images/vehicles/Toyota/toyota-1.jpg', import.meta.url).href} alt="Toyota" />
+              <span className="hero-img-label">Toyota</span>
             </div>
+            <div className="hero-img-card hero-img-sm top">
+              <img src={new URL('../images/vehicles/BMW/bmw-1.jpg', import.meta.url).href} alt="BMW" />
+              <span className="hero-img-label">BMW</span>
+            </div>
+            <div className="hero-img-card hero-img-sm bottom">
+              <img src={new URL('../images/vehicles/Honda/honda-1.jpg', import.meta.url).href} alt="Honda" />
+              <span className="hero-img-label">Honda</span>
+            </div>
+          </div>
+          <div className="hero-brands-ticker">
+            {['Toyota', 'Honda', 'BMW', 'Nissan', 'Suzuki', 'Hyundai', 'Mercedes-Benz', 'Audi'].map(b => (
+              <span key={b} className="hero-brand-chip">{b}</span>
+            ))}
           </div>
         </div>
       </section>
