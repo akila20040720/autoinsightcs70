@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Gauge, Settings2, ClipboardCheck, Flame, ArrowRight, 
   Search, Car, MapPin, Calendar, DollarSign, SlidersHorizontal,
   ChevronDown, RotateCcw, Sparkles, Zap, Shield, Clock,
-  Heart, Trash2, BookmarkX
+  Heart, Trash2, BookmarkX, TrendingUp, BarChart3, Users
 } from 'lucide-react';
 import { MarketplaceSkeleton } from '../component/Skeleton';
 import { 
@@ -55,6 +56,49 @@ const FAVORITES_KEY = 'autoinsight_favorites';
 
 // Get total listing count from real data
 const TOTAL_LISTINGS = getAllVehicles().length;
+
+// Hero carousel images
+const HERO_SLIDES = [
+  { src: '../images/vehicles/Toyota/toyota-1.jpg', brand: 'Toyota', tagline: 'Reliability Redefined' },
+  { src: '../images/vehicles/BMW/bmw-1.jpg', brand: 'BMW', tagline: 'The Ultimate Machine' },
+  { src: '../images/vehicles/Honda/honda-1.jpg', brand: 'Honda', tagline: 'Engineering Excellence' },
+  { src: '../images/vehicles/Mercedes-Benz/mercedes-1.jpg', brand: 'Mercedes-Benz', tagline: 'Luxury Performance' },
+  { src: '../images/vehicles/Audi/audi-1.jpg', brand: 'Audi', tagline: 'Vorsprung durch Technik' },
+  { src: '../images/vehicles/Nissan/nissan-1.jpg', brand: 'Nissan', tagline: 'Innovation That Excites' },
+];
+
+// Animated counter hook
+function useAnimatedCount(target: number, duration = 2000, ready = true) {
+  const [count, setCount] = useState(0);
+  const started = useRef(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ready) return;
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const start = performance.now();
+          const step = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            setCount(Math.floor(eased * target));
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration, ready]);
+
+  return { count, ref };
+}
 
 const DEFAULT_FILTERS = {
   brand: 'All', model: 'All', condition: 'All', priceRange: 'All', city: 'All', mileageRange: 'All', yearRange: 'All'
@@ -123,6 +167,20 @@ const CarMarketplace: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Hero carousel auto-rotation
+  const [heroSlide, setHeroSlide] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroSlide(prev => (prev + 1) % HERO_SLIDES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Animated stat counters — pass !loading so they start after skeleton is gone
+  const listingsCounter = useAnimatedCount(TOTAL_LISTINGS, 2000, !loading);
+  const brandsCounter = useAnimatedCount(BRANDS.length, 2000, !loading);
+  const districtsCounter = useAnimatedCount(ALL_DISTRICTS.length, 2000, !loading);
+
   if (loading) return <MarketplaceSkeleton />;
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -153,18 +211,51 @@ const CarMarketplace: React.FC = () => {
     <div className="marketplace-wrapper">
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-left">
-          <p className="hero-eyebrow">{TOTAL_LISTINGS.toLocaleString()}+ vehicles across Sri Lanka</p>
-          <h1 className="hero-title">
-            The smarter way to<br />
-            buy your next car.
-          </h1>
-          <p className="hero-subtitle">
-            Browse real listings from {BRANDS.length}+ brands and {ALL_DISTRICTS.length} districts.
-            Compare prices, check trends, and find the right deal — all in one place.
-          </p>
+        {/* Animated background particles */}
+        <div className="hero-particles">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`hero-particle hero-particle-${i + 1}`} />
+          ))}
+        </div>
 
-          <div className="hero-quick-search">
+        <div className="hero-left">
+          <motion.div
+            className="hero-badge"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Sparkles size={13} />
+            <span>AI-Powered Vehicle Intelligence</span>
+          </motion.div>
+
+          <motion.h1
+            className="hero-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            Find Your Perfect
+            <span className="hero-title-gradient"> Car </span>
+            with Confidence.
+          </motion.h1>
+
+          <motion.p
+            className="hero-subtitle"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            Browse real listings from {BRANDS.length}+ brands across {ALL_DISTRICTS.length} districts.
+            Compare prices, spot trends, and drive away with the best deal.
+          </motion.p>
+
+          <motion.div
+            className="hero-quick-search"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <div className="hero-search-fields">
               <div className="hero-search-select">
                 <Car size={15} />
@@ -192,45 +283,123 @@ const CarMarketplace: React.FC = () => {
               <SlidersHorizontal size={14} />
               Advanced filters
             </button>
-          </div>
+          </motion.div>
 
-          <div className="hero-trust-row">
+          {/* Stats counters row */}
+          <motion.div
+            className="hero-stats-row"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.55 }}
+          >
+            <div className="hero-stat" ref={listingsCounter.ref}>
+              <BarChart3 size={18} />
+              <div className="hero-stat-content">
+                <span className="hero-stat-number">{listingsCounter.count.toLocaleString()}+</span>
+                <span className="hero-stat-label">Vehicles</span>
+              </div>
+            </div>
+            <div className="hero-stat" ref={brandsCounter.ref}>
+              <Car size={18} />
+              <div className="hero-stat-content">
+                <span className="hero-stat-number">{brandsCounter.count}+</span>
+                <span className="hero-stat-label">Brands</span>
+              </div>
+            </div>
+            <div className="hero-stat" ref={districtsCounter.ref}>
+              <MapPin size={18} />
+              <div className="hero-stat-content">
+                <span className="hero-stat-number">{districtsCounter.count}</span>
+                <span className="hero-stat-label">Districts</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="hero-trust-row"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+          >
             <div className="hero-trust-item">
               <Shield size={15} />
               <span>Verified data</span>
             </div>
             <div className="hero-trust-item">
-              <Flame size={15} />
+              <TrendingUp size={15} />
               <span>Live market trends</span>
             </div>
             <div className="hero-trust-item">
               <Clock size={15} />
               <span>Updated daily</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="hero-right">
-          <div className="hero-image-grid">
-            <div className="hero-img-card hero-img-main">
-              <img src={new URL('../images/vehicles/Toyota/toyota-1.jpg', import.meta.url).href} alt="Toyota" />
-              <span className="hero-img-label">Toyota</span>
-            </div>
-            <div className="hero-img-card hero-img-sm top">
-              <img src={new URL('../images/vehicles/BMW/bmw-1.jpg', import.meta.url).href} alt="BMW" />
-              <span className="hero-img-label">BMW</span>
-            </div>
-            <div className="hero-img-card hero-img-sm bottom">
-              <img src={new URL('../images/vehicles/Honda/honda-1.jpg', import.meta.url).href} alt="Honda" />
-              <span className="hero-img-label">Honda</span>
+        <motion.div
+          className="hero-right"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+        >
+          {/* Main carousel image */}
+          <div className="hero-carousel">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={heroSlide}
+                className="hero-carousel-slide"
+                initial={{ opacity: 0, scale: 1.06 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.6 }}
+              >
+                <img
+                  src={new URL(HERO_SLIDES[heroSlide].src, import.meta.url).href}
+                  alt={HERO_SLIDES[heroSlide].brand}
+                />
+                <div className="hero-carousel-overlay">
+                  <span className="hero-carousel-brand">{HERO_SLIDES[heroSlide].brand}</span>
+                  <span className="hero-carousel-tagline">{HERO_SLIDES[heroSlide].tagline}</span>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+            {/* Slide indicators */}
+            <div className="hero-carousel-dots">
+              {HERO_SLIDES.map((_, i) => (
+                <button
+                  key={i}
+                  className={`hero-carousel-dot${i === heroSlide ? ' active' : ''}`}
+                  onClick={() => setHeroSlide(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
             </div>
           </div>
-          <div className="hero-brands-ticker">
-            {['Toyota', 'Honda', 'BMW', 'Nissan', 'Suzuki', 'Hyundai', 'Mercedes-Benz', 'Audi'].map(b => (
-              <span key={b} className="hero-brand-chip">{b}</span>
+
+          {/* Bottom image row */}
+          <div className="hero-thumb-row">
+            {[
+              { src: '../images/vehicles/Toyota/toyota-2.jpg', brand: 'Toyota' },
+              { src: '../images/vehicles/Honda/honda-2.jpg', brand: 'Honda' },
+              { src: '../images/vehicles/Suzuki/suzuki-1.jpg', brand: 'Suzuki' },
+              { src: '../images/vehicles/Nissan/nissan-2.jpg', brand: 'Nissan' },
+            ].map((thumb) => (
+              <div key={thumb.brand} className="hero-thumb-card">
+                <img src={new URL(thumb.src, import.meta.url).href} alt={thumb.brand} />
+                <span className="hero-thumb-label">{thumb.brand}</span>
+              </div>
             ))}
           </div>
-        </div>
+
+          {/* Brand ticker */}
+          <div className="hero-brands-ticker">
+            <div className="hero-brands-track">
+              {['Toyota', 'Honda', 'BMW', 'Nissan', 'Suzuki', 'Hyundai', 'Mercedes-Benz', 'Audi', 'Toyota', 'Honda', 'BMW', 'Nissan'].map((b, i) => (
+                <span key={`${b}-${i}`} className="hero-brand-chip">{b}</span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       <div className="page-header">
