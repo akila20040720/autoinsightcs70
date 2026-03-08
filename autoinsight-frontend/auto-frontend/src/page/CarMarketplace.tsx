@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Gauge, Settings2, ClipboardCheck, Flame, ArrowRight, 
   Search, Car, MapPin, Calendar, DollarSign, SlidersHorizontal,
-  ChevronDown, RotateCcw, Sparkles, Zap, Shield, Clock,
-  Heart, Trash2, BookmarkX, TrendingUp, BarChart3, Users
+  ChevronDown, RotateCcw, Sparkles, Shield, Clock,
+  Heart, Trash2, BookmarkX, TrendingUp, BarChart3
 } from 'lucide-react';
 import { MarketplaceSkeleton } from '../component/Skeleton';
 import { 
