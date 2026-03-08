@@ -780,7 +780,7 @@ const SearchResults: React.FC = () => {
             </button>
             <button 
               className="compare-now-btn" 
-              onClick={() => setShowCompareModal(true)}
+              onClick={() => navigate('/compare', { state: { vehicleIds: compareList.map(c => c.id) } })}
               disabled={compareList.length < 2}
             >
               Compare Now
