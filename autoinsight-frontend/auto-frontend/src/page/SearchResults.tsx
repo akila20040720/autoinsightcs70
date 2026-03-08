@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { 
   Gauge, Settings2, ClipboardCheck, TrendingUp, TrendingDown, ArrowLeft,
   GitCompare, X, Check, Plus, Heart, ExternalLink, ChevronLeft, ChevronRight,
-  ArrowUpDown, Eye, Info // <-- Added Info icon here
+  ArrowUpDown, Eye, Info
 } from 'lucide-react';
 
 type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low' | 'mileage-high';
@@ -16,7 +16,6 @@ import {
 } from '../services/vehicleDataService';
 import '../styles/SearchResults.css';
 
-// ... (Keep your existing interfaces and helper functions exactly the same)
 interface CarResult {
   id: string;
   name: string; 
@@ -48,9 +47,14 @@ function vehicleToCarResult(v: Vehicle): CarResult {
   const priceHistory: number[] = [];
   let currentPrice = basePrice * (1 - volatility * 3);
   
+  // Use a stable seed based on the car's properties 
+  let seed = v.price + (v.mileage || 1);
+  
   for (let i = 0; i < 6; i++) {
     priceHistory.push(Math.round(currentPrice * 100) / 100);
-    currentPrice += (Math.random() - 0.3) * basePrice * volatility;
+    // Deterministic random number
+    const pseudoRand = Math.abs(Math.sin(seed++) * 10000) % 1;
+    currentPrice += (pseudoRand - 0.3) * basePrice * volatility;
     currentPrice = Math.max(currentPrice, basePrice * 0.9);
     currentPrice = Math.min(currentPrice, basePrice * 1.1);
   }
@@ -206,6 +210,59 @@ const SearchResults: React.FC = () => {
     };
   }, [brand, model]);
 
+  // Generate the coordinates and points deterministically
+  const chartData = useMemo(() => {
+    const history = [];
+    let currentPrice = stats.avgPrice * 0.65; 
+    
+    // Stable seed based on the average price
+    let seed = stats.avgPrice || 1;
+    
+    // Generate 60 spiky historical points to represent the 2020-2026 span
+    for (let i = 0; i < 60; i++) {
+      history.push(currentPrice);
+      // Deterministic pseudo-random number between 0 and 1
+      const pseudoRand = Math.abs(Math.sin(seed++) * 10000) % 1;
+      currentPrice += (pseudoRand - 0.47) * stats.avgPrice * 0.08; 
+    }
+    history[59] = parseFloat(stats.lastWeek); 
+
+    const nextWeekPrice = parseFloat(stats.nextWeek);
+    const nextMonthPrice = parseFloat(stats.nextMonth);
+
+    const allPrices = [...history, nextWeekPrice, nextMonthPrice];
+    const minPrice = Math.min(...allPrices) * 0.92;
+    const maxPrice = Math.max(...allPrices) * 1.08;
+    const range = maxPrice - minPrice;
+
+    // SVG coordinate mapping
+    const svgWidth = 500;
+    const svgHeight = 180;
+    const xHistorySpace = 360; 
+    const xPredSpace = svgWidth - xHistorySpace;
+
+    const historyPoints = history.map((price, i) => {
+      const x = (i / 59) * xHistorySpace; 
+      const y = svgHeight - ((price - minPrice) / range) * svgHeight;
+      return { x, y, price };
+    });
+
+    const nextWeekX = xHistorySpace + xPredSpace * 0.4;
+    const nextWeekY = svgHeight - ((nextWeekPrice - minPrice) / range) * svgHeight;
+
+    const nextMonthX = xHistorySpace + xPredSpace * 0.9;
+    const nextMonthY = svgHeight - ((nextMonthPrice - minPrice) / range) * svgHeight;
+
+    return {
+      historyPoints,
+      minPrice,
+      maxPrice,
+      nextWeekPoint: { x: nextWeekX, y: nextWeekY, price: nextWeekPrice },
+      nextMonthPoint: { x: nextMonthX, y: nextMonthY, price: nextMonthPrice },
+      lastHistPoint: historyPoints[59]
+    };
+  }, [stats]);
+
   const allResults = useMemo<CarResult[]>(() => {
     const serviceFilters = filters ? convertFilters(filters) : {};
     const vehicles = searchVehicles(serviceFilters); 
@@ -298,7 +355,6 @@ const SearchResults: React.FC = () => {
       </div>
 
       <section className="analytics-dashboard">
-        {/* ... (Keep existing analytics dashboard completely unchanged) ... */}
         <div className="analytics-main">
           <div className="stats-overview-flex">
             <div className="stat-card glass-panel-small">
@@ -313,43 +369,73 @@ const SearchResults: React.FC = () => {
 
           <div className="graph-card glass-panel-small">
             <div className="graph-header">
-              <h4>Price Trend (2000 – 2026)</h4>
+              <h4>{searchQuery} Price Trend (2020 – 2026)</h4>
               <span className={`trend-badge ${stats.trend === 'up' ? 'positive' : 'negative'}`}>
                 {stats.trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                 {stats.trend === 'up' ? ' Increasing' : ' Decreasing'}
               </span>
             </div>
-            <div className="svg-graph-container">
-              <svg viewBox="0 0 500 200" className="price-chart">
+            
+            <div className="svg-graph-container" style={{ paddingLeft: '20px' }}>
+              <svg viewBox="-20 0 520 200" className="price-chart" style={{ overflow: 'visible' }}>
                 <defs>
-                  <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#8b5cf6" />
-                    <stop offset="100%" stopColor="#3b82f6" />
-                  </linearGradient>
                   <linearGradient id="fillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="rgba(59, 130, 246, 0.2)" />
+                    <stop offset="0%" stopColor="rgba(59, 130, 246, 0.25)" />
                     <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
                   </linearGradient>
                 </defs>
-                <line x1="0" y1="50" x2="500" y2="50" className="grid-line" />
-                <line x1="0" y1="100" x2="500" y2="100" className="grid-line" />
-                <line x1="0" y1="150" x2="500" y2="150" className="grid-line" />
-                {stats.trend === 'up' ? (
-                  <>
-                    <path d="M 0 180 C 150 170, 250 100, 500 40 L 500 200 L 0 200 Z" fill="url(#fillGrad)" />
-                    <path d="M 0 180 C 150 170, 250 100, 500 40" fill="none" stroke="url(#lineGrad)" strokeWidth="4" className="chart-line" />
-                  </>
-                ) : (
-                  <>
-                    <path d="M 0 60 C 100 70, 300 120, 500 160 L 500 200 L 0 200 Z" fill="url(#fillGrad)" />
-                    <path d="M 0 60 C 100 70, 300 120, 500 160" fill="none" stroke="url(#lineGrad)" strokeWidth="4" className="chart-line" />
-                  </>
-                )}
+
+                {/* Y-Axis Grid & Labels */}
+                {[0, 0.25, 0.5, 0.75, 1].map(ratio => {
+                  const yVal = chartData.maxPrice - (chartData.maxPrice - chartData.minPrice) * ratio;
+                  return (
+                    <g key={ratio}>
+                      <line x1="0" y1={180 * ratio} x2="500" y2={180 * ratio} stroke="var(--glass-border)" strokeDasharray="4 4" />
+                      <text x="-10" y={180 * ratio + 4} fontSize="10" fill="var(--text-muted)" textAnchor="end">
+                        {yVal.toFixed(1)}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {/* Filled Area under historical line */}
+                <polygon
+                  points={`0,180 ${chartData.historyPoints.map(p => `${p.x},${p.y}`).join(' ')} ${chartData.lastHistPoint.x},180`}
+                  fill="url(#fillGrad)"
+                />
+
+                {/* Main Historical Spiky Line */}
+                <polyline
+                  points={chartData.historyPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                  fill="none"
+                  stroke="#3b82f6"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* Prediction Dotted Lines */}
+                <line
+                  x1={chartData.lastHistPoint.x} y1={chartData.lastHistPoint.y}
+                  x2={chartData.nextWeekPoint.x} y2={chartData.nextWeekPoint.y}
+                  stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4"
+                />
+                <line
+                  x1={chartData.nextWeekPoint.x} y1={chartData.nextWeekPoint.y}
+                  x2={chartData.nextMonthPoint.x} y2={chartData.nextMonthPoint.y}
+                  stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4"
+                />
+
+                {/* Prediction Nodes */}
+                <circle cx={chartData.nextWeekPoint.x} cy={chartData.nextWeekPoint.y} r="5" fill="#f59e0b" />
+                <circle cx={chartData.nextMonthPoint.x} cy={chartData.nextMonthPoint.y} r="5" fill="#ef4444" />
               </svg>
-              <div className="graph-labels">
-                <span>2000</span>
-                <span>2010</span>
+
+              {/* X-Axis Labels */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500 }}>
                 <span>2020</span>
+                <span style={{ marginLeft: '-20px' }}>2022</span>
+                <span style={{ marginLeft: '-20px' }}>2024</span>
                 <span>2026</span>
               </div>
             </div>
@@ -370,11 +456,17 @@ const SearchResults: React.FC = () => {
               </div>
               <div className="divider"></div>
               <div className="pred-item highlight">
-                <span className="pred-time">Next Week</span>
+                <span className="pred-time" style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
+                  <span style={{display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#f59e0b'}}></span>
+                  Next Week
+                </span>
                 <span className="pred-price">{stats.nextWeek}M</span>
               </div>
               <div className="pred-item highlight">
-                <span className="pred-time">Next Month</span>
+                <span className="pred-time" style={{display: 'flex', alignItems: 'center', gap: '6px'}}>
+                  <span style={{display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444'}}></span>
+                  Next Month
+                </span>
                 <span className="pred-price">{stats.nextMonth}M</span>
               </div>
             </div>
@@ -405,7 +497,7 @@ const SearchResults: React.FC = () => {
           </div>
         </div>
 
-        {/* --- NEW COMPARE FEATURE TIP MESSAGE --- */}
+        {/* COMPARE FEATURE TIP MESSAGE */}
         <div className="compare-feature-tip glass-panel-small">
           <div className="tip-icon-wrapper">
             <Info size={18} />
@@ -415,7 +507,6 @@ const SearchResults: React.FC = () => {
             <p>Click the <kbd><Plus size={12} className="inline-icon" /></kbd> icon on any vehicle card to compare up to 3 models side-by-side.</p>
           </div>
         </div>
-        {/* -------------------------------------- */}
         
         <div className="flex-results-grid">
           {results.map(car => (
@@ -539,7 +630,6 @@ const SearchResults: React.FC = () => {
           ))}
         </div>
 
-        {/* ... (Keep Pagination and Compare trays exactly the same) ... */}
         {/* Pagination Controls */}
         {totalPages > 1 && (
           <div className="pagination-container">
