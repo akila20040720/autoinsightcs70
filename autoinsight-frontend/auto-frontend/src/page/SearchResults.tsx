@@ -48,7 +48,7 @@ function vehicleToCarResult(v: Vehicle): CarResult {
   const priceHistory: number[] = [];
   let currentPrice = basePrice * (1 - volatility * 3);
   
-  // Use a stable seed based on the car's properties 
+  // Use a stable seed based on the car's properties so the chart doesn't change on refresh
   let seed = v.price + (v.mileage || 1);
   
   for (let i = 0; i < 6; i++) {
@@ -211,22 +211,22 @@ const SearchResults: React.FC = () => {
     };
   }, [brand, model]);
 
-  // Generate the coordinates and points deterministically
+  // Generate the coordinates and points deterministically for 2025-2026
   const chartData = useMemo(() => {
     const history = [];
-    let currentPrice = stats.avgPrice * 0.65; 
+    let currentPrice = stats.avgPrice * 0.9; 
     
     // Stable seed based on the average price
     let seed = stats.avgPrice || 1;
     
-    // Generate 60 spiky historical points to represent the 2020-2026 span
-    for (let i = 0; i < 60; i++) {
+    // Generate 40 spiky historical points to represent the shorter 2025-2026 span
+    for (let i = 0; i < 40; i++) {
       history.push(currentPrice);
       // Deterministic pseudo-random number between 0 and 1
       const pseudoRand = Math.abs(Math.sin(seed++) * 10000) % 1;
-      currentPrice += (pseudoRand - 0.47) * stats.avgPrice * 0.08; 
+      currentPrice += (pseudoRand - 0.45) * stats.avgPrice * 0.08; 
     }
-    history[59] = parseFloat(stats.lastWeek); 
+    history[39] = parseFloat(stats.lastWeek); 
 
     const nextWeekPrice = parseFloat(stats.nextWeek);
     const nextMonthPrice = parseFloat(stats.nextMonth);
@@ -243,7 +243,7 @@ const SearchResults: React.FC = () => {
     const xPredSpace = svgWidth - xHistorySpace;
 
     const historyPoints = history.map((price, i) => {
-      const x = (i / 59) * xHistorySpace; 
+      const x = (i / 39) * xHistorySpace; 
       const y = svgHeight - ((price - minPrice) / range) * svgHeight;
       return { x, y, price };
     });
@@ -260,7 +260,7 @@ const SearchResults: React.FC = () => {
       maxPrice,
       nextWeekPoint: { x: nextWeekX, y: nextWeekY, price: nextWeekPrice },
       nextMonthPoint: { x: nextMonthX, y: nextMonthY, price: nextMonthPrice },
-      lastHistPoint: historyPoints[59]
+      lastHistPoint: historyPoints[39]
     };
   }, [stats]);
 
@@ -370,7 +370,7 @@ const SearchResults: React.FC = () => {
 
           <div className="graph-card glass-panel-small">
             <div className="graph-header">
-              <h4>{searchQuery} Price Trend (2020 – 2026)</h4>
+              <h4>{searchQuery} Price Trend (2025 – 2026)</h4>
               <span className={`trend-badge ${stats.trend === 'up' ? 'positive' : 'negative'}`}>
                 {stats.trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                 {stats.trend === 'up' ? ' Increasing' : ' Decreasing'}
@@ -432,12 +432,12 @@ const SearchResults: React.FC = () => {
                 <circle cx={chartData.nextMonthPoint.x} cy={chartData.nextMonthPoint.y} r="5" fill="#ef4444" />
               </svg>
 
-              {/* X-Axis Labels */}
+              {/* X-Axis Labels for 2025 - 2026 */}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500 }}>
-                <span>2020</span>
-                <span style={{ marginLeft: '-20px' }}>2022</span>
-                <span style={{ marginLeft: '-20px' }}>2024</span>
-                <span>2026</span>
+                <span>2025-11-15</span>
+                <span style={{ marginLeft: '-40px' }}>2026-01-01</span>
+                <span style={{ marginLeft: '-40px' }}>2026-02-01</span>
+                <span>2026-03-01</span>
               </div>
             </div>
           </div>
@@ -792,7 +792,7 @@ const SearchResults: React.FC = () => {
             </button>
             <button 
               className="compare-now-btn" 
-              onClick={() => setShowCompareModal(true)}
+              onClick={() => navigate('/compare', { state: { vehicleIds: compareList.map(c => c.id) } })}
               disabled={compareList.length < 2}
             >
               Compare Now

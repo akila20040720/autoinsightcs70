@@ -5,6 +5,7 @@ import Navbar from './component/Navbar';
 import CarMarketplace from './page/CarMarketplace';
 import SearchResults from './page/SearchResults';
 import VehicleDetail from './page/VehicleDetail';
+import VehicleComparison from './page/VehicleComparison';
 import Footer from './component/Footer';
 import './styles/App.css'; 
 
@@ -48,6 +49,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/" element={<CarMarketplace />} />
           <Route path="/results" element={<SearchResults />} />
           <Route path="/vehicle/:id" element={<VehicleDetail />} />
+          <Route path="/compare" element={<VehicleComparison />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

@@ -313,7 +313,7 @@ const CarMarketplace: React.FC = () => {
               <MapPin size={18} />
               <div className="hero-stat-content">
                 <span className="hero-stat-number">{districtsCounter.count}</span>
-                <span className="hero-stat-label">Districts</span>
+                <span className="hero-stat-label">Locations</span>
               </div>
             </div>
           </motion.div>
