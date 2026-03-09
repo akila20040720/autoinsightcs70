@@ -13,6 +13,7 @@ import {
   searchVehicles,
   type Vehicle,
 } from '../services/vehicleDataService';
+import OgImage from '../component/OgImage';
 import '../styles/VehicleComparison.css';
 
 interface CompareVehicle {
@@ -188,11 +189,9 @@ const VehicleComparison: React.FC = () => {
               <button className="remove-vehicle-btn" onClick={() => removeVehicle(car.id)} title="Remove">
                 <X size={16} />
               </button>
-              {car.imageUrl && (
-                <div className="comparison-card-image">
-                  <img src={car.imageUrl} alt={car.name} />
-                </div>
-              )}
+              <div className="comparison-card-image">
+                <OgImage listingUrl={car.vehicleUrl} alt={car.name} />
+              </div>
               <div className="comparison-card-info">
                 <h3>{car.name}</h3>
                 <span className="comparison-year-badge">{car.year}</span>
@@ -549,7 +548,7 @@ const VehicleComparison: React.FC = () => {
               {searchResults.map(v => (
                 <div key={v.id} className="add-modal-vehicle-row">
                   <div className="add-modal-vehicle-info">
-                    {v.imageUrl && <img src={v.imageUrl} alt={`${v.make} ${v.model}`} />}
+                    <OgImage listingUrl={v.vehicleUrl} alt={`${v.make} ${v.model}`} />
                     <div>
                       <strong>{v.make} {v.model}</strong>
                       <span>{v.year} · {v.mileage.toLocaleString()} km · {v.condition}</span>

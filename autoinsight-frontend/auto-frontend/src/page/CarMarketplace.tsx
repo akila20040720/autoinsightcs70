@@ -26,7 +26,7 @@ interface Car {
   mileage: number;
   transmission: string;
   condition: string;
-  imageUrl: string;
+  imageUrl?: string;
   vehicleUrl?: string;
   tag: string;
   tagColor: string;
@@ -59,15 +59,11 @@ const FAVORITES_KEY = 'autoinsight_favorites';
 // Get total listing count from real data
 const TOTAL_LISTINGS = getAllVehicles().length;
 
-// Hero carousel images
-const HERO_SLIDES = [
-  { src: '../images/vehicles/Toyota/toyota-1.jpg', brand: 'Toyota', tagline: 'Reliability Redefined' },
-  { src: '../images/vehicles/BMW/bmw-1.jpg', brand: 'BMW', tagline: 'The Ultimate Machine' },
-  { src: '../images/vehicles/Honda/honda-1.jpg', brand: 'Honda', tagline: 'Engineering Excellence' },
-  { src: '../images/vehicles/Mercedes-Benz/mercedes-1.jpg', brand: 'Mercedes-Benz', tagline: 'Luxury Performance' },
-  { src: '../images/vehicles/Audi/audi-1.jpg', brand: 'Audi', tagline: 'Vorsprung durch Technik' },
-  { src: '../images/vehicles/Nissan/nissan-1.jpg', brand: 'Nissan', tagline: 'Innovation That Excites' },
-];
+const HERO_SLIDES = getFeaturedVehicles(6).map((v) => ({
+  listingUrl: v.vehicleUrl,
+  brand: v.make,
+  tagline: `${v.model} Spotlight`,
+}));
 
 // Animated counter hook
 function useAnimatedCount(target: number, duration = 2000, ready = true) {
@@ -128,7 +124,7 @@ const CarMarketplace: React.FC = () => {
       mileage: v.mileage,
       transmission: 'Auto',
       condition: v.condition,
-      imageUrl: v.imageUrl || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80',
+      imageUrl: v.imageUrl,
       vehicleUrl: v.vehicleUrl,
       tag: tags[i % tags.length],
       tagColor: tagColors[i % tagColors.length],
@@ -173,6 +169,7 @@ const CarMarketplace: React.FC = () => {
   // Hero carousel auto-rotation
   const [heroSlide, setHeroSlide] = useState(0);
   useEffect(() => {
+    if (HERO_SLIDES.length === 0) return;
     const interval = setInterval(() => {
       setHeroSlide(prev => (prev + 1) % HERO_SLIDES.length);
     }, 4000);
@@ -356,13 +353,13 @@ const CarMarketplace: React.FC = () => {
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ duration: 0.6 }}
               >
-                <img
-                  src={new URL(HERO_SLIDES[heroSlide].src, import.meta.url).href}
-                  alt={HERO_SLIDES[heroSlide].brand}
+                <OgImage
+                  listingUrl={HERO_SLIDES[heroSlide]?.listingUrl}
+                  alt={HERO_SLIDES[heroSlide]?.brand || 'Vehicle'}
                 />
                 <div className="hero-carousel-overlay">
-                  <span className="hero-carousel-brand">{HERO_SLIDES[heroSlide].brand}</span>
-                  <span className="hero-carousel-tagline">{HERO_SLIDES[heroSlide].tagline}</span>
+                  <span className="hero-carousel-brand">{HERO_SLIDES[heroSlide]?.brand || 'Featured Vehicle'}</span>
+                  <span className="hero-carousel-tagline">{HERO_SLIDES[heroSlide]?.tagline || 'Live Listing Preview'}</span>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -381,14 +378,9 @@ const CarMarketplace: React.FC = () => {
 
           {/* Bottom image row */}
           <div className="hero-thumb-row">
-            {[
-              { src: '../images/vehicles/Toyota/toyota-2.jpg', brand: 'Toyota' },
-              { src: '../images/vehicles/Honda/honda-2.jpg', brand: 'Honda' },
-              { src: '../images/vehicles/Suzuki/suzuki-1.jpg', brand: 'Suzuki' },
-              { src: '../images/vehicles/Nissan/nissan-2.jpg', brand: 'Nissan' },
-            ].map((thumb) => (
+            {HERO_SLIDES.slice(0, 4).map((thumb) => (
               <div key={thumb.brand} className="hero-thumb-card">
-                <img src={new URL(thumb.src, import.meta.url).href} alt={thumb.brand} />
+                <OgImage listingUrl={thumb.listingUrl} alt={thumb.brand} />
                 <span className="hero-thumb-label">{thumb.brand}</span>
               </div>
             ))}
@@ -551,7 +543,6 @@ const CarMarketplace: React.FC = () => {
                 <span className="floating-tag" style={{ backgroundColor: car.tagColor }}>{car.tag}</span>
                 <OgImage
                   listingUrl={car.vehicleUrl}
-                  fallbackSrc={car.imageUrl}
                   alt={`${car.brand} ${car.model}`}
                   className="car-image"
                 />
@@ -636,7 +627,6 @@ const CarMarketplace: React.FC = () => {
                   </span>
                   <OgImage
                     listingUrl={car.vehicleUrl}
-                    fallbackSrc={car.imageUrl}
                     alt={`${car.make} ${car.model}`}
                     className="car-image"
                   />

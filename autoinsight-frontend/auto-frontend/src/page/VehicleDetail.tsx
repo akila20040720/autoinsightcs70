@@ -201,13 +201,10 @@ const VehicleDetail: React.FC = () => {
         {/* Left - Image & Gallery */}
         <div className="detail-gallery">
           <div className="main-image">
-            {car.imageUrl && (
-              <OgImage
-                listingUrl={car.vehicleUrl}
-                fallbackSrc={car.imageUrl}
-                alt={car.name}
-              />
-            )}
+            <OgImage
+              listingUrl={car.vehicleUrl}
+              alt={car.name}
+            />
             <span className="condition-badge">{car.condition}</span>
           </div>
         </div>
@@ -354,14 +351,11 @@ const VehicleDetail: React.FC = () => {
                 state={{ car: v }}
                 className="similar-card glass-card"
               >
-                {v.imageUrl && (
-                  <OgImage
-                    listingUrl={v.vehicleUrl}
-                    fallbackSrc={v.imageUrl}
-                    alt={v.name}
-                    className="similar-image"
-                  />
-                )}
+                <OgImage
+                  listingUrl={v.vehicleUrl}
+                  alt={v.name}
+                  className="similar-image"
+                />
                 <div className="similar-info">
                   <h4>{v.name}</h4>
                   <span className="similar-year">{v.year}</span>
