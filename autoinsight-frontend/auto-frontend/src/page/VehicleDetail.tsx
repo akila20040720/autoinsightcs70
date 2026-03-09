@@ -9,6 +9,7 @@ import {
   searchVehicles,
   getMarketStats
 } from '../services/vehicleDataService';
+import OgImage from '../component/OgImage';
 import '../styles/VehicleDetail.css';
 
 interface CarResult {
@@ -201,7 +202,11 @@ const VehicleDetail: React.FC = () => {
         <div className="detail-gallery">
           <div className="main-image">
             {car.imageUrl && (
-              <img src={car.imageUrl} alt={car.name} />
+              <OgImage
+                listingUrl={car.vehicleUrl}
+                fallbackSrc={car.imageUrl}
+                alt={car.name}
+              />
             )}
             <span className="condition-badge">{car.condition}</span>
           </div>
@@ -350,7 +355,12 @@ const VehicleDetail: React.FC = () => {
                 className="similar-card glass-card"
               >
                 {v.imageUrl && (
-                  <img src={v.imageUrl} alt={v.name} className="similar-image" />
+                  <OgImage
+                    listingUrl={v.vehicleUrl}
+                    fallbackSrc={v.imageUrl}
+                    alt={v.name}
+                    className="similar-image"
+                  />
                 )}
                 <div className="similar-info">
                   <h4>{v.name}</h4>

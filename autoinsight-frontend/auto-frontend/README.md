@@ -1,5 +1,23 @@
 # React + TypeScript + Vite
 
+## Riyasewana OG Thumbnail Preview
+
+This app can load `og:image` previews directly from each Riyasewana listing URL and show them in vehicle thumbnail boxes.
+
+1. Start the Python OG image server:
+
+```bash
+npm run og-server
+```
+
+2. Start the frontend dev server in another terminal:
+
+```bash
+npm run dev
+```
+
+The frontend calls `/api/og-image?url=<riyasewana-url>` and Vite proxies it to `http://127.0.0.1:8000`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

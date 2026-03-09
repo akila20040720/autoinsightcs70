@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Gauge, Settings2, ClipboardCheck, Flame, ArrowRight, 
   Search, Car, MapPin, Calendar, DollarSign, SlidersHorizontal,
-  ChevronDown, RotateCcw, Sparkles, Zap, Shield, Clock,
-  Heart, Trash2, BookmarkX, TrendingUp, BarChart3, Users
+  ChevronDown, RotateCcw, Sparkles, Shield, Clock,
+  Heart, Trash2, BookmarkX, TrendingUp, BarChart3
 } from 'lucide-react';
 import { MarketplaceSkeleton } from '../component/Skeleton';
+import OgImage from '../component/OgImage';
 import { 
   getAllVehicles, 
   getTopMakes, 
@@ -26,6 +27,7 @@ interface Car {
   transmission: string;
   condition: string;
   imageUrl: string;
+  vehicleUrl?: string;
   tag: string;
   tagColor: string;
   trend: string;
@@ -127,6 +129,7 @@ const CarMarketplace: React.FC = () => {
       transmission: 'Auto',
       condition: v.condition,
       imageUrl: v.imageUrl || 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fd?auto=format&fit=crop&w=600&q=80',
+      vehicleUrl: v.vehicleUrl,
       tag: tags[i % tags.length],
       tagColor: tagColors[i % tagColors.length],
       trend: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 10 + 1).toFixed(1)}%`,
@@ -546,7 +549,12 @@ const CarMarketplace: React.FC = () => {
             <div key={car.id} className="glass-card">
               <div className="card-image-wrapper">
                 <span className="floating-tag" style={{ backgroundColor: car.tagColor }}>{car.tag}</span>
-                <img src={car.imageUrl} alt={`${car.brand} ${car.model}`} className="car-image" />
+                <OgImage
+                  listingUrl={car.vehicleUrl}
+                  fallbackSrc={car.imageUrl}
+                  alt={`${car.brand} ${car.model}`}
+                  className="car-image"
+                />
               </div>
               
               <div className="card-content">
@@ -626,7 +634,12 @@ const CarMarketplace: React.FC = () => {
                   <span className="floating-tag saved-tag">
                     <Heart size={12} fill="currentColor" /> Saved
                   </span>
-                  <img src={car.imageUrl} alt={`${car.make} ${car.model}`} className="car-image" />
+                  <OgImage
+                    listingUrl={car.vehicleUrl}
+                    fallbackSrc={car.imageUrl}
+                    alt={`${car.make} ${car.model}`}
+                    className="car-image"
+                  />
                 </div>
                 
                 <div className="card-content">

@@ -8,6 +8,7 @@ import {
 
 type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low' | 'mileage-high';
 import { SearchResultsSkeleton } from '../component/Skeleton';
+import OgImage from '../component/OgImage';
 import { 
   searchVehicles, 
   getMarketStats, 
@@ -532,7 +533,12 @@ const SearchResults: React.FC = () => {
               
               {car.imageUrl && (
                 <div className="card-image-wrapper">
-                  <img src={car.imageUrl} alt={car.name} className="car-image" />
+                  <OgImage
+                    listingUrl={car.vehicleUrl}
+                    fallbackSrc={car.imageUrl}
+                    alt={car.name}
+                    className="car-image"
+                  />
                 </div>
               )}
               <div className="card-content">
@@ -759,7 +765,13 @@ const SearchResults: React.FC = () => {
           <div className="compare-tray-cars">
             {compareList.map(car => (
               <div key={car.id} className="compare-tray-car">
-                {car.imageUrl && <img src={car.imageUrl} alt={car.name} />}
+                {car.imageUrl && (
+                  <OgImage
+                    listingUrl={car.vehicleUrl}
+                    fallbackSrc={car.imageUrl}
+                    alt={car.name}
+                  />
+                )}
                 <span className="compare-tray-car-name">{car.name}</span>
                 <button className="compare-tray-remove" onClick={() => toggleCompare(car)}>
                   <X size={14} />
@@ -807,7 +819,12 @@ const SearchResults: React.FC = () => {
                 {compareList.map(car => (
                   <div key={car.id} className="compare-cell compare-car-header">
                     {car.imageUrl && (
-                      <img src={car.imageUrl} alt={car.name} className="compare-car-image" />
+                      <OgImage
+                        listingUrl={car.vehicleUrl}
+                        fallbackSrc={car.imageUrl}
+                        alt={car.name}
+                        className="compare-car-image"
+                      />
                     )}
                     <h3>{car.name}</h3>
                     <span className="compare-year">{car.year}</span>
