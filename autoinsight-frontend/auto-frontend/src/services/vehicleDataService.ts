@@ -291,3 +291,65 @@ export function getSimilarVehicles(vehicle: Vehicle, limit: number = 3): Vehicle
 export function getTransmission(): 'Auto' | 'Manual' {
   return Math.random() > 0.2 ? 'Auto' : 'Manual';
 }
+
+export interface LiveSearchApiFilters {
+  vehicle_type?: 'cars' | 'vans' | 'pickups' | 'suvs';
+  make?: string;
+  model?: string;
+  year?: string;
+  district?: string;
+  condition?: string;
+  min_year?: number;
+  max_year?: number;
+  min_mileage?: number;
+  max_mileage?: number;
+  min_price_lkr?: number;
+  max_price_lkr?: number;
+  max_results?: number;
+}
+
+function toNumber(value: unknown): number {
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function toVehicleFromApi(item: Record<string, unknown>, index: number): Vehicle {
+  const priceMillion = toNumber(item.priceMillion);
+  const fallbackPriceLkr = toNumber(item.priceLkr);
+
+  return {
+    id: String(item.id ?? `live-${index}`),
+    vehicleType: String(item.vehicleType ?? item['Vehicle Type'] ?? 'Car'),
+    make: String(item.make ?? item.Make ?? ''),
+    model: String(item.model ?? item.Model ?? ''),
+    year: Math.trunc(toNumber(item.year ?? item.Year)),
+    price: priceMillion > 0
+      ? Math.round(priceMillion * 100) / 100
+      : Math.round((fallbackPriceLkr / 1_000_000) * 100) / 100,
+    mileage: Math.trunc(toNumber(item.mileage ?? item.Milleage)),
+    district: String(item.district ?? item.District ?? ''),
+    publishedDate: String(item.publishedDate ?? item['published date'] ?? ''),
+    vehicleUrl: String(item.vehicleUrl ?? item['Vehicle URL'] ?? ''),
+    condition: String(item.condition ?? 'Used') as 'Used' | 'Recondition' | 'Brand New',
+  };
+}
+
+export async function searchVehiclesLive(filters: LiveSearchApiFilters): Promise<Vehicle[]> {
+  const response = await fetch('/api/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(filters),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const message = (errorData as { error?: string }).error || 'Failed to fetch live vehicle data.';
+    throw new Error(message);
+  }
+
+  const data = (await response.json()) as { results?: Record<string, unknown>[] };
+  const list = Array.isArray(data.results) ? data.results : [];
+  return list.map((item, index) => toVehicleFromApi(item, index + 1));
+}

@@ -10,10 +10,9 @@ type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-ol
 import { SearchResultsSkeleton } from '../component/Skeleton';
 import OgImage from '../component/OgImage';
 import { 
-  searchVehicles, 
-  getMarketStats, 
+  searchVehiclesLive,
   type Vehicle,
-  type VehicleFilters
+  type LiveSearchApiFilters
 } from '../services/vehicleDataService';
 import '../styles/SearchResults.css';
 
@@ -79,8 +78,10 @@ function vehicleToCarResult(v: Vehicle): CarResult {
   };
 }
 
-function convertFilters(filters: FilterState): VehicleFilters {
-  const serviceFilters: VehicleFilters = {};
+function convertFilters(filters: FilterState): LiveSearchApiFilters {
+  const serviceFilters: LiveSearchApiFilters = {
+    vehicle_type: 'cars',
+  };
   
   if (filters.brand !== 'All') serviceFilters.make = filters.brand;
   if (filters.model !== 'All') serviceFilters.model = filters.model;
@@ -98,14 +99,14 @@ function convertFilters(filters: FilterState): VehicleFilters {
   if (filters.priceRange !== 'All') {
     switch (filters.priceRange) {
       case 'Below10M':
-        serviceFilters.maxPrice = 10;
+        serviceFilters.max_price_lkr = 10_000_000;
         break;
       case '10Mto20M':
-        serviceFilters.minPrice = 10;
-        serviceFilters.maxPrice = 20;
+        serviceFilters.min_price_lkr = 10_000_000;
+        serviceFilters.max_price_lkr = 20_000_000;
         break;
       case 'Above20M':
-        serviceFilters.minPrice = 20;
+        serviceFilters.min_price_lkr = 20_000_000;
         break;
     }
   }
@@ -113,14 +114,14 @@ function convertFilters(filters: FilterState): VehicleFilters {
   if (filters.mileageRange !== 'All') {
     switch (filters.mileageRange) {
       case 'Below50k':
-        serviceFilters.maxMileage = 50000;
+        serviceFilters.max_mileage = 50000;
         break;
       case '50kto100k':
-        serviceFilters.minMileage = 50000;
-        serviceFilters.maxMileage = 100000;
+        serviceFilters.min_mileage = 50000;
+        serviceFilters.max_mileage = 100000;
         break;
       case 'Above100k':
-        serviceFilters.minMileage = 100000;
+        serviceFilters.min_mileage = 100000;
         break;
     }
   }
@@ -128,8 +129,7 @@ function convertFilters(filters: FilterState): VehicleFilters {
   if (filters.yearRange !== 'All') {
     const year = parseInt(filters.yearRange);
     if (!isNaN(year)) {
-      serviceFilters.minYear = year;
-      serviceFilters.maxYear = year;
+      serviceFilters.year = String(year);
     }
   }
   
@@ -147,6 +147,8 @@ const SearchResults: React.FC = () => {
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortOption>('default');
+  const [liveVehicles, setLiveVehicles] = useState<Vehicle[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
   
   const [favorites, setFavorites] = useState<string[]>(() => {
     try {
@@ -197,11 +199,33 @@ const SearchResults: React.FC = () => {
   }, [brand, model]);
 
   const stats = useMemo(() => {
-    const marketStats = getMarketStats(brand, model !== 'All' ? model : undefined);
+    if (liveVehicles.length === 0) {
+      return {
+        avgPrice: 0,
+        avgMileage: 0,
+        totalListings: 0,
+        trend: 'down' as const,
+        lastWeek: '0.00',
+        lastMonth: '0.00',
+        nextWeek: '0.00',
+        nextMonth: '0.00',
+      };
+    }
+
+    const prices = liveVehicles.map(v => v.price);
+    const mileages = liveVehicles.map(v => v.mileage);
+    const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+    const avgMileage = mileages.reduce((a, b) => a + b, 0) / mileages.length;
+
+    const marketStats = {
+      avgPrice,
+      avgMileage,
+      totalListings: liveVehicles.length,
+    };
     const trend = marketStats.avgPrice > 0 ? 'up' : 'down';
     return {
-      avgPrice: marketStats.avgPrice,
-      avgMileage: marketStats.avgMileage,
+      avgPrice: Math.round(marketStats.avgPrice * 100) / 100,
+      avgMileage: Math.round(marketStats.avgMileage),
       totalListings: marketStats.totalListings,
       trend,
       lastWeek: (marketStats.avgPrice * 0.98).toFixed(2),
@@ -209,7 +233,7 @@ const SearchResults: React.FC = () => {
       nextWeek: (marketStats.avgPrice * 1.02).toFixed(2),
       nextMonth: (marketStats.avgPrice * 1.04).toFixed(2),
     };
-  }, [brand, model]);
+  }, [liveVehicles]);
 
   // Generate the coordinates and points deterministically for 2025-2026
   const chartData = useMemo(() => {
@@ -234,7 +258,7 @@ const SearchResults: React.FC = () => {
     const allPrices = [...history, nextWeekPrice, nextMonthPrice];
     const minPrice = Math.min(...allPrices) * 0.92;
     const maxPrice = Math.max(...allPrices) * 1.08;
-    const range = maxPrice - minPrice;
+    const range = (maxPrice - minPrice) || 1;
 
     // SVG coordinate mapping
     const svgWidth = 500;
@@ -265,10 +289,8 @@ const SearchResults: React.FC = () => {
   }, [stats]);
 
   const allResults = useMemo<CarResult[]>(() => {
-    const serviceFilters = filters ? convertFilters(filters) : {};
-    const vehicles = searchVehicles(serviceFilters); 
-    return vehicles.map(vehicleToCarResult);
-  }, [filters]);
+    return liveVehicles.map(vehicleToCarResult);
+  }, [liveVehicles]);
 
   const sortedResults = useMemo<CarResult[]>(() => {
     const sorted = [...allResults];
@@ -307,16 +329,13 @@ const SearchResults: React.FC = () => {
   }, [currentPage]);
 
   const similarVehicles = useMemo<CarResult[]>(() => {
-    if (results.length === 0) return [];
-    const firstResult = results[0];
-    const similar = searchVehicles({ 
-      minPrice: firstResult.price * 0.7,
-      maxPrice: firstResult.price * 1.3,
-    }, 20)
-      .filter(v => v.make !== brand)
+    if (allResults.length <= 1) return [];
+    const firstResult = allResults[0];
+    return allResults
+      .filter(v => v.id !== firstResult.id)
+      .filter(v => Math.abs(v.price - firstResult.price) <= 2)
       .slice(0, 3);
-    return similar.map(vehicleToCarResult);
-  }, [results, brand]);
+  }, [allResults]);
 
   const filterChips = useMemo(() => {
     if (!filters) return [];
@@ -331,9 +350,29 @@ const SearchResults: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, [brand, model]);
+    setLoadError(null);
+    let active = true;
+
+    const apiFilters = filters ? convertFilters(filters) : { vehicle_type: 'cars' as const };
+    searchVehiclesLive({ ...apiFilters, max_results: 250 })
+      .then((vehicles) => {
+        if (!active) return;
+        setLiveVehicles(vehicles);
+      })
+      .catch((err: unknown) => {
+        if (!active) return;
+        setLiveVehicles([]);
+        setLoadError(err instanceof Error ? err.message : 'Failed to fetch live listings.');
+      })
+      .finally(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [filters]);
 
   if (loading) return <SearchResultsSkeleton />;
 
@@ -497,6 +536,15 @@ const SearchResults: React.FC = () => {
             </select>
           </div>
         </div>
+
+        {loadError && (
+          <div className="compare-feature-tip glass-panel-small" style={{ marginBottom: '1rem' }}>
+            <div className="tip-content">
+              <strong>Live Scraping Error</strong>
+              <p>{loadError}</p>
+            </div>
+          </div>
+        )}
 
         {/* COMPARE FEATURE TIP MESSAGE */}
         <div className="compare-feature-tip glass-panel-small">
