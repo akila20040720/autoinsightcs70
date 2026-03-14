@@ -1,0 +1,36 @@
+/* --- SKELETON SHIMMER --- */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-input) 0%,
+    rgba(148, 163, 184, 0.12) 40%,
+    var(--bg-input) 80%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-mt {
+  margin-top: 1rem;
+}
+
+.skeleton-mt-sm {
+  margin-top: 0.5rem;
+}
+
+.skeleton-mt-lg {
+  margin-top: 1.25rem;
+}
