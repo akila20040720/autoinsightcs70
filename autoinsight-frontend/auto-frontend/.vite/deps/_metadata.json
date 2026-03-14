@@ -1,4 +1,12 @@
 {
+<<<<<<< HEAD
+  "hash": "405d11ff",
+  "configHash": "4cebf285",
+  "lockfileHash": "d17cfe9b",
+  "browserHash": "e449e3e1",
+  "optimized": {},
+  "chunks": {}
+=======
   "hash": "ad309151",
   "configHash": "4361130e",
   "lockfileHash": "99786e50",
@@ -40,4 +48,5 @@
       "file": "chunk-PKNB524N.js"
     }
   }
+>>>>>>> 1753d124fbd075ec359eca3b6665607046238555
 }

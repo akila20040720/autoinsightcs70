@@ -308,6 +308,15 @@ export interface LiveSearchApiFilters {
   max_results?: number;
 }
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+
+function apiUrl(path: string): string {
+  if (!API_BASE_URL) {
+    return path;
+  }
+  return `${API_BASE_URL}${path}`;
+}
+
 function toNumber(value: unknown): number {
   const n = typeof value === 'number' ? value : Number(value);
   return Number.isFinite(n) ? n : 0;
@@ -335,7 +344,7 @@ function toVehicleFromApi(item: Record<string, unknown>, index: number): Vehicle
 }
 
 export async function searchVehiclesLive(filters: LiveSearchApiFilters): Promise<Vehicle[]> {
-  const response = await fetch('/api/search', {
+  const response = await fetch(apiUrl('/api/search'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

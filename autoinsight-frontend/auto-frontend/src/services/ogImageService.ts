@@ -1,6 +1,14 @@
 const CACHE_PREFIX = 'autoinsight_og_image_';
 const memoryCache = new Map<string, string | null>();
 const inflightRequests = new Map<string, Promise<string | null>>();
+const OG_API_BASE_URL = (import.meta.env.VITE_OG_API_BASE_URL ?? import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+
+function ogApiUrl(path: string): string {
+  if (!OG_API_BASE_URL) {
+    return path;
+  }
+  return `${OG_API_BASE_URL}${path}`;
+}
 
 function getStorageKey(listingUrl: string): string {
   return `${CACHE_PREFIX}${listingUrl}`;
@@ -49,7 +57,7 @@ export async function fetchOgImage(listingUrl?: string): Promise<string | null> 
     return existingRequest;
   }
 
-  const request = fetch(`/api/og-image?url=${encodeURIComponent(listingUrl)}`)
+  const request = fetch(`${ogApiUrl('/api/og-image')}?url=${encodeURIComponent(listingUrl)}`)
     .then(async (res) => {
       if (!res.ok) return null;
       const data = (await res.json()) as { image?: string | null };
