@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Gauge, Settings2, ClipboardCheck, TrendingUp, TrendingDown, ArrowLeft,
-  GitCompare, X, Check, Plus, Heart, ExternalLink, ChevronLeft, ChevronRight,
-  ArrowUpDown, Eye, Info
+  GitCompare, X, Plus, Heart, ChevronLeft, ChevronRight,
+  ArrowUpDown, Info, Car, DollarSign, MapPin, Calendar, SlidersHorizontal,
+  RotateCcw, ChevronDown
 } from 'lucide-react';
 
 type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-old' | 'mileage-low' | 'mileage-high';
@@ -11,6 +12,9 @@ import { SearchResultsSkeleton } from '../component/Skeleton';
 import OgImage from '../component/OgImage';
 import { 
   searchVehiclesLive,
+  getTopMakes,
+  getPopularModels,
+  getUniqueDistricts,
   type Vehicle,
   type LiveSearchApiFilters
 } from '../services/vehicleDataService';
@@ -40,6 +44,20 @@ interface FilterState {
   mileageRange: string;
   yearRange: string;
 }
+
+const DEFAULT_FILTERS: FilterState = {
+  brand: 'All',
+  model: 'All',
+  condition: 'All',
+  priceRange: 'All',
+  city: 'All',
+  mileageRange: 'All',
+  yearRange: 'All',
+};
+
+const FILTER_MAKES = getTopMakes(20).map((entry) => entry.make);
+const FILTER_CITIES = getUniqueDistricts().slice(0, 40);
+const FILTER_YEARS = Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - i));
 
 function vehicleToCarResult(v: Vehicle): CarResult {
   const basePrice = v.price;
@@ -174,6 +192,31 @@ const SearchResults: React.FC = () => {
 
   const isFavorite = (carId: string) => favorites.includes(carId);
 
+  const formatCardPrice = (price: number) => {
+    if (price >= 1000) return price.toLocaleString();
+    return `${price}M`;
+  };
+
+  const handleNeedInspection = (car: CarResult) => {
+    const subject = encodeURIComponent(`Inspection request: ${car.name} (${car.year})`);
+    const body = encodeURIComponent(
+      [
+        'Hi AutoInsight team,',
+        '',
+        `I need a pre-purchase inspection for this vehicle: ${car.name} (${car.year}).`,
+        `Price: LKR ${car.price}M`,
+        `Mileage: ${car.mileage.toLocaleString()} km`,
+        car.vehicleUrl ? `Listing: ${car.vehicleUrl}` : '',
+        '',
+        'Please contact me with available inspection slots and pricing.',
+      ]
+        .filter(Boolean)
+        .join('\n')
+    );
+
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
   const toggleCompare = (car: CarResult) => {
     setCompareList(prev => {
       const exists = prev.find(c => c.id === car.id);
@@ -188,9 +231,37 @@ const SearchResults: React.FC = () => {
   const isInCompare = (carId: string) => compareList.some(c => c.id === carId);
   const clearCompare = () => setCompareList([]);
 
-  const filters = (location.state as { filters?: FilterState } | null)?.filters;
-  const brand = filters?.brand ?? 'All';
-  const model = filters?.model ?? 'All';
+  const incomingFilters = (location.state as { filters?: FilterState } | null)?.filters;
+  const [activeFilters, setActiveFilters] = useState<FilterState>(incomingFilters ?? DEFAULT_FILTERS);
+
+  useEffect(() => {
+    if (incomingFilters) {
+      setActiveFilters(incomingFilters);
+    }
+  }, [incomingFilters]);
+
+  const brand = activeFilters.brand;
+  const model = activeFilters.model;
+
+  const availableModels = useMemo(
+    () => (brand === 'All' ? [] : getPopularModels(brand, 30).map(entry => entry.model)),
+    [brand]
+  );
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setActiveFilters(prev => {
+      const next = { ...prev, [name]: value } as FilterState;
+      if (name === 'brand') {
+        next.model = 'All';
+      }
+      return next;
+    });
+  };
+
+  const resetFilters = () => {
+    setActiveFilters(DEFAULT_FILTERS);
+  };
 
   const searchQuery = useMemo(() => {
     if (brand !== 'All' && model !== 'All') return `${brand} ${model}`;
@@ -316,7 +387,7 @@ const SearchResults: React.FC = () => {
   
   useEffect(() => {
     setCurrentPage(1);
-  }, [filters, sortBy]);
+  }, [activeFilters, sortBy]);
 
   const results = useMemo<CarResult[]>(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -338,22 +409,21 @@ const SearchResults: React.FC = () => {
   }, [allResults]);
 
   const filterChips = useMemo(() => {
-    if (!filters) return [];
     const chips: string[] = [];
-    if (filters.condition !== 'All') chips.push(filters.condition);
-    if (filters.priceRange !== 'All') chips.push(filters.priceRange.replace(/([A-Z])/g, ' $1').trim());
-    if (filters.city !== 'All') chips.push(filters.city);
-    if (filters.mileageRange !== 'All') chips.push(filters.mileageRange.replace(/([A-Z])/g, ' $1').trim());
-    if (filters.yearRange !== 'All') chips.push(filters.yearRange);
+    if (activeFilters.condition !== 'All') chips.push(activeFilters.condition);
+    if (activeFilters.priceRange !== 'All') chips.push(activeFilters.priceRange.replace(/([A-Z])/g, ' $1').trim());
+    if (activeFilters.city !== 'All') chips.push(activeFilters.city);
+    if (activeFilters.mileageRange !== 'All') chips.push(activeFilters.mileageRange.replace(/([A-Z])/g, ' $1').trim());
+    if (activeFilters.yearRange !== 'All') chips.push(activeFilters.yearRange);
     return chips;
-  }, [filters]);
+  }, [activeFilters]);
 
   useEffect(() => {
     setLoading(true);
     setLoadError(null);
     let active = true;
 
-    const apiFilters = filters ? convertFilters(filters) : { vehicle_type: 'cars' as const };
+    const apiFilters = convertFilters(activeFilters);
     searchVehiclesLive({ ...apiFilters, max_results: 250 })
       .then((vehicles) => {
         if (!active) return;
@@ -372,14 +442,14 @@ const SearchResults: React.FC = () => {
     return () => {
       active = false;
     };
-  }, [filters]);
+  }, [activeFilters]);
 
   if (loading) return <SearchResultsSkeleton />;
 
   return (
     <div className="results-wrapper">
       <div className="results-header">
-        <button className="back-btn" onClick={() => navigate('/', { state: { filters } })}>
+        <button className="back-btn" onClick={() => navigate('/', { state: { filters: activeFilters } })}>
           <ArrowLeft size={18} />
           Back to Search
         </button>
@@ -514,63 +584,145 @@ const SearchResults: React.FC = () => {
         </div>
       </section>
 
-      {/* Main Exact Matches */}
-      <section className="listings-section">
-        <div className="listings-header">
-          <h3 className="section-title">Available Listings ({sortedResults.length})</h3>
-          
-          <div className="sort-container">
-            <ArrowUpDown size={16} className="sort-icon" />
-            <select 
-              value={sortBy} 
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="sort-select"
-            >
-              <option value="default">Relevance</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="year-new">Year: Newest First</option>
-              <option value="year-old">Year: Oldest First</option>
-              <option value="mileage-low">Mileage: Lowest</option>
-              <option value="mileage-high">Mileage: Highest</option>
-            </select>
+      <div className="results-content-layout">
+        <aside className="results-filters-sidebar glass-panel-small">
+          <div className="results-filters-header">
+            <h3><SlidersHorizontal size={16} /> Filters</h3>
+            <button className="results-clear-btn" onClick={resetFilters}>
+              <RotateCcw size={14} />
+              Clear
+            </button>
           </div>
-        </div>
 
-        {loadError && (
-          <div className="compare-feature-tip glass-panel-small" style={{ marginBottom: '1rem' }}>
-            <div className="tip-content">
-              <strong>Live Scraping Error</strong>
-              <p>{loadError}</p>
+          <div className="results-filter-group">
+            <label><Car size={14} /> Make</label>
+            <div className="results-select-wrap">
+              <select name="brand" value={activeFilters.brand} onChange={handleFilterChange}>
+                <option value="All">Any Make</option>
+                {FILTER_MAKES.map(make => <option key={make} value={make}>{make}</option>)}
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
             </div>
           </div>
-        )}
+
+          <div className="results-filter-group">
+            <label><Settings2 size={14} /> Model</label>
+            <div className="results-select-wrap">
+              <select name="model" value={activeFilters.model} onChange={handleFilterChange} disabled={activeFilters.brand === 'All'}>
+                <option value="All">Any Model</option>
+                {availableModels.map(modelName => <option key={modelName} value={modelName}>{modelName}</option>)}
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+
+          <div className="results-filter-group">
+            <label><ClipboardCheck size={14} /> Condition</label>
+            <div className="results-select-wrap">
+              <select name="condition" value={activeFilters.condition} onChange={handleFilterChange}>
+                <option value="All">Any</option>
+                <option value="Unregistered">Brand New</option>
+                <option value="Registered">Used</option>
+                <option value="Recondition">Reconditioned</option>
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+
+          <div className="results-filter-group">
+            <label><DollarSign size={14} /> Price Range</label>
+            <div className="results-select-wrap">
+              <select name="priceRange" value={activeFilters.priceRange} onChange={handleFilterChange}>
+                <option value="All">Any Price</option>
+                <option value="Below10M">Below 10M LKR</option>
+                <option value="10Mto20M">10M - 20M LKR</option>
+                <option value="Above20M">Above 20M LKR</option>
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+
+          <div className="results-filter-group">
+            <label><Gauge size={14} /> Mileage</label>
+            <div className="results-select-wrap">
+              <select name="mileageRange" value={activeFilters.mileageRange} onChange={handleFilterChange}>
+                <option value="All">Any Mileage</option>
+                <option value="Below50k">Below 50,000 km</option>
+                <option value="50kto100k">50k - 100k km</option>
+                <option value="Above100k">Above 100k km</option>
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+
+          <div className="results-filter-group">
+            <label><MapPin size={14} /> City</label>
+            <div className="results-select-wrap">
+              <select name="city" value={activeFilters.city} onChange={handleFilterChange}>
+                <option value="All">Any City</option>
+                {FILTER_CITIES.map(city => <option key={city} value={city}>{city}</option>)}
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+
+          <div className="results-filter-group">
+            <label><Calendar size={14} /> Year</label>
+            <div className="results-select-wrap">
+              <select name="yearRange" value={activeFilters.yearRange} onChange={handleFilterChange}>
+                <option value="All">Any Year</option>
+                {FILTER_YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+              </select>
+              <ChevronDown size={14} className="results-select-chevron" />
+            </div>
+          </div>
+        </aside>
+
+        <section className="listings-section results-listings-main">
+          <div className="listings-header">
+            <h3 className="section-title">Available Listings ({sortedResults.length})</h3>
+
+            <div className="sort-container">
+              <ArrowUpDown size={16} className="sort-icon" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="sort-select"
+              >
+                <option value="default">Relevance</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="year-new">Year: Newest First</option>
+                <option value="year-old">Year: Oldest First</option>
+                <option value="mileage-low">Mileage: Lowest</option>
+                <option value="mileage-high">Mileage: Highest</option>
+              </select>
+            </div>
+          </div>
+
+          {loadError && (
+            <div className="compare-feature-tip glass-panel-small" style={{ marginBottom: '1rem' }}>
+              <div className="tip-content">
+                <strong>Live Scraping Error</strong>
+                <p>{loadError}</p>
+              </div>
+            </div>
+          )}
 
         {/* COMPARE FEATURE TIP MESSAGE */}
-        <div className="compare-feature-tip glass-panel-small">
-          <div className="tip-icon-wrapper">
-            <Info size={18} />
+          <div className="compare-feature-tip glass-panel-small">
+            <div className="tip-icon-wrapper">
+              <Info size={18} />
+            </div>
+            <div className="tip-content">
+              <strong>Compare Vehicles</strong>
+              <p>Click the <kbd><Plus size={12} className="inline-icon" /></kbd> icon on any vehicle card to compare up to 3 models side-by-side.</p>
+            </div>
           </div>
-          <div className="tip-content">
-            <strong>Compare Vehicles</strong>
-            <p>Click the <kbd><Plus size={12} className="inline-icon" /></kbd> icon on any vehicle card to compare up to 3 models side-by-side.</p>
-          </div>
-        </div>
         
-        <div className="flex-results-grid">
+          <div className="flex-results-grid">
           {results.map(car => (
             <div key={car.id} className={`glass-card flex-card ${isInCompare(car.id) ? 'compare-selected' : ''}`}>
-              {/* Compare checkbox */}
-              <button 
-                className={`compare-checkbox ${isInCompare(car.id) ? 'checked' : ''}`}
-                onClick={() => toggleCompare(car)}
-                disabled={!isInCompare(car.id) && compareList.length >= 3}
-                title={isInCompare(car.id) ? 'Remove from compare' : compareList.length >= 3 ? 'Max 3 cars' : 'Add to compare'}
-              >
-                {isInCompare(car.id) ? <Check size={14} /> : <Plus size={14} />}
-              </button>
-              
-              {/* Favorite heart button */}
               <button 
                 className={`favorite-btn ${isFavorite(car.id) ? 'active' : ''}`}
                 onClick={() => toggleFavorite(car.id)}
@@ -587,103 +739,59 @@ const SearchResults: React.FC = () => {
                 />
               </div>
               <div className="card-content">
-                <div className="flex-row-between">
-                  <h4 className="car-title">{car.name}</h4>
-                  <span className="year-badge">{car.year}</span>
+                <div className="price-mileage-row">
+                  <div className="result-price">{formatCardPrice(car.price)}</div>
+                  <div className="result-mileage">{car.mileage.toLocaleString()} km</div>
                 </div>
-                
-                <div className="price-display">
-                  <span className="currency">LKR</span> {car.price}M
-                  {car.priceChange !== undefined && car.priceChange !== 0 && (
-                    <span className={`price-change-badge ${car.priceChange > 0 ? 'up' : 'down'}`}>
-                      {car.priceChange > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                      {Math.abs(car.priceChange)}%
-                    </span>
-                  )}
+
+                <a
+                  href={car.vehicleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="result-gov-link"
+                >
+                  Excl. Gov. Charges
+                </a>
+
+                <h4 className="result-card-title">{car.year} {car.name}</h4>
+
+                <div className="result-meta-row">
+                  <span>Dealer: {car.condition === 'Unregistered' ? 'New' : 'Used'}</span>
+                  <span>{car.district || 'Location pending'}</span>
                 </div>
-                
-                {/* Price History Sparkline */}
-                {car.priceHistory && car.priceHistory.length > 0 && (
-                  <div className="price-history-container">
-                    <span className="price-history-label">6-month trend</span>
-                    <div className="sparkline-wrapper">
-                      <svg className="sparkline" viewBox="0 0 100 30" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id={`sparkGrad-${car.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor={car.priceChange && car.priceChange >= 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'} />
-                            <stop offset="100%" stopColor="transparent" />
-                          </linearGradient>
-                        </defs>
-                        {(() => {
-                          const prices = car.priceHistory!;
-                          const min = Math.min(...prices) * 0.98;
-                          const max = Math.max(...prices) * 1.02;
-                          const range = max - min || 1;
-                          const points = prices.map((p, i) => {
-                            const x = (i / (prices.length - 1)) * 100;
-                            const y = 30 - ((p - min) / range) * 28;
-                            return `${x},${y}`;
-                          }).join(' ');
-                          return (
-                            <>
-                              <polygon points={`0,30 ${points} 100,30`} fill={`url(#sparkGrad-${car.id})`} />
-                              <polyline 
-                                points={points} 
-                                fill="none" 
-                                stroke={car.priceChange && car.priceChange >= 0 ? '#10b981' : '#ef4444'} 
-                                strokeWidth="2" 
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </>
-                          );
-                        })()}
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                
-                <div className="stats-row">
-                  <div className="stat-box">
-                    <span className="stat-icon"><Gauge size={16} /></span>
-                    <div className="stat-text"><strong>{car.mileage.toLocaleString()}</strong><span>km</span></div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><Settings2 size={16} /></span>
-                    <div className="stat-text"><strong>{car.transmission}</strong><span>Trans</span></div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><ClipboardCheck size={16} /></span>
-                    <div className="stat-text"><strong>{car.condition}</strong><span>Status</span></div>
-                  </div>
-                </div>
-                <div className="card-actions">
-                  <Link 
-                    to={`/vehicle/${car.id}`}
-                    state={{ car }}
-                    className="btn-view-details"
-                  >
-                    <Eye size={16} />
-                    <span>View Details</span>
-                  </Link>
+
+                <div className="result-card-actions-row">
                   <button 
-                    className="btn-glass-purple contact-seller-btn"
+                    className="result-check-btn"
                     onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
                     disabled={!car.vehicleUrl}
-                    title={car.vehicleUrl ? 'View on Riyasewana.com' : 'Link not available'}
+                    title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
                   >
-                    <ExternalLink size={16} />
-                    <span>Contact Seller</span>
+                    Check Availability
+                  </button>
+                  <button
+                    className={`result-more-btn ${isInCompare(car.id) ? 'active' : ''}`}
+                    onClick={() => toggleCompare(car)}
+                    disabled={!isInCompare(car.id) && compareList.length >= 3}
+                    title={isInCompare(car.id) ? 'Remove from compare' : compareList.length >= 3 ? 'Max 3 cars' : 'Add to compare'}
+                  >
+                    ...
                   </button>
                 </div>
+                <button
+                  className="need-inspection-btn"
+                  onClick={() => handleNeedInspection(car)}
+                >
+                  Need Inspection
+                </button>
               </div>
             </div>
           ))}
-        </div>
+          </div>
 
         {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="pagination-container">
+          {totalPages > 1 && (
+            <div className="pagination-container">
             <button 
               className="pagination-btn"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -742,13 +850,14 @@ const SearchResults: React.FC = () => {
               Next
               <ChevronRight size={18} />
             </button>
+            </div>
+          )}
+
+          <div className="pagination-info">
+            Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, sortedResults.length)} of {sortedResults.length} vehicles
           </div>
-        )}
-        
-        <div className="pagination-info">
-          Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, sortedResults.length)} of {sortedResults.length} vehicles
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Similar Choices Section */}
       <section className="listings-section similar-section">
@@ -759,38 +868,68 @@ const SearchResults: React.FC = () => {
         <div className="flex-results-grid">
           {similarVehicles.map(car => (
             <div key={car.id} className="glass-card flex-card">
+              <button 
+                className={`favorite-btn ${isFavorite(car.id) ? 'active' : ''}`}
+                onClick={() => toggleFavorite(car.id)}
+                title={isFavorite(car.id) ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart size={18} fill={isFavorite(car.id) ? 'currentColor' : 'none'} />
+              </button>
+
+              <div className="card-image-wrapper">
+                <OgImage
+                  listingUrl={car.vehicleUrl}
+                  alt={car.name}
+                  className="car-image"
+                />
+              </div>
+
               <div className="card-content">
-                <div className="flex-row-between">
-                  <h4 className="car-title">{car.name}</h4>
-                  <span className="year-badge">{car.year}</span>
+                <div className="price-mileage-row">
+                  <div className="result-price">{formatCardPrice(car.price)}</div>
+                  <div className="result-mileage">{car.mileage.toLocaleString()} km</div>
                 </div>
-                
-                <div className="price-display">
-                  <span className="currency">LKR</span> {car.price}M
-                </div>
-                
-                <div className="stats-row">
-                  <div className="stat-box">
-                    <span className="stat-icon"><Gauge size={16} /></span>
-                    <div className="stat-text"><strong>{car.mileage.toLocaleString()}</strong><span>km</span></div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><Settings2 size={16} /></span>
-                    <div className="stat-text"><strong>{car.transmission}</strong><span>Trans</span></div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><ClipboardCheck size={16} /></span>
-                    <div className="stat-text"><strong>{car.condition}</strong><span>Status</span></div>
-                  </div>
-                </div>
-                <button 
-                  className="btn-glass-purple contact-seller-btn"
-                  onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
-                  disabled={!car.vehicleUrl}
-                  title={car.vehicleUrl ? 'View on Riyasewana.com' : 'Link not available'}
+
+                <a
+                  href={car.vehicleUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="result-gov-link"
                 >
-                  <ExternalLink size={14} style={{ marginRight: '0.4rem' }} />
-                  View Listing
+                  Excl. Gov. Charges
+                </a>
+
+                <h4 className="result-card-title">{car.year} {car.name}</h4>
+
+                <div className="result-meta-row">
+                  <span>Dealer: {car.condition === 'Unregistered' ? 'New' : 'Used'}</span>
+                  <span>{car.district || 'Location pending'}</span>
+                </div>
+
+                <div className="result-card-actions-row">
+                  <button 
+                    className="result-check-btn"
+                    onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
+                    disabled={!car.vehicleUrl}
+                    title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
+                  >
+                    Check Availability
+                  </button>
+                  <button
+                    className={`result-more-btn ${isInCompare(car.id) ? 'active' : ''}`}
+                    onClick={() => toggleCompare(car)}
+                    disabled={!isInCompare(car.id) && compareList.length >= 3}
+                    title={isInCompare(car.id) ? 'Remove from compare' : compareList.length >= 3 ? 'Max 3 cars' : 'Add to compare'}
+                  >
+                    ...
+                  </button>
+                </div>
+
+                <button 
+                  className="need-inspection-btn"
+                  onClick={() => handleNeedInspection(car)}
+                >
+                  Need Inspection
                 </button>
               </div>
             </div>

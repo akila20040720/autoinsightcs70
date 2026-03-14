@@ -21,15 +21,17 @@
   --footer-icon-bg: rgba(59, 130, 246, 0.08);
 
   /* Shared accent colors */
-  --primary-blue: #3b82f6;
-  --primary-blue-hover: #2563eb;
-  --gradient-blue: linear-gradient(135deg, #2563eb, #3b82f6);
-  --gradient-purple: linear-gradient(135deg, #6366f1, #8b5cf6);
-  --gradient-text: linear-gradient(135deg, #6366f1, #3b82f6);
-  --success-green: rgba(16, 185, 129, 0.12);
-  --success-text: #059669;
-  --danger-red: rgba(239, 68, 68, 0.12);
-  --danger-text: #dc2626;
+  --primary-blue: #0a2c79;
+  --primary-blue-hover: #09245f;
+  --theme-accent: #ff7a00;
+  --theme-accent-hover: #f97316;
+  --gradient-blue: linear-gradient(135deg, #0a2c79, #3b82f6);
+  --gradient-purple: linear-gradient(135deg, #0a2c79, #ff7a00);
+  --gradient-text: linear-gradient(135deg, #0a2c79, #ff7a00);
+  --success-green: rgba(10, 44, 121, 0.12);
+  --success-text: #0a2c79;
+  --danger-red: rgba(255, 122, 0, 0.12);
+  --danger-text: #ff7a00;
 }
 
 /* Dark Theme — deep space premium */
@@ -54,13 +56,15 @@
 
   --primary-blue: #60a5fa;
   --primary-blue-hover: #3b82f6;
-  --gradient-blue: linear-gradient(135deg, #3b82f6, #60a5fa);
-  --gradient-purple: linear-gradient(135deg, #7c3aed, #a78bfa);
-  --gradient-text: linear-gradient(135deg, #a78bfa, #60a5fa);
-  --success-green: rgba(52, 211, 153, 0.15);
-  --success-text: #34d399;
-  --danger-red: rgba(248, 113, 113, 0.15);
-  --danger-text: #f87171;
+  --theme-accent: #fb923c;
+  --theme-accent-hover: #f97316;
+  --gradient-blue: linear-gradient(135deg, #1d4ed8, #60a5fa);
+  --gradient-purple: linear-gradient(135deg, #1d4ed8, #fb923c);
+  --gradient-text: linear-gradient(135deg, #60a5fa, #fb923c);
+  --success-green: rgba(96, 165, 250, 0.15);
+  --success-text: #60a5fa;
+  --danger-red: rgba(251, 146, 60, 0.18);
+  --danger-text: #fb923c;
 }
 
 /* --- GLOBAL RESETS & LAYOUT --- */
@@ -100,4 +104,122 @@ body, html {
   align-items: center;
   justify-content: center;
   color: var(--primary-blue);
+}
+
+/* --- GLOBAL THEME ENFORCEMENT (ALL PAGES) --- */
+.app-layout .btn-primary,
+.app-layout .add-vehicle-btn,
+.app-layout .winner-view-btn,
+.app-layout .add-vehicle-select-btn,
+.app-layout .compare-now-btn,
+.app-layout .btn-glass-purple,
+.app-layout .contact-seller-btn,
+.app-layout .pagination-page.active {
+  background: linear-gradient(135deg, var(--primary-blue), var(--theme-accent)) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+.app-layout .btn-primary:hover,
+.app-layout .add-vehicle-btn:hover,
+.app-layout .winner-view-btn:hover,
+.app-layout .add-vehicle-select-btn:hover,
+.app-layout .compare-now-btn:hover,
+.app-layout .btn-glass-purple:hover,
+.app-layout .contact-seller-btn:hover,
+.app-layout .pagination-page.active:hover {
+  background: linear-gradient(135deg, var(--primary-blue-hover), var(--theme-accent-hover)) !important;
+}
+
+.app-layout .action-btn,
+.app-layout .btn-view-details,
+.app-layout .winner-listing-btn,
+.app-layout .comparison-add-card:hover,
+.app-layout .filter-reset-btn:hover,
+.app-layout .theme-toggle-btn:hover,
+.app-layout .mobile-menu-btn:hover,
+.app-layout .nav-link.nav-active,
+.app-layout .nav-link:hover,
+.app-layout .market-card-check-btn,
+.app-layout .result-check-btn,
+.app-layout .result-more-btn,
+.app-layout .market-card-more-btn,
+.app-layout .need-inspection-btn,
+.app-layout .market-need-inspection-btn {
+  border-color: rgba(10, 44, 121, 0.35) !important;
+  color: var(--primary-blue) !important;
+}
+
+.app-layout .need-inspection-btn,
+.app-layout .market-need-inspection-btn,
+.app-layout .condition-chip.active,
+.app-layout .compare-tray-remove,
+.app-layout .remove-vehicle-btn,
+.app-layout .remove-saved-btn {
+  border-color: var(--theme-accent) !important;
+  color: var(--theme-accent) !important;
+}
+
+.app-layout .need-inspection-btn:hover,
+.app-layout .market-need-inspection-btn:hover,
+.app-layout .compare-tray-remove:hover,
+.app-layout .remove-vehicle-btn:hover,
+.app-layout .remove-saved-btn:hover,
+.app-layout .condition-chip.active {
+  background: var(--theme-accent) !important;
+  color: #ffffff !important;
+}
+
+.app-layout .price-change.up,
+.app-layout .price-trend.up,
+.app-layout .chart-change.up,
+.app-layout .market-diff.below,
+.app-layout .text-green {
+  color: var(--primary-blue) !important;
+}
+
+.app-layout .price-change.down,
+.app-layout .price-trend.down,
+.app-layout .chart-change.down,
+.app-layout .market-diff.above,
+.app-layout .text-red {
+  color: var(--theme-accent) !important;
+}
+
+.app-layout .price-trend.up,
+.app-layout .chart-change.up,
+.app-layout .ct-best,
+.app-layout .ct-row.ct-header,
+.app-layout .comparison-year-badge,
+.app-layout .condition-tag.recondition,
+.app-layout .condition-tag.brand-new,
+.app-layout .condition-badge {
+  background: rgba(10, 44, 121, 0.1) !important;
+  color: var(--primary-blue) !important;
+}
+
+.app-layout .price-trend.down,
+.app-layout .chart-change.down,
+.app-layout .condition-tag.used,
+.app-layout .winner-card,
+.app-layout .winner-badge,
+.app-layout .ct-market-row {
+  background: rgba(255, 122, 0, 0.12) !important;
+  color: var(--theme-accent) !important;
+}
+
+.app-layout .ct-badge,
+.app-layout .best-badge,
+.app-layout .trend-badge {
+  background: linear-gradient(135deg, var(--primary-blue), var(--theme-accent)) !important;
+  color: #ffffff !important;
+}
+
+.app-layout .sort-icon {
+  color: var(--theme-accent) !important;
+}
+
+.app-layout .sort-select {
+  border-color: rgba(255, 122, 0, 0.35) !important;
+  color: var(--text-main) !important;
 }

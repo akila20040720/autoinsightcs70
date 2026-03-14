@@ -813,7 +813,14 @@
 .section-title h3 {
   font-size: 1.8rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #0a2c79;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title h3 .inline-icon {
+  color: #ff7a00;
 }
 
 .car-showcase-grid {
@@ -1043,7 +1050,7 @@
 }
 
 .saved-section .heart-icon {
-  color: #ef4444;
+  color: #ff7a00;
 }
 
 .saved-grid {
@@ -1145,4 +1152,529 @@
   border-radius: 6px;
   font-weight: 700;
   font-size: 0.85rem;
+}
+
+/* --- HOME BANNER + SEARCH STRIP (2026 REDESIGN) --- */
+.home-hero-banner {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto 0 auto;
+  border-radius: 0;
+  overflow: hidden;
+  min-height: 420px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-panel);
+}
+
+.home-hero-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 2rem 2.5rem;
+  background:
+    linear-gradient(90deg, rgba(2, 6, 23, 0.86) 0%, rgba(2, 6, 23, 0.56) 35%, rgba(2, 6, 23, 0.2) 65%, rgba(2, 6, 23, 0.05) 100%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.04), rgba(2, 6, 23, 0.5));
+  color: #fff;
+}
+
+.home-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.home-hero-overlay h1 {
+  margin: 0;
+  max-width: 680px;
+  font-size: clamp(1.9rem, 3.2vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.home-hero-overlay p {
+  margin: 0;
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.marketplace-search-strip {
+  max-width: 1400px;
+  margin: 0 auto 3.5rem auto;
+  background: linear-gradient(180deg, #0a2c79 0%, #0a2a70 100%);
+  border-radius: 0 0 18px 18px;
+  padding: 1.1rem 1.4rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: none;
+  color: #fff;
+}
+
+.marketplace-search-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.marketplace-search-top h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.marketplace-search-actions {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.marketplace-search-actions .filter-reset-btn,
+.toggle-filters-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  color: #fff;
+  padding: 0.42rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.marketplace-search-actions .filter-reset-btn:hover,
+.toggle-filters-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.marketplace-search-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.search-strip-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.search-strip-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.marketplace-search-strip .select-wrapper select {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #d5d9e2;
+  border-radius: 6px;
+  min-height: 45px;
+  padding: 0.7rem 2rem 0.7rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.marketplace-search-strip .select-wrapper select:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+}
+
+.marketplace-search-strip .select-chevron {
+  color: #6b7280;
+}
+
+.search-strip-submit {
+  justify-content: flex-end;
+}
+
+.marketplace-search-strip .search-btn {
+  width: 100%;
+  min-height: 45px;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff7a00 0%, #ff8f1f 100%);
+  border-radius: 6px;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.marketplace-search-strip .search-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(255, 122, 0, 0.28);
+}
+
+.condition-chip-row {
+  margin-top: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.condition-chip {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.78rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.condition-chip.active {
+  background: #ff8a00;
+  border-color: #ff8a00;
+}
+
+.marketplace-advanced-row {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .marketplace-search-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .home-hero-banner,
+  .home-hero-image {
+    min-height: 300px;
+    height: 300px;
+  }
+
+  .home-hero-overlay {
+    padding: 1.3rem 1rem;
+  }
+
+  .home-hero-overlay p {
+    font-size: 0.9rem;
+  }
+
+  .marketplace-search-strip {
+    border-radius: 0 0 14px 14px;
+    padding: 1rem;
+  }
+
+  .marketplace-search-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .marketplace-search-actions {
+    width: 100%;
+  }
+
+  .marketplace-search-actions .filter-reset-btn,
+  .toggle-filters-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .marketplace-search-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-strip-submit {
+    justify-content: stretch;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-hero-banner,
+  .home-hero-image {
+    min-height: 250px;
+    height: 250px;
+  }
+
+  .home-hero-overlay {
+    gap: 0.7rem;
+    padding: 1rem 0.85rem;
+  }
+
+  .home-hero-overlay h1 {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  .home-hero-overlay p {
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  .marketplace-search-strip {
+    margin-bottom: 2.2rem;
+    padding: 0.85rem;
+  }
+
+  .marketplace-search-top h2 {
+    font-size: 1.1rem;
+  }
+
+  .condition-chip-row {
+    gap: 0.35rem;
+  }
+
+  .condition-chip {
+    font-size: 0.74rem;
+    padding: 0.3rem 0.65rem;
+  }
+}
+
+/* --- MARKETPLACE CARD THEME (MATCH SEARCH RESULT STYLE) --- */
+.inventory-section .glass-card {
+  background: #ffffff;
+  border: 1px solid #d5d9e2;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(10, 44, 121, 0.08);
+  padding: 0;
+}
+
+.inventory-section .glass-card:hover {
+  transform: translateY(-2px);
+  border-color: #0a2c79;
+  box-shadow: 0 10px 28px rgba(10, 44, 121, 0.14);
+}
+
+.inventory-section .card-image-wrapper {
+  margin: 0;
+  border-radius: 0;
+  height: 285px;
+}
+
+.inventory-section .floating-tag {
+  display: none;
+}
+
+.inventory-section .card-content {
+  padding: 1rem 1.05rem 0.95rem;
+  background: #ffffff;
+}
+
+.market-card-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.market-card-price {
+  color: #0f172a;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.market-card-mileage {
+  color: #334155;
+  font-size: 1.1rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.market-card-gov-link {
+  display: inline-block;
+  color: #3b82f6;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  margin-bottom: 0.75rem;
+}
+
+.market-card-title {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.28rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.market-card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 0.95rem;
+}
+
+.market-card-meta-row span:last-child {
+  text-align: right;
+}
+
+.market-card-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 56px;
+  border: 1px solid #d5d9e2;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.7rem;
+}
+
+.market-card-check-btn,
+.market-card-more-btn {
+  border: none;
+  background: #ffffff;
+  color: #3b82f6;
+  font-family: inherit;
+  font-size: 1.02rem;
+  font-weight: 700;
+  min-height: 48px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.market-card-check-btn {
+  border-right: 1px solid #d5d9e2;
+}
+
+.market-card-more-btn {
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+}
+
+.market-card-check-btn:hover,
+.market-card-more-btn:hover {
+  background: rgba(10, 44, 121, 0.06);
+  color: #0a2c79;
+}
+
+.market-need-inspection-btn {
+  width: 100%;
+  border: 1px solid #ff7a00;
+  background: #ffffff;
+  color: #ff7a00;
+  border-radius: 8px;
+  padding: 0.68rem 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.market-need-inspection-btn:hover {
+  background: #ff7a00;
+  border-color: #ff7a00;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(255, 122, 0, 0.28);
+}
+
+.remove-saved-btn {
+  border: 1px solid rgba(255, 122, 0, 0.25);
+  background: rgba(255, 122, 0, 0.1);
+  color: #ff7a00;
+}
+
+.remove-saved-btn:hover {
+  background: #ff7a00;
+  color: #ffffff;
+}
+
+.marketplace-wrapper .btn-glass-purple {
+  background: linear-gradient(135deg, #0a2c79, #3b82f6);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(10, 44, 121, 0.28);
+}
+
+.marketplace-wrapper .btn-glass-purple:hover {
+  background: linear-gradient(135deg, #09245f, #2563eb);
+  box-shadow: 0 8px 20px rgba(10, 44, 121, 0.35);
+}
+
+@media (max-width: 768px) {
+  .inventory-section .card-image-wrapper {
+    height: 230px;
+  }
+
+  .market-card-price {
+    font-size: 1.7rem;
+  }
+
+  .market-card-mileage {
+    font-size: 0.95rem;
+  }
+
+  .market-card-title {
+    font-size: 1.1rem;
+  }
+
+  .market-card-meta-row {
+    font-size: 0.8rem;
+  }
+}
+
+/* --- PAGE-WIDE THEME UNIFICATION (BLUE / ORANGE) --- */
+.marketplace-wrapper {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.06) 0%, rgba(255, 122, 0, 0.03) 35%, rgba(59, 130, 246, 0.04) 100%);
+}
+
+.marketplace-wrapper .filter-reset-btn:hover {
+  color: #ff7a00;
+  border-color: rgba(255, 122, 0, 0.35);
+  background: rgba(255, 122, 0, 0.08);
+}
+
+.marketplace-wrapper .empty-saved-state {
+  border: 1px dashed rgba(10, 44, 121, 0.22);
+  background: #ffffff;
+}
+
+.marketplace-wrapper .empty-saved-icon {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(255, 122, 0, 0.12));
+  color: #0a2c79;
+}
+
+.marketplace-wrapper .empty-saved-state h4 {
+  color: #0a2c79;
+}
+
+.marketplace-wrapper .year-badge {
+  background: rgba(10, 44, 121, 0.08);
+  color: #0a2c79;
+}
+
+.marketplace-wrapper .section-title h3 {
+  color: #0a2c79;
+}
+
+.marketplace-wrapper .section-title h3 .inline-icon {
+  color: #ff7a00;
+}
+
+.dark-theme .marketplace-wrapper {
+  background: linear-gradient(180deg, rgba(10, 44, 121, 0.18) 0%, rgba(255, 122, 0, 0.08) 30%, rgba(10, 44, 121, 0.12) 100%);
 }

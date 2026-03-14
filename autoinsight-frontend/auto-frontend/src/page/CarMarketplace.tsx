@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Gauge, Settings2, ClipboardCheck, Flame, ArrowRight, 
+  Gauge, Settings2, Flame,
   Search, Car, MapPin, Calendar, DollarSign, SlidersHorizontal,
-  ChevronDown, RotateCcw, Sparkles, Shield, Clock,
-  Heart, Trash2, BookmarkX, TrendingUp, BarChart3
+  ChevronDown, RotateCcw, Heart, Trash2, BookmarkX
 } from 'lucide-react';
 import { MarketplaceSkeleton } from '../component/Skeleton';
 import OgImage from '../component/OgImage';
+import customBannerImage from '../images/banner.png';
 import { 
   getAllVehicles, 
   getTopMakes, 
@@ -58,45 +57,6 @@ const FAVORITES_KEY = 'autoinsight_favorites';
 
 // Get total listing count from real data
 const TOTAL_LISTINGS = getAllVehicles().length;
-
-const HERO_SLIDES = getFeaturedVehicles(6).map((v) => ({
-  listingUrl: v.vehicleUrl,
-  brand: v.make,
-  tagline: `${v.model} Spotlight`,
-}));
-
-// Animated counter hook
-function useAnimatedCount(target: number, duration = 2000, ready = true) {
-  const [count, setCount] = useState(0);
-  const started = useRef(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ready) return;
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const step = (now: number) => {
-            const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-            setCount(Math.floor(eased * target));
-            if (progress < 1) requestAnimationFrame(step);
-          };
-          requestAnimationFrame(step);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration, ready]);
-
-  return { count, ref };
-}
 
 const DEFAULT_FILTERS = {
   brand: 'All', model: 'All', condition: 'All', priceRange: 'All', city: 'All', mileageRange: 'All', yearRange: 'All'
@@ -159,27 +119,13 @@ const CarMarketplace: React.FC = () => {
   // Restore filters from navigation state (e.g. when coming back from SearchResults)
   const savedFilters = (location.state as { filters?: typeof DEFAULT_FILTERS } | null)?.filters;
   const [filters, setFilters] = useState(savedFilters ?? DEFAULT_FILTERS);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   useEffect(() => {
     // Simulate data fetch — replace with real API call
     const timer = setTimeout(() => setLoading(false), 800);
     return () => clearTimeout(timer);
   }, []);
-
-  // Hero carousel auto-rotation
-  const [heroSlide, setHeroSlide] = useState(0);
-  useEffect(() => {
-    if (HERO_SLIDES.length === 0) return;
-    const interval = setInterval(() => {
-      setHeroSlide(prev => (prev + 1) % HERO_SLIDES.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Animated stat counters — pass !loading so they start after skeleton is gone
-  const listingsCounter = useAnimatedCount(TOTAL_LISTINGS, 2000, !loading);
-  const brandsCounter = useAnimatedCount(BRANDS.length, 2000, !loading);
-  const districtsCounter = useAnimatedCount(ALL_DISTRICTS.length, 2000, !loading);
 
   if (loading) return <MarketplaceSkeleton />;
 
@@ -200,8 +146,34 @@ const CarMarketplace: React.FC = () => {
     navigate('/results', { state: { filters: { ...filters, brand, model } } });
   };
 
+  const formatCardPrice = (price: number) => {
+    if (price >= 1000) return price.toLocaleString();
+    return `${price}M`;
+  };
+
+  const handleNeedInspection = (vehicleName: string, vehicleUrl?: string) => {
+    const subject = encodeURIComponent(`Inspection request: ${vehicleName}`);
+    const body = encodeURIComponent(
+      [
+        'Hi AutoInsight team,',
+        '',
+        `I need a pre-purchase inspection for this vehicle: ${vehicleName}.`,
+        vehicleUrl ? `Listing: ${vehicleUrl}` : '',
+        '',
+        'Please contact me with available inspection slots and pricing.',
+      ]
+        .filter(Boolean)
+        .join('\n')
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  };
+
   const handleReset = () => {
     setFilters(DEFAULT_FILTERS);
+  };
+
+  const handleConditionSelect = (condition: 'All' | 'Unregistered' | 'Registered' | 'Recondition') => {
+    setFilters(prev => ({ ...prev, condition }));
   };
 
   const activeFilterCount = Object.values(filters).filter(v => v !== 'All').length;
@@ -209,327 +181,145 @@ const CarMarketplace: React.FC = () => {
 
   return (
     <div className="marketplace-wrapper">
-      {/* Hero Section */}
-      <section className="hero-section">
-        {/* Animated background particles */}
-        <div className="hero-particles">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className={`hero-particle hero-particle-${i + 1}`} />
-          ))}
+      <section className="home-hero-banner">
+        <img
+          src={customBannerImage}
+          alt="AutoInsight custom banner"
+          className="home-hero-image"
+        />
+        <div className="home-hero-overlay">
+          <span className="home-hero-badge">Featured Marketplace</span>
+          <h1>Find the right car faster with smarter filters</h1>
+          <p>
+            Search across {TOTAL_LISTINGS.toLocaleString()} live listings from {BRANDS.length}+ makes in {ALL_DISTRICTS.length} locations.
+          </p>
         </div>
-
-        <div className="hero-left">
-          <motion.div
-            className="hero-badge"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Sparkles size={13} />
-            <span>AI-Powered Vehicle Intelligence</span>
-          </motion.div>
-
-          <motion.h1
-            className="hero-title"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-          >
-            Find Your Perfect
-            <span className="hero-title-gradient"> Car </span>
-            with Confidence.
-          </motion.h1>
-
-          <motion.p
-            className="hero-subtitle"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            Browse real listings from {BRANDS.length}+ brands across {ALL_DISTRICTS.length} districts.
-            Compare prices, spot trends, and drive away with the best deal.
-          </motion.p>
-
-          <motion.div
-            className="hero-quick-search"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <div className="hero-search-fields">
-              <div className="hero-search-select">
-                <Car size={15} />
-                <select name="brand" value={filters.brand} onChange={handleFilterChange}>
-                  <option value="All">Any Make</option>
-                  {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
-                </select>
-              </div>
-              <div className="hero-search-select">
-                <Settings2 size={15} />
-                <select name="model" value={filters.model} onChange={handleFilterChange} disabled={filters.brand === 'All'}>
-                  <option value="All">Any Model</option>
-                  {availableModels.map(model => <option key={model} value={model}>{model}</option>)}
-                </select>
-              </div>
-              <button className="hero-search-btn" onClick={handleSearch}>
-                <Search size={18} />
-                Search
-              </button>
-            </div>
-            <button
-              className="hero-filters-link"
-              onClick={() => document.querySelector('.filter-section')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              <SlidersHorizontal size={14} />
-              Advanced filters
-            </button>
-          </motion.div>
-
-          {/* Stats counters row */}
-          <motion.div
-            className="hero-stats-row"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.55 }}
-          >
-            <div className="hero-stat" ref={listingsCounter.ref}>
-              <BarChart3 size={18} />
-              <div className="hero-stat-content">
-                <span className="hero-stat-number">{listingsCounter.count.toLocaleString()}+</span>
-                <span className="hero-stat-label">Vehicles</span>
-              </div>
-            </div>
-            <div className="hero-stat" ref={brandsCounter.ref}>
-              <Car size={18} />
-              <div className="hero-stat-content">
-                <span className="hero-stat-number">{brandsCounter.count}+</span>
-                <span className="hero-stat-label">Brands</span>
-              </div>
-            </div>
-            <div className="hero-stat" ref={districtsCounter.ref}>
-              <MapPin size={18} />
-              <div className="hero-stat-content">
-                <span className="hero-stat-number">{districtsCounter.count}</span>
-                <span className="hero-stat-label">Locations</span>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="hero-trust-row"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-          >
-            <div className="hero-trust-item">
-              <Shield size={15} />
-              <span>Verified data</span>
-            </div>
-            <div className="hero-trust-item">
-              <TrendingUp size={15} />
-              <span>Live market trends</span>
-            </div>
-            <div className="hero-trust-item">
-              <Clock size={15} />
-              <span>Updated daily</span>
-            </div>
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="hero-right"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
-          {/* Main carousel image */}
-          <div className="hero-carousel">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={heroSlide}
-                className="hero-carousel-slide"
-                initial={{ opacity: 0, scale: 1.06 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.6 }}
-              >
-                <OgImage
-                  listingUrl={HERO_SLIDES[heroSlide]?.listingUrl}
-                  alt={HERO_SLIDES[heroSlide]?.brand || 'Vehicle'}
-                />
-                <div className="hero-carousel-overlay">
-                  <span className="hero-carousel-brand">{HERO_SLIDES[heroSlide]?.brand || 'Featured Vehicle'}</span>
-                  <span className="hero-carousel-tagline">{HERO_SLIDES[heroSlide]?.tagline || 'Live Listing Preview'}</span>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-            {/* Slide indicators */}
-            <div className="hero-carousel-dots">
-              {HERO_SLIDES.map((_, i) => (
-                <button
-                  key={i}
-                  className={`hero-carousel-dot${i === heroSlide ? ' active' : ''}`}
-                  onClick={() => setHeroSlide(i)}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Bottom image row */}
-          <div className="hero-thumb-row">
-            {HERO_SLIDES.slice(0, 4).map((thumb) => (
-              <div key={thumb.brand} className="hero-thumb-card">
-                <OgImage listingUrl={thumb.listingUrl} alt={thumb.brand} />
-                <span className="hero-thumb-label">{thumb.brand}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Brand ticker */}
-          <div className="hero-brands-ticker">
-            <div className="hero-brands-track">
-              {['Toyota', 'Honda', 'BMW', 'Nissan', 'Suzuki', 'Hyundai', 'Mercedes-Benz', 'Audi', 'Toyota', 'Honda', 'BMW', 'Nissan'].map((b, i) => (
-                <span key={`${b}-${i}`} className="hero-brand-chip">{b}</span>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </section>
 
-      <div className="page-header">
-        <div className="filter-intro">
-          <div className="filter-intro-badge">
-            <Sparkles size={14} />
-            <span>AI Powered Search</span>
-          </div>
-          <h2>Find Your <span className="gradient-text">Perfect Vehicle</span></h2>
-          <p>Use our detailed filters to search across thousands of listings in real-time.</p>
-        </div>
-      </div>
-
-      <section className="glass-panel filter-section">
-        <div className="filter-section-header">
-          <div className="filter-section-title">
-            <SlidersHorizontal size={18} />
-            <h3>Search Filters</h3>
+      <section className="marketplace-search-strip">
+        <div className="marketplace-search-top">
+          <h2>Feel like a car person</h2>
+          <div className="marketplace-search-actions">
             {activeFilterCount > 0 && (
-              <span className="filter-count-badge">{activeFilterCount}</span>
+              <button className="filter-reset-btn" onClick={handleReset}>
+                <RotateCcw size={14} />
+                Clear all
+              </button>
             )}
-          </div>
-          {activeFilterCount > 0 && (
-            <button className="filter-reset-btn" onClick={handleReset}>
-              <RotateCcw size={14} />
-              Clear All
+            <button
+              className="toggle-filters-btn"
+              onClick={() => setShowAdvancedFilters(prev => !prev)}
+            >
+              <SlidersHorizontal size={14} />
+              {showAdvancedFilters ? 'Less filters' : 'More filters'}
             </button>
-          )}
+          </div>
         </div>
 
-        <div className="filter-form-grid">
-          {/* Primary Filters */}
-          <div className="filter-group">
-            <span className="filter-group-label">Primary</span>
-            <div className="filter-row">
-              <div className="filter-item mandatory">
-                <label><Car size={14} /> Make <span className="required">*</span></label>
-                <div className="select-wrapper">
-                  <select name="brand" value={filters.brand} onChange={handleFilterChange}>
-                    <option value="All">Any Make</option>
-                    {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
-              <div className="filter-item mandatory">
-                <label><Car size={14} /> Model <span className="required">*</span></label>
-                <div className="select-wrapper">
-                  <select name="model" value={filters.model} onChange={handleFilterChange} disabled={filters.brand === 'All'}>
-                    <option value="All">Any Model</option>
-                    {availableModels.map(model => <option key={model} value={model}>{model}</option>)}
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
+        <div className="marketplace-search-grid">
+          <div className="search-strip-item">
+            <label><Car size={14} /> Make</label>
+            <div className="select-wrapper">
+              <select name="brand" value={filters.brand} onChange={handleFilterChange}>
+                <option value="All">Any Make</option>
+                {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+              </select>
+              <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
-
-          {/* Secondary Filters */}
-          <div className="filter-group">
-            <span className="filter-group-label">Details</span>
-            <div className="filter-row three-col">
-              <div className="filter-item">
-                <label><ClipboardCheck size={14} /> Condition</label>
-                <div className="select-wrapper">
-                  <select name="condition" value={filters.condition} onChange={handleFilterChange}>
-                    <option value="All">Any</option>
-                    <option value="Unregistered">Brand New</option>
-                    <option value="Registered">Used</option>
-                    <option value="Recondition">Reconditioned</option>
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
-              <div className="filter-item">
-                <label><DollarSign size={14} /> Price Range</label>
-                <div className="select-wrapper">
-                  <select name="priceRange" value={filters.priceRange} onChange={handleFilterChange}>
-                    <option value="All">Any Price</option>
-                    <option value="Below10M">Below 10M LKR</option>
-                    <option value="10Mto20M">10M – 20M LKR</option>
-                    <option value="Above20M">Above 20M LKR</option>
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
-              <div className="filter-item">
-                <label><MapPin size={14} /> City</label>
-                <div className="select-wrapper">
-                  <select name="city" value={filters.city} onChange={handleFilterChange}>
-                    <option value="All">Any City</option>
-                    {CITIES.map(city => <option key={city} value={city}>{city}</option>)}
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
+          <div className="search-strip-item">
+            <label><Settings2 size={14} /> Model</label>
+            <div className="select-wrapper">
+              <select name="model" value={filters.model} onChange={handleFilterChange} disabled={filters.brand === 'All'}>
+                <option value="All">Any Model</option>
+                {availableModels.map(model => <option key={model} value={model}>{model}</option>)}
+              </select>
+              <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
-
-          {/* Additional Filters */}
-          <div className="filter-group">
-            <span className="filter-group-label">More Options</span>
-            <div className="filter-row">
-              <div className="filter-item">
-                <label><Gauge size={14} /> Mileage</label>
-                <div className="select-wrapper">
-                  <select name="mileageRange" value={filters.mileageRange} onChange={handleFilterChange}>
-                    <option value="All">Any Mileage</option>
-                    <option value="Below50k">Below 50,000 km</option>
-                    <option value="50kto100k">50k – 100k km</option>
-                    <option value="Above100k">Above 100k km</option>
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
-              <div className="filter-item">
-                <label><Calendar size={14} /> Year Range</label>
-                <div className="select-wrapper">
-                  <select name="yearRange" value={filters.yearRange} onChange={handleFilterChange}>
-                    <option value="All">Any Year</option>
-                    {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
-                  </select>
-                  <ChevronDown size={16} className="select-chevron" />
-                </div>
-              </div>
+          <div className="search-strip-item">
+            <label><Gauge size={14} /> KMs (Max)</label>
+            <div className="select-wrapper">
+              <select name="mileageRange" value={filters.mileageRange} onChange={handleFilterChange}>
+                <option value="All">Any Mileage</option>
+                <option value="Below50k">Below 50,000 km</option>
+                <option value="50kto100k">50k - 100k km</option>
+                <option value="Above100k">Above 100k km</option>
+              </select>
+              <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
-
-          <div className="filter-actions">
+          <div className="search-strip-item">
+            <label><DollarSign size={14} /> Price (Max)</label>
+            <div className="select-wrapper">
+              <select name="priceRange" value={filters.priceRange} onChange={handleFilterChange}>
+                <option value="All">Any Price</option>
+                <option value="Below10M">Below 10M LKR</option>
+                <option value="10Mto20M">10M - 20M LKR</option>
+                <option value="Above20M">Above 20M LKR</option>
+              </select>
+              <ChevronDown size={16} className="select-chevron" />
+            </div>
+          </div>
+          <div className="search-strip-item">
+            <label><MapPin size={14} /> Suburb/Postcode</label>
+            <div className="select-wrapper">
+              <select name="city" value={filters.city} onChange={handleFilterChange}>
+                <option value="All">Any City</option>
+                {CITIES.map(city => <option key={city} value={city}>{city}</option>)}
+              </select>
+              <ChevronDown size={16} className="select-chevron" />
+            </div>
+          </div>
+          <div className="search-strip-item search-strip-submit">
             <button className="btn-glow-blue search-btn" onClick={handleSearch}>
               <Search size={18} />
-              Search Vehicles
+              Show me cars
             </button>
           </div>
         </div>
+
+        <div className="condition-chip-row">
+          <button
+            className={`condition-chip${filters.condition === 'All' ? ' active' : ''}`}
+            onClick={() => handleConditionSelect('All')}
+          >
+            All
+          </button>
+          <button
+            className={`condition-chip${filters.condition === 'Unregistered' ? ' active' : ''}`}
+            onClick={() => handleConditionSelect('Unregistered')}
+          >
+            New
+          </button>
+          <button
+            className={`condition-chip${filters.condition === 'Registered' ? ' active' : ''}`}
+            onClick={() => handleConditionSelect('Registered')}
+          >
+            Used
+          </button>
+          <button
+            className={`condition-chip${filters.condition === 'Recondition' ? ' active' : ''}`}
+            onClick={() => handleConditionSelect('Recondition')}
+          >
+            Recondition
+          </button>
+        </div>
+
+        {showAdvancedFilters && (
+          <div className="marketplace-advanced-row">
+            <div className="search-strip-item">
+              <label><Calendar size={14} /> Year</label>
+              <div className="select-wrapper">
+                <select name="yearRange" value={filters.yearRange} onChange={handleFilterChange}>
+                  <option value="All">Any Year</option>
+                  {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+                </select>
+                <ChevronDown size={16} className="select-chevron" />
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="inventory-section">
@@ -540,7 +330,6 @@ const CarMarketplace: React.FC = () => {
           {topSellingCars.map(car => (
             <div key={car.id} className="glass-card">
               <div className="card-image-wrapper">
-                <span className="floating-tag" style={{ backgroundColor: car.tagColor }}>{car.tag}</span>
                 <OgImage
                   listingUrl={car.vehicleUrl}
                   alt={`${car.brand} ${car.model}`}
@@ -549,42 +338,46 @@ const CarMarketplace: React.FC = () => {
               </div>
               
               <div className="card-content">
-                <h4 className="car-title">{car.brand} {car.model}</h4>
-                
-                <div className="price-row">
-                  <div className="price-display">
-                    <span className="currency">LKR</span> {car.price}M
-                  </div>
-                  <div className={`trend-pill ${car.trend.startsWith('+') ? 'positive' : 'negative'}`}>
-                    {car.trend.startsWith('+') ? '↗' : '↘'} {car.trend}
-                  </div>
+                <div className="market-card-price-row">
+                  <div className="market-card-price">{formatCardPrice(car.price)}</div>
+                  <div className="market-card-mileage">{car.mileage.toLocaleString()} km</div>
                 </div>
-                
-                <div className="stats-row">
-                  <div className="stat-box">
-                    <span className="stat-icon"><Gauge size={16} /></span>
-                    <div className="stat-text">
-                      <strong>{car.mileage.toLocaleString()}</strong>
-                      <span>km</span>
-                    </div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><Settings2 size={16} /></span>
-                    <div className="stat-text">
-                      <strong>{car.transmission}</strong>
-                      <span>Trans</span>
-                    </div>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-icon"><ClipboardCheck size={16} /></span>
-                    <div className="stat-text">
-                      <strong>{car.condition}</strong>
-                      <span>Status</span>
-                    </div>
-                  </div>
+
+                <a href={car.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                  Refer the Advertisment for more details
+                </a>
+
+                <h4 className="market-card-title">{car.brand} {car.model}</h4>
+
+                <div className="market-card-meta-row">
+                  <span>Dealer: Used</span>
+                  <span>Top seller</span>
                 </div>
-                
-                <button className="btn-glass-purple" onClick={() => handleViewAnalysis(car.brand, car.model)}>View Full Analysis <ArrowRight size={14} className="inline-icon" /></button>
+
+                <div className="market-card-actions-row">
+                  <button
+                    className="market-card-check-btn"
+                    onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
+                    disabled={!car.vehicleUrl}
+                    title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
+                  >
+                    Check Availability
+                  </button>
+                  <button
+                    className="market-card-more-btn"
+                    onClick={() => handleViewAnalysis(car.brand, car.model)}
+                    title="View market analysis"
+                  >
+                    ...
+                  </button>
+                </div>
+
+                <button
+                  className="market-need-inspection-btn"
+                  onClick={() => handleNeedInspection(`${car.brand} ${car.model}`, car.vehicleUrl)}
+                >
+                  Need Inspection
+                </button>
               </div>
             </div>
           ))}
@@ -622,9 +415,6 @@ const CarMarketplace: React.FC = () => {
                 </button>
                 
                 <div className="card-image-wrapper">
-                  <span className="floating-tag saved-tag">
-                    <Heart size={12} fill="currentColor" /> Saved
-                  </span>
                   <OgImage
                     listingUrl={car.vehicleUrl}
                     alt={`${car.make} ${car.model}`}
@@ -633,42 +423,46 @@ const CarMarketplace: React.FC = () => {
                 </div>
                 
                 <div className="card-content">
-                  <div className="flex-row-between">
-                    <h4 className="car-title">{car.make} {car.model}</h4>
-                    <span className="year-badge">{car.year}</span>
+                  <div className="market-card-price-row">
+                    <div className="market-card-price">{formatCardPrice(car.price)}</div>
+                    <div className="market-card-mileage">{car.mileage.toLocaleString()} km</div>
                   </div>
-                  
-                  <div className="price-display">
-                    <span className="currency">LKR</span> {car.price}M
-                  </div>
-                  
-                  <div className="stats-row">
-                    <div className="stat-box">
-                      <span className="stat-icon"><Gauge size={16} /></span>
-                      <div className="stat-text">
-                        <strong>{car.mileage.toLocaleString()}</strong>
-                        <span>km</span>
-                      </div>
-                    </div>
-                    <div className="stat-box">
-                      <span className="stat-icon"><Settings2 size={16} /></span>
-                      <div className="stat-text">
-                        <strong>Auto</strong>
-                        <span>Trans</span>
-                      </div>
-                    </div>
-                    <div className="stat-box">
-                      <span className="stat-icon"><ClipboardCheck size={16} /></span>
-                      <div className="stat-text">
-                        <strong>{car.condition}</strong>
-                        <span>Status</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <a href={car.vehicleUrl} target="_blank" rel="noopener noreferrer" className="btn-glass-purple">
-                    View Listing <ArrowRight size={14} className="inline-icon" />
+
+                  <a href={car.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                    Excl. Gov. Charges
                   </a>
+
+                  <h4 className="market-card-title">{car.year} {car.make} {car.model}</h4>
+
+                  <div className="market-card-meta-row">
+                    <span>Dealer: {car.condition === 'Brand New' ? 'New' : 'Used'}</span>
+                    <span>{car.district || 'Saved vehicle'}</span>
+                  </div>
+
+                  <div className="market-card-actions-row">
+                    <button
+                      className="market-card-check-btn"
+                      onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
+                      disabled={!car.vehicleUrl}
+                      title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
+                    >
+                      Check Availability
+                    </button>
+                    <button
+                      className="market-card-more-btn"
+                      onClick={() => handleViewAnalysis(car.make, car.model)}
+                      title="View market analysis"
+                    >
+                      ...
+                    </button>
+                  </div>
+
+                  <button
+                    className="market-need-inspection-btn"
+                    onClick={() => handleNeedInspection(`${car.year} ${car.make} ${car.model}`, car.vehicleUrl)}
+                  >
+                    Need Inspection
+                  </button>
                 </div>
               </div>
             ))}
