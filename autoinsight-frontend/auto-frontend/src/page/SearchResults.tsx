@@ -467,17 +467,17 @@ const SearchResults: React.FC = () => {
       <section className="analytics-dashboard">
         <div className="analytics-main">
           <div className="stats-overview-flex">
-            <div className="stat-card glass-panel-small">
+            <div className="stat-card">
               <span className="stat-label">Average Price</span>
               <h3 className="stat-value">{stats.avgPrice}M <span className="currency">LKR</span></h3>
             </div>
-            <div className="stat-card glass-panel-small">
+            <div className="stat-card">
               <span className="stat-label">Average Mileage</span>
               <h3 className="stat-value">{stats.avgMileage.toLocaleString()} <span className="unit">km</span></h3>
             </div>
           </div>
 
-          <div className="graph-card glass-panel-small">
+          <div className="graph-card">
             <div className="graph-header">
               <h4>{searchQuery} Price Trend (2025 – 2026)</h4>
               <span className={`trend-badge ${stats.trend === 'up' ? 'positive' : 'negative'}`}>
@@ -553,7 +553,7 @@ const SearchResults: React.FC = () => {
         </div>
 
         <div className="analytics-sidebar">
-          <div className="predictions-card glass-panel-small">
+          <div className="predictions-card">
             <h4>Market Predictions</h4>
             <div className="prediction-list">
               <div className="pred-item">
@@ -774,8 +774,9 @@ const SearchResults: React.FC = () => {
                     onClick={() => toggleCompare(car)}
                     disabled={!isInCompare(car.id) && compareList.length >= 3}
                     title={isInCompare(car.id) ? 'Remove from compare' : compareList.length >= 3 ? 'Max 3 cars' : 'Add to compare'}
+                    aria-label={isInCompare(car.id) ? 'Remove from compare' : 'Add to compare'}
                   >
-                    ...
+                    {isInCompare(car.id) ? <X size={18} /> : <Plus size={18} />}
                   </button>
                 </div>
                 <button
@@ -920,8 +921,9 @@ const SearchResults: React.FC = () => {
                     onClick={() => toggleCompare(car)}
                     disabled={!isInCompare(car.id) && compareList.length >= 3}
                     title={isInCompare(car.id) ? 'Remove from compare' : compareList.length >= 3 ? 'Max 3 cars' : 'Add to compare'}
+                    aria-label={isInCompare(car.id) ? 'Remove from compare' : 'Add to compare'}
                   >
-                    ...
+                    {isInCompare(car.id) ? <X size={18} /> : <Plus size={18} />}
                   </button>
                 </div>
 

@@ -553,7 +553,7 @@
 
 .result-price {
   color: #0f172a;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -561,7 +561,7 @@
 
 .result-mileage {
   color: #334155;
-  font-size: 1.9rem;
+  font-size: 1rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -569,14 +569,14 @@
 .result-gov-link {
   display: inline-block;
   color: #3b82f6;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   text-decoration: underline;
   margin-bottom: 0.75rem;
 }
 
 .result-card-title {
   margin: 0 0 0.8rem 0;
-  font-size: 1.95rem;
+  font-size: 1.1rem;
   font-weight: 700;
   line-height: 1.25;
   color: #0f172a;
@@ -587,7 +587,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.8rem;
-  font-size: 0.98rem;
+  font-size: 0.78rem;
   color: #64748b;
   margin-bottom: 0.95rem;
 }
@@ -611,9 +611,9 @@
   background: #ffffff;
   color: #3b82f6;
   font-family: inherit;
-  font-size: 1.02rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  min-height: 48px;
+  min-height: 42px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -623,8 +623,10 @@
 }
 
 .result-more-btn {
-  font-size: 1.25rem;
-  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
 }
 
 .result-check-btn:hover,
@@ -1433,19 +1435,19 @@
   }
 
   .result-price {
-    font-size: 1.65rem;
+    font-size: 1.35rem;
   }
 
   .result-mileage {
-    font-size: 1.05rem;
+    font-size: 0.95rem;
   }
 
   .result-card-title {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .result-meta-row {
-    font-size: 0.8rem;
+    font-size: 0.76rem;
   }
 }
 
