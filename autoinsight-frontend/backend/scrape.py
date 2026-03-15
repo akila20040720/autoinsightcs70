@@ -749,6 +749,20 @@ def api_health():
     return jsonify({'ok': True, 'service': 'riyasewana-scraper-api'})
 
 
+@app.get('/')
+def api_root():
+    return jsonify({
+        'ok': True,
+        'service': 'riyasewana-scraper-api',
+        'health': '/api/health',
+    })
+
+
+@app.get('/healthz')
+def api_healthz():
+    return api_health()
+
+
 @app.get('/api/vehicle-types')
 def api_vehicle_types():
     return jsonify({'vehicle_types': ALLOWED_TYPE_SLUGS})
