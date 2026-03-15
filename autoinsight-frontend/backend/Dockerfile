@@ -27,10 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY autoinsight-frontend/backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY autoinsight-frontend/backend/ .
 
 EXPOSE 8000
 
