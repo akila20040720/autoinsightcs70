@@ -1,7 +1,11 @@
 const CACHE_PREFIX = 'autoinsight_og_image_';
 const memoryCache = new Map<string, string | null>();
 const inflightRequests = new Map<string, Promise<string | null>>();
-const OG_API_BASE_URL = (import.meta.env.VITE_OG_API_BASE_URL ?? import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+const OG_API_BASE_URL = (
+  import.meta.env.VITE_OG_API_BASE_URL
+  ?? import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.PROD ? 'https://autoinsightcs70-production.up.railway.app' : '')
+).replace(/\/$/, '');
 
 function ogApiUrl(path: string): string {
   if (!OG_API_BASE_URL) {

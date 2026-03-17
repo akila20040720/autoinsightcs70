@@ -308,7 +308,10 @@ export interface LiveSearchApiFilters {
   max_results?: number;
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL
+  ?? (import.meta.env.PROD ? 'https://autoinsightcs70-production.up.railway.app' : '')
+).replace(/\/$/, '');
 
 function apiUrl(path: string): string {
   if (!API_BASE_URL) {
