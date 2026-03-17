@@ -335,21 +335,39 @@ function toVehicleFromApi(item: Record<string, unknown>, index: number): Vehicle
 }
 
 export async function searchVehiclesLive(filters: LiveSearchApiFilters): Promise<Vehicle[]> {
-  const response = await fetch('/api/search', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(filters),
-  });
+  // Try to fetch from API first, fall back to local data if not available
+  try {
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filters),
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const message = (errorData as { error?: string }).error || 'Failed to fetch live vehicle data.';
-    throw new Error(message);
+    if (response.ok) {
+      const data = (await response.json()) as { results?: Record<string, unknown>[] };
+      const list = Array.isArray(data.results) ? data.results : [];
+      if (list.length > 0) {
+        return list.map((item, index) => toVehicleFromApi(item, index + 1));
+      }
+    }
+  } catch {
+    // Fall back to local search if API is unavailable
   }
 
-  const data = (await response.json()) as { results?: Record<string, unknown>[] };
-  const list = Array.isArray(data.results) ? data.results : [];
-  return list.map((item, index) => toVehicleFromApi(item, index + 1));
+  // Fall back to local CSV data search
+  const localFilters: VehicleFilters = {};
+  if (filters.make) localFilters.make = filters.make;
+  if (filters.model) localFilters.model = filters.model;
+  if (filters.condition) localFilters.condition = filters.condition;
+  if (filters.min_price_lkr) localFilters.minPrice = filters.min_price_lkr / 1_000_000;
+  if (filters.max_price_lkr) localFilters.maxPrice = filters.max_price_lkr / 1_000_000;
+  if (filters.min_mileage) localFilters.minMileage = filters.min_mileage;
+  if (filters.max_mileage) localFilters.maxMileage = filters.max_mileage;
+  if (filters.year) localFilters.minYear = localFilters.maxYear = parseInt(filters.year);
+  if (filters.district) localFilters.district = filters.district;
+
+  const maxResults = filters.max_results ?? 250;
+  return searchVehicles(localFilters, maxResults);
 }
