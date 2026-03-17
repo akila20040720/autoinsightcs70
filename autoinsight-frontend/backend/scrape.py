@@ -57,7 +57,20 @@ signal.signal(signal.SIGINT, signal_handler)
 
 
 app = Flask(__name__)
-CORS(app)
+
+_raw_origins = os.environ.get(
+    'ALLOWED_ORIGINS',
+    'https://analytics-autoinsight.vercel.app,http://localhost:5173,http://localhost:4173'
+)
+_origins = [o.strip() for o in _raw_origins.split(',') if o.strip()]
+
+CORS(app, resources={
+    r'/api/*': {
+        'origins': _origins,
+        'methods': ['GET', 'POST', 'OPTIONS'],
+        'allow_headers': ['Content-Type'],
+    }
+})
 
 
 
