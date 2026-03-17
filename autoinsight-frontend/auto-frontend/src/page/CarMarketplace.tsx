@@ -13,7 +13,8 @@ import {
   getTopMakes, 
   getPopularModels, 
   getUniqueDistricts,
-  getFeaturedVehicles
+  searchVehiclesLive,
+  type Vehicle
 } from '../services/vehicleDataService';
 import '../styles/CarMarketplace.css';
 
@@ -55,8 +56,8 @@ const YEARS = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i
 // Use real data for saved vehicles lookup
 const FAVORITES_KEY = 'autoinsight_favorites';
 
-// Get total listing count from real data
-const TOTAL_LISTINGS = getAllVehicles().length;
+// Get total listing count from real data (live count is dynamic, use static fallback for now or fetch)
+const TOTAL_LISTINGS = 67000; // approximation since getAllVehicles() is empty now
 
 const DEFAULT_FILTERS = {
   brand: 'All', model: 'All', condition: 'All', priceRange: 'All', city: 'All', mileageRange: 'All', yearRange: 'All'
@@ -66,13 +67,34 @@ const CarMarketplace: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
-
-  // Get all vehicles from real data
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  // Get all vehicles from real data (empty because unlinked, but needed for types/refs)
   const allVehicles = useMemo(() => getAllVehicles(), []);
+
+  // Fetch featured vehicles from live api or use empty list
+  useEffect(() => {
+    // Initial fetch for featured/recent items
+    const fetchInitialData = async () => {
+      setLoading(true);
+      try {
+        // Fetch some recent listings to populate "featured" if needed
+        // For now, searchVehiclesLive with empty filters returns recent items
+        const results = await searchVehiclesLive({ max_results: 10 });
+        setVehicles(results);
+      } catch (err) {
+        console.error("Failed to fetch initial vehicles", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchInitialData();
+  }, []);
   
-  // Get featured/top selling cars from real data
+  // Get featured/top selling cars from live data
   const topSellingCars = useMemo(() => {
-    const featured = getFeaturedVehicles(6);
+    // If we have fetched vehicles, use them as "featured"
+    const featured = vehicles.slice(0, 6);
     const tags = ['Popular', 'Budget Friendly', 'Great Value', 'Hot Deal', 'Best Seller', 'Trending'];
     const tagColors = ['#3b82f6', '#f472b6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'];
     
@@ -90,7 +112,7 @@ const CarMarketplace: React.FC = () => {
       tagColor: tagColors[i % tagColors.length],
       trend: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 10 + 1).toFixed(1)}%`,
     }));
-  }, []);
+  }, [vehicles]);
 
   // Favorites with localStorage persistence
   const [favorites, setFavorites] = useState<string[]>(() => {

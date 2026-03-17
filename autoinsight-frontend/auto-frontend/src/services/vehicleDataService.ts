@@ -1,5 +1,5 @@
 // Vehicle Data Service - Parses and provides access to real vehicle dataset
-import csvData from '../data/dataset_with_condition.csv?raw';
+// import csvData from '../data/dataset_with_condition.csv?raw';
 
 export interface Vehicle {
   id: string;
@@ -17,68 +17,188 @@ export interface Vehicle {
 }
 
 // Parse CSV data
-function parseCSV(csv: string): Vehicle[] {
-  const lines = csv.trim().split('\n');
-  const vehicles: Vehicle[] = [];
+// function parseCSV(csv: string): Vehicle[] {
+//   // Return empty array if no CSV provided
+//   if (!csv) return [];
   
-  // Skip header row
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (!line.trim()) continue;
-    
-    // Parse CSV line (handling potential commas in fields)
-    const values = line.split(',');
-    
-    if (values.length < 11) continue;
-    
-    const make = values[2]?.trim() || '';
-    const model = values[3]?.trim() || '';
-    const year = parseFloat(values[4]) || 0;
-    const priceRaw = parseFloat(values[5]) || 0;
-    const mileage = parseFloat(values[6]) || 0;
-    const district = values[7]?.trim() || '';
-    const publishedDate = values[8]?.trim() || '';
-    const vehicleUrl = values[9]?.trim() || '';
-    const condition = values[10]?.trim() as 'Used' | 'Recondition' | 'Brand New';
-    
-    if (!make || !model || priceRaw <= 0) continue;
-    
-    // Convert price to millions
-    const price = Math.round((priceRaw / 1000000) * 100) / 100;
-    
-    vehicles.push({
-      id: `v-${i}`,
-      vehicleType: 'Car',
-      make,
-      model,
-      year,
-      price,
-      mileage,
-      district,
-      publishedDate,
-      vehicleUrl,
-      condition: condition || 'Used',
-    });
-  }
+//   const lines = csv.trim().split('\n');
+//   const vehicles: Vehicle[] = [];
   
-  return vehicles;
-}
+//   // Skip header row
+//   for (let i = 1; i < lines.length; i++) {
+//     const line = lines[i];
+//     if (!line.trim()) continue;
+    
+//     // Parse CSV line (handling potential commas in fields)
+//     const values = line.split(',');
+    
+//     if (values.length < 11) continue;
+    
+//     const make = values[2]?.trim() || '';
+//     const model = values[3]?.trim() || '';
+//     const year = parseFloat(values[4]) || 0;
+//     const priceRaw = parseFloat(values[5]) || 0;
+//     const mileage = parseFloat(values[6]) || 0;
+//     const district = values[7]?.trim() || '';
+//     const publishedDate = values[8]?.trim() || '';
+//     const vehicleUrl = values[9]?.trim() || '';
+//     const condition = values[10]?.trim() as 'Used' | 'Recondition' | 'Brand New';
+    
+//     if (!make || !model || priceRaw <= 0) continue;
+    
+//     // Convert price to millions
+//     const price = Math.round((priceRaw / 1000000) * 100) / 100;
+    
+//     vehicles.push({
+//       id: `v-${i}`,
+//       vehicleType: 'Car',
+//       make,
+//       model,
+//       year,
+//       price,
+//       mileage,
+//       district,
+//       publishedDate,
+//       vehicleUrl,
+//       condition: condition || 'Used',
+//     });
+//   }
+  
+//   return vehicles;
+// }
 
 // Parse and cache vehicle data
 let cachedVehicles: Vehicle[] | null = null;
 
 export function getAllVehicles(): Vehicle[] {
   if (!cachedVehicles) {
-    cachedVehicles = parseCSV(csvData);
+    // cachedVehicles = parseCSV(csvData);
+    cachedVehicles = []; // Return empty array temporarily
   }
   return cachedVehicles;
 }
 
+export interface SearchFilters {
+  make?: string;
+  model?: string;
+  year?: string;
+  min_price_lkr?: number;
+  max_price_lkr?: number;
+  min_year?: number;
+  max_year?: number;
+  condition?: string;
+  district?: string;
+  vehicle_type?: string;
+  // page?: number; // Backend support paging?
+}
+
+const API_BASE_URL = 'http://localhost:5000/api';
+
+export async function searchLiveVehicles(filters: SearchFilters): Promise<Vehicle[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filters),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data.results) return [];
+
+    return data.results.map((v: any) => ({
+      id: v.id,
+      vehicleType: v.vehicleType,
+      make: v.make,
+      model: v.model,
+      year: v.year,
+      price: v.priceMillion || 0,
+      mileage: v.mileage,
+      district: v.district,
+      publishedDate: v.publishedDate,
+      vehicleUrl: v.vehicleUrl,
+      condition: v.condition,
+      imageUrl: v.imageUrl,
+    }));
+  } catch (error) {
+    console.error("Error fetching live vehicles:", error);
+    return [];
+  }
+}
+
 // Get unique makes
 export function getUniqueMakes(): string[] {
+  // If we have no cached vehicles, return some defaults
+  if (getAllVehicles().length === 0) {
+    return ['Toyota', 'Honda', 'Nissan', 'Suzuki', 'Mitsubishi', 'Mazda', 'Kia', 'Hyundai', 'Benz', 'BMW', 'Audi', 'Land Rover', 'Micro', 'Perodua', 'Daihatsu'].sort();
+  }
   const vehicles = getAllVehicles();
   const makes = [...new Set(vehicles.map(v => v.make))];
   return makes.sort();
+}
+
+// Get top makes
+export function getTopMakes(limit: number = 10): { make: string, count: number }[] {
+  if (getAllVehicles().length === 0) {
+      // Mock data for dropdowns when live data is used
+      return [
+        { make: 'Toyota', count: 100 },
+        { make: 'Honda', count: 80 },
+        { make: 'Nissan', count: 60 },
+        { make: 'Suzuki', count: 50 },
+        { make: 'Mitsubishi', count: 40 },
+        { make: 'Mazda', count: 30 },
+        { make: 'Kia', count: 20 },
+        { make: 'Hyundai', count: 15 },
+        { make: 'Benz', count: 10 },
+        { make: 'BMW', count: 8 },
+        { make: 'Audi', count: 5 },
+        { make: 'Land Rover', count: 4 },
+      ].slice(0, limit);
+  }
+  const makes = getAllVehicles().map(v => v.make);
+  const makeCounts = makes.reduce((acc, make) => {
+    acc[make] = (acc[make] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  return Object.entries(makeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([make, count]) => ({ make, count }));
+}
+
+// Get popular models for a make
+export function getPopularModels(make: string, limit: number = 10): { model: string, count: number }[] {
+    if (getAllVehicles().length === 0) {
+        // Simple mock for "All" or unknown
+        if (make === 'All') return [];
+        // Just return a few generic ones or empty to force manual typing if needed, 
+        // but for now let's return some common ones if the make matches known ones
+        if (make === 'Toyota') return [{model: 'Corolla', count: 10}, {model: 'Vitz', count: 10}, {model: 'Premio', count: 10}, {model: 'Axio', count: 10}];
+        if (make === 'Honda') return [{model: 'Civic', count: 10}, {model: 'Fit', count: 10}, {model: 'Vezel', count: 10}, {model: 'Grace', count: 10}];
+        if (make === 'Nissan') return [{model: 'Sunny', count: 10}, {model: 'Leaf', count: 10}, {model: 'X-Trail', count: 10}];
+        if (make === 'Suzuki') return [{model: 'Alto', count: 10}, {model: 'Wagon R', count: 10}, {model: 'Swift', count: 10}];
+        
+        return [];
+    }
+
+  const vehicles = getAllVehicles().filter(v => v.make === make);
+  const models = vehicles.map(v => v.model);
+  const modelCounts = models.reduce((acc, model) => {
+    acc[model] = (acc[model] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  return Object.entries(modelCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([model, count]) => ({ model, count }));
 }
 
 // Get models for a specific make
@@ -94,42 +214,23 @@ export function getModelsForMake(make: string): string[] {
 
 // Get unique districts (cities)
 export function getUniqueDistricts(): string[] {
+  if (getAllVehicles().length === 0) {
+    return ['Colombo', 'Gampaha', 'Kandy', 'Kurunegala', 'Kalutara', 'Galle', 'Matara', 'Ratnapura', 'Kegalle', 'Anuradhapura', 'Polonnaruwa', 'Badulla', 'Matale', 'Puttalam', 'Ampara', 'Batticaloa', 'Jaffna', 'Trincomalee', 'Mannar', 'Vavuniya', 'Mullaitivu', 'Kilinochchi', 'Monaragala', 'Hambantota', 'Nuwara Eliya'].sort();
+  }
   const vehicles = getAllVehicles();
   const districts = [...new Set(vehicles.map(v => v.district))];
   return districts.sort();
 }
 
-// Get top makes by count
-export function getTopMakes(limit: number = 10): { make: string; count: number }[] {
+// Get featured vehicles (random selection)
+export function getFeaturedVehicles(count: number = 6): Vehicle[] {
+    if (getAllVehicles().length === 0) return [];
   const vehicles = getAllVehicles();
-  const makeCount: Record<string, number> = {};
-  
-  vehicles.forEach(v => {
-    makeCount[v.make] = (makeCount[v.make] || 0) + 1;
-  });
-  
-  return Object.entries(makeCount)
-    .map(([make, count]) => ({ make, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, limit);
+  const shuffled = [...vehicles].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
 }
 
-// Get popular models for a make
-export function getPopularModels(make: string, limit: number = 10): { model: string; count: number }[] {
-  const vehicles = getAllVehicles();
-  const modelCount: Record<string, number> = {};
-  
-  vehicles
-    .filter(v => v.make.toLowerCase() === make.toLowerCase())
-    .forEach(v => {
-      modelCount[v.model] = (modelCount[v.model] || 0) + 1;
-    });
-  
-  return Object.entries(modelCount)
-    .map(([model, count]) => ({ model, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, limit);
-}
+
 
 // Search vehicles with filters
 export interface VehicleFilters {
@@ -252,22 +353,22 @@ export function getMarketStats(make: string, model?: string): {
 }
 
 // Get featured/top selling vehicles (most recent listings with good conditions)
-export function getFeaturedVehicles(limit: number = 8): Vehicle[] {
-  const vehicles = getAllVehicles();
+// export function getFeaturedVehicles(limit: number = 8): Vehicle[] {
+//   const vehicles = getAllVehicles();
   
-  // Prioritize reconditioned and brand new, recent listings
-  const sorted = [...vehicles].sort((a, b) => {
-    // Prefer better conditions
-    const condOrder: Record<string, number> = { 'Brand New': 3, 'Recondition': 2, 'Used': 1 };
-    const condDiff = (condOrder[b.condition] || 0) - (condOrder[a.condition] || 0);
-    if (condDiff !== 0) return condDiff;
+//   // Prioritize reconditioned and brand new, recent listings
+//   const sorted = [...vehicles].sort((a, b) => {
+//     // Prefer better conditions
+//     const condOrder: Record<string, number> = { 'Brand New': 3, 'Recondition': 2, 'Used': 1 };
+//     const condDiff = (condOrder[b.condition] || 0) - (condOrder[a.condition] || 0);
+//     if (condDiff !== 0) return condDiff;
     
-    // Then by year (newer first)
-    return b.year - a.year;
-  });
+//     // Then by year (newer first)
+//     return b.year - a.year;
+//   });
   
-  return sorted.slice(0, limit);
-}
+//   return sorted.slice(0, limit);
+// }
 
 // Get similar vehicles (same make, different model or similar price range)
 export function getSimilarVehicles(vehicle: Vehicle, limit: number = 3): Vehicle[] {
