@@ -65,10 +65,10 @@ _raw_origins = os.environ.get(
 _origins = [o.strip() for o in _raw_origins.split(',') if o.strip()]
 
 CORS(app, resources={
-    r'/api/*': {
-        'origins': _origins,
-        'methods': ['GET', 'POST', 'OPTIONS'],
-        'allow_headers': ['Content-Type'],
+    r"/api/*": {
+        "origins": _origins,
+        "allow_headers": ["Content-Type"],
+        "methods": ["GET", "POST", "OPTIONS"]
     }
 })
 
