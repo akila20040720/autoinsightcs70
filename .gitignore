@@ -1,1 +1,5 @@
 bode_modules/
+node_modules/
+dist/
+.venv/
+.venv/
