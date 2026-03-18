@@ -7,6 +7,5 @@ app = Flask(__name__)
 def get_vehicles():
     data = pd.read_csv("vehicles.csv")
     return jsonify(data.to_dict(orient="records"))
-
 if __name__ == "__main__":
     app.run(debug=True)
