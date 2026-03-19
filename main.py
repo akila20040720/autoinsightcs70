@@ -4,10 +4,9 @@ import pandas as pd
 
 app = FastAPI()
 
-# Allow React frontend to access this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Your React URL
+    allow_origins=["http://localhost:5173"],   URL
     allow_methods=["*"],
     allow_headers=["*"],
 )
