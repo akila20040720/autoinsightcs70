@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+import os
 
 app = FastAPI()
 
@@ -11,8 +12,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def load_vehicles():
+   
+    df1 = pd.read_csv("vehicles.csv")
+    df2 = pd.read_csv("Database/riyasewana_vehicles_2025-02-09.csv")
+    
+   
+    combined = pd.concat([df1, df2], ignore_index=True)
+    combined = combined.fillna("")
+    return combined
+
+@app.get("/vehicles/search")
+def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
+    data = load_vehicles()
+    
+   
+    mask = (
+        data["Make"].str.contains(q, case=False, na=False) |
+        data["Model"].str.contains(q, case=False, na=False)
+    )
+    results = data[mask]
+    return results.to_dict(orient="records")
+
 @app.get("/vehicles")
 def get_vehicles():
-    data = pd.read_csv("vehicles.csv")
-    data = data.fillna("") 
+    data = load_vehicles()
     return data.to_dict(orient="records")
