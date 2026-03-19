@@ -14,4 +14,5 @@ app.add_middleware(
 @app.get("/vehicles")
 def get_vehicles():
     data = pd.read_csv("vehicles.csv")
+    data = data.fillna("") 
     return data.to_dict(orient="records")
