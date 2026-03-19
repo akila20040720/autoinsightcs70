@@ -26,6 +26,11 @@ def load_vehicles():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading data: {e}")
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "service": "autoinsight-api"}
+
+
 @app.get("/vehicles/search")
 def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
     data = load_vehicles()
