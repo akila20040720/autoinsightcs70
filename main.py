@@ -103,8 +103,16 @@ def sort_vehicles(order: str = Query("asc", description="asc or desc")):
     data = data.sort_values("Price", ascending=ascending).dropna(subset=["Price"])
     return data.to_dict(orient="records")
 
+
 @app.get("/vehicles/districts")
 def get_districts():
     data = load_vehicles()
     districts = sorted(data["District"].dropna().unique().tolist())
     return {"districts": districts, "total": len(districts)}    
+
+
+@app.get("/vehicles/makes")
+def get_makes():
+    data = load_vehicles()
+    makes = sorted(data["Make"].dropna().unique().tolist())
+    return {"makes": makes, "total": len(makes)}    
