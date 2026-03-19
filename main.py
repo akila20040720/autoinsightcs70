@@ -117,6 +117,7 @@ def get_makes():
     makes = sorted(data["Make"].dropna().unique().tolist())
     return {"makes": makes, "total": len(makes)}  
 
+
 @app.get("/vehicles/year/{year}")
 def get_vehicles_by_year(year: int):
     data = load_vehicles()
@@ -129,3 +130,18 @@ def get_vehicles_by_year(year: int):
         "total": len(result),
         "data": result.to_dict(orient="records")
     }      
+
+
+@app.get("/vehicles/price-summary")
+def price_summary():
+    data = load_vehicles()
+    data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    summary = (
+        data.groupby("Make")["Price"]
+        .agg(["mean", "min", "max", "count"])
+        .round(2)
+        .reset_index()
+    )
+    summary.columns = ["Make", "Average Price", "Min Price", "Max Price", "Count"]
+    summary = summary.sort_values("Count", ascending=False).head(20)
+    return summary.to_dict(orient="records")
