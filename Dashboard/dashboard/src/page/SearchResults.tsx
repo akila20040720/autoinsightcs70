@@ -10,6 +10,7 @@ type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-ol
 import { SearchResultsSkeleton } from '../component/Skeleton';
 import { 
   searchVehicles, 
+  searchVehiclesFromAPI,  
   getMarketStats, 
   type Vehicle,
   type VehicleFilters
@@ -219,12 +220,27 @@ const SearchResults: React.FC = () => {
     };
   }, [brand, model]);
 
-  // Get all results from real data using service (no limit)
-  const allResults = useMemo<CarResult[]>(() => {
-    const serviceFilters = filters ? convertFilters(filters) : {};
-    const vehicles = searchVehicles(serviceFilters); // Get all matching vehicles
-    return vehicles.map(vehicleToCarResult);
-  }, [filters]);
+  // Get all results from BOTH local CSV and backend API
+const [apiResults, setApiResults] = useState<CarResult[]>([]);
+
+useEffect(() => {
+  if (brand !== 'All') {
+    searchVehiclesFromAPI(brand).then(vehicles => {
+      const localIds = new Set(
+        searchVehicles(filters ? convertFilters(filters) : {})
+          .map(v => v.vehicleUrl)
+      );
+      const newOnly = vehicles.filter(v => !localIds.has(v.vehicleUrl));
+      setApiResults(newOnly.map(vehicleToCarResult));
+    });
+  }
+}, [brand, model]);
+
+const allResults = useMemo<CarResult[]>(() => {
+  const serviceFilters = filters ? convertFilters(filters) : {};
+  const localVehicles = searchVehicles(serviceFilters).map(vehicleToCarResult);
+  return [...localVehicles, ...apiResults];
+}, [filters, apiResults]);
 
   // Sort results based on selected option
   const sortedResults = useMemo<CarResult[]>(() => {
