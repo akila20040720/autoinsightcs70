@@ -4,6 +4,7 @@ node_modules/
 dist/
 .venv/
 .venv/
+__pycache__/
 node_modules/
 Dashboard/dashboard/node_modules/
 Dashboard/dashboard/dist/
