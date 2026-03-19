@@ -291,3 +291,30 @@ export function getSimilarVehicles(vehicle: Vehicle, limit: number = 3): Vehicle
 export function getTransmission(): 'Auto' | 'Manual' {
   return Math.random() > 0.2 ? 'Auto' : 'Manual';
 }
+// ===== BACKEND API FUNCTIONS =====
+const API_URL = "http://127.0.0.1:8000";
+
+// Search vehicles from backend (both CSVs combined)
+export async function searchVehiclesFromAPI(query: string): Promise<Vehicle[]> {
+  try {
+    const res = await fetch(`${API_URL}/vehicles/search?q=${encodeURIComponent(query)}`);
+    const data = await res.json();
+
+    return data.map((item: any, i: number) => ({
+      id: `api-${i}`,
+      vehicleType: item["Vehicle Type"] || "Car",
+      make: item["Make"] || "",
+      model: item["Model"] || "",
+      year: parseFloat(item["Year"]) || 0,
+      price: Math.round((parseFloat(item["Price"]) / 1000000) * 100) / 100,
+      mileage: parseFloat(item["Milleage"]) || 0,
+      district: item["District"] || "",
+      publishedDate: item["published date"] || "",
+      vehicleUrl: item["Vehicle URL"] || "",
+      condition: (item["Condition"] || "Used") as 'Used' | 'Recondition' | 'Brand New',
+    }));
+  } catch (err) {
+    console.error("API search failed, falling back to local data:", err);
+    return [];
+  }
+}
