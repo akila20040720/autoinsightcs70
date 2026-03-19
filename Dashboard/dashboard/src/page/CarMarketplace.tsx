@@ -12,7 +12,9 @@ import {
   getTopMakes, 
   getPopularModels, 
   getUniqueDistricts,
-  getFeaturedVehicles
+  getFeaturedVehicles,
+  getAllMakesFromAPI,
+  getModelsFromAPI
 } from '../services/vehicleDataService';
 import { VehicleImage } from '../components/VehicleImage';
 import '../styles/CarMarketplace.css';
@@ -31,20 +33,20 @@ interface Car {
   tagColor: string;
   trend: string;
 }
-
-// Get top makes from real data
-const TOP_MAKES = getTopMakes(15); 
-const BRANDS = TOP_MAKES.map(m => m.make);
+// Get top makes from local CSV
+const TOP_MAKES = getTopMakes(50); 
+const LOCAL_BRANDS = TOP_MAKES.map(m => m.make);
 
 // Cache for models per brand
 const MODELS_CACHE: { [key: string]: string[] } = {};
 const getModelsForBrand = (brand: string): string[] => {
   if (brand === 'All') return [];
   if (!MODELS_CACHE[brand]) {
-    MODELS_CACHE[brand] = getPopularModels(brand, 20).map(m => m.model);
+    MODELS_CACHE[brand] = getPopularModels(brand, 50).map(m => m.model);
   }
   return MODELS_CACHE[brand];
 };
+
 
 // Get top districts from real data
 const ALL_DISTRICTS = getUniqueDistricts();
@@ -66,7 +68,30 @@ const CarMarketplace: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(true);
+const [allBrands, setAllBrands] = useState<string[]>(LOCAL_BRANDS);
+const [availableModels, setAvailableModels] = useState<string[]>([]);
 
+// Load makes from API and merge with local
+useEffect(() => {
+  getAllMakesFromAPI().then(apiBrands => {
+    const merged = [...new Set([...LOCAL_BRANDS, ...apiBrands])].sort();
+    setAllBrands(merged);
+  });
+}, []);
+
+// Load models when brand changes
+useEffect(() => {
+  if (filters.brand === 'All') {
+    setAvailableModels([]);
+    return;
+  }
+  const localModels = getModelsForBrand(filters.brand);
+  setAvailableModels(localModels);
+  getModelsFromAPI(filters.brand).then(apiModels => {
+    const merged = [...new Set([...localModels, ...apiModels])].sort();
+    setAvailableModels(merged);
+  });
+}, [filters.brand]);
   // Get all vehicles from real data
   const allVehicles = useMemo(() => getAllVehicles(), []);
   
@@ -120,6 +145,30 @@ const CarMarketplace: React.FC = () => {
   const savedFilters = (location.state as { filters?: typeof DEFAULT_FILTERS } | null)?.filters;
   const [filters, setFilters] = useState(savedFilters ?? DEFAULT_FILTERS);
 
+  const [filters, setFilters] = useState(savedFilters ?? DEFAULT_FILTERS);
+
+// Load makes from API and merge with local
+useEffect(() => {
+  getAllMakesFromAPI().then(apiBrands => {
+    const merged = [...new Set([...LOCAL_BRANDS, ...apiBrands])].sort();
+    setAllBrands(merged);
+  });
+}, []);
+
+// Load models when brand changes
+useEffect(() => {
+  if (filters.brand === 'All') {
+    setAvailableModels([]);
+    return;
+  }
+  const localModels = getModelsForBrand(filters.brand);
+  setAvailableModels(localModels);
+  getModelsFromAPI(filters.brand).then(apiModels => {
+    const merged = [...new Set([...localModels, ...apiModels])].sort();
+    setAvailableModels(merged);
+  });
+}, [filters.brand]); 
+
   useEffect(() => {
     // Simulate data fetch — replace with real API call
     const timer = setTimeout(() => setLoading(false), 800);
@@ -150,8 +199,7 @@ const CarMarketplace: React.FC = () => {
   };
 
   const activeFilterCount = Object.values(filters).filter(v => v !== 'All').length;
-  const availableModels = getModelsForBrand(filters.brand);
-
+  
   return (
     <div className="marketplace-wrapper">
       {/* Hero Section */}
@@ -262,7 +310,7 @@ const CarMarketplace: React.FC = () => {
                 <div className="select-wrapper">
                   <select name="brand" value={filters.brand} onChange={handleFilterChange}>
                     <option value="All">Any Make</option>
-                    {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                   {allBrands.map(brand => <option key={brand} value={brand}>{brand}</option>)}
                   </select>
                   <ChevronDown size={16} className="select-chevron" />
                 </div>
