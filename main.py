@@ -115,4 +115,17 @@ def get_districts():
 def get_makes():
     data = load_vehicles()
     makes = sorted(data["Make"].dropna().unique().tolist())
-    return {"makes": makes, "total": len(makes)}    
+    return {"makes": makes, "total": len(makes)}  
+
+@app.get("/vehicles/year/{year}")
+def get_vehicles_by_year(year: int):
+    data = load_vehicles()
+    data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
+    result = data[data["Year"] == year]
+    if result.empty:
+        raise HTTPException(status_code=404, detail=f"No vehicles found for year {year}")
+    return {
+        "year": year,
+        "total": len(result),
+        "data": result.to_dict(orient="records")
+    }      
