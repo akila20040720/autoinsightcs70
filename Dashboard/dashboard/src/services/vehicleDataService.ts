@@ -319,3 +319,22 @@ export async function searchVehiclesFromAPI(query: string): Promise<Vehicle[]> {
   }
 }
 
+export async function getAllMakesFromAPI(): Promise<string[]> {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/vehicles/makes");
+    const data = await res.json();
+    return data;
+  } catch {
+    return [];
+  }
+}
+
+export async function getModelsFromAPI(make: string): Promise<string[]> {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/vehicles/models?make=${encodeURIComponent(make)}`);
+    const data = await res.json();
+    return data;
+  } catch {
+    return [];
+  }
+}
