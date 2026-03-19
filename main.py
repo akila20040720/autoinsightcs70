@@ -92,3 +92,13 @@ def get_stats():
         "total_makes": data["Make"].nunique(),
         "total_districts": data["District"].nunique(),
     }
+
+
+@app.get("/vehicles/sort")
+def sort_vehicles(order: str = Query("asc", description="asc or desc")):
+    data = load_vehicles()
+    ascending = order.lower() != "desc"
+    data = data.copy()
+    data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    data = data.sort_values("Price", ascending=ascending).dropna(subset=["Price"])
+    return data.to_dict(orient="records")
