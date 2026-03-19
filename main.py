@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import os
@@ -13,14 +13,18 @@ app.add_middleware(
 )
 
 def load_vehicles():
-   
-    df1 = pd.read_csv("vehicles.csv")
-    df2 = pd.read_csv("Database/riyasewana_vehicles_2025-02-09.csv")
+    try:
+        df1 = pd.read_csv("vehicles.csv")
+        df2 = pd.read_csv("Database/riyasewana_vehicles_2025-02-09.csv")
     
    
-    combined = pd.concat([df1, df2], ignore_index=True)
-    combined = combined.fillna("")
-    return combined
+        combined = pd.concat([df1, df2], ignore_index=True)
+        combined = combined.fillna("")
+        return combined
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=500, detail=f"CSV file not found: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading data: {e}")
 
 @app.get("/vehicles/search")
 def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
