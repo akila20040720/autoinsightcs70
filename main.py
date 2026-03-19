@@ -92,3 +92,56 @@ def get_stats():
         "total_makes": data["Make"].nunique(),
         "total_districts": data["District"].nunique(),
     }
+
+
+@app.get("/vehicles/sort")
+def sort_vehicles(order: str = Query("asc", description="asc or desc")):
+    data = load_vehicles()
+    ascending = order.lower() != "desc"
+    data = data.copy()
+    data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    data = data.sort_values("Price", ascending=ascending).dropna(subset=["Price"])
+    return data.to_dict(orient="records")
+
+
+@app.get("/vehicles/districts")
+def get_districts():
+    data = load_vehicles()
+    districts = sorted(data["District"].dropna().unique().tolist())
+    return {"districts": districts, "total": len(districts)}    
+
+
+@app.get("/vehicles/makes")
+def get_makes():
+    data = load_vehicles()
+    makes = sorted(data["Make"].dropna().unique().tolist())
+    return {"makes": makes, "total": len(makes)}  
+
+
+@app.get("/vehicles/year/{year}")
+def get_vehicles_by_year(year: int):
+    data = load_vehicles()
+    data["Year"] = pd.to_numeric(data["Year"], errors="coerce")
+    result = data[data["Year"] == year]
+    if result.empty:
+        raise HTTPException(status_code=404, detail=f"No vehicles found for year {year}")
+    return {
+        "year": year,
+        "total": len(result),
+        "data": result.to_dict(orient="records")
+    }      
+
+
+@app.get("/vehicles/price-summary")
+def price_summary():
+    data = load_vehicles()
+    data["Price"] = pd.to_numeric(data["Price"], errors="coerce")
+    summary = (
+        data.groupby("Make")["Price"]
+        .agg(["mean", "min", "max", "count"])
+        .round(2)
+        .reset_index()
+    )
+    summary.columns = ["Make", "Average Price", "Min Price", "Max Price", "Count"]
+    summary = summary.sort_values("Count", ascending=False).head(20)
+    return summary.to_dict(orient="records")
