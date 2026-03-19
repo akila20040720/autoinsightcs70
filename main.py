@@ -57,3 +57,25 @@ def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
         raise HTTPException(status_code=404, detail=f"No vehicles found for '{q}'")
     return results.to_dict(orient="records")
 
+@app.get("/vehicles/filter")
+def filter_vehicles(
+    district: str = Query(None, description="Filter by district"),
+    make: str = Query(None, description="Filter by make"),
+    min_price: float = Query(None, description="Minimum price in LKR"),
+    max_price: float = Query(None, description="Maximum price in LKR"),
+):
+    data = load_vehicles()
+ 
+    if district:
+        data = data[data["District"].str.contains(district, case=False, na=False)]
+    if make:
+        data = data[data["Make"].str.contains(make, case=False, na=False)]
+    if min_price is not None:
+        data = data[pd.to_numeric(data["Price"], errors='coerce') >= min_price]
+    if max_price is not None:
+        data = data[pd.to_numeric(data["Price"], errors='coerce') <= max_price]
+ 
+    if data.empty:
+        raise HTTPException(status_code=404, detail="No vehicles found for the given filters")
+ 
+    return data.to_dict(orient="records")
