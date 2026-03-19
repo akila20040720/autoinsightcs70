@@ -48,11 +48,12 @@ def get_vehicles(page: int = 1, limit: int = 20):
 def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
     data = load_vehicles()
     
-   
     mask = (
         data["Make"].str.contains(q, case=False, na=False) |
         data["Model"].str.contains(q, case=False, na=False)
     )
     results = data[mask]
+    if results.empty:
+        raise HTTPException(status_code=404, detail=f"No vehicles found for '{q}'")
     return results.to_dict(orient="records")
 
