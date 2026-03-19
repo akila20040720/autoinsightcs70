@@ -1,5 +1,13 @@
+Database
 bode_modules/
 node_modules/
 dist/
 .venv/
 .venv/
+node_modules/
+Dashboard/dashboard/node_modules/
+Dashboard/dashboard/dist/
+__pycache__/
+*.pyc
+.venv
+main
