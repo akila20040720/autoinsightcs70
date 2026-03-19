@@ -26,6 +26,24 @@ def load_vehicles():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error loading data: {e}")
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "service": "autoinsight-api"}
+
+
+@app.get("/vehicles")
+def get_vehicles(page: int = 1, limit: int = 20):
+    data = load_vehicles()
+    start = (page - 1) * limit
+    end = start + limit
+    return {
+        "total": len(data),
+        "page": page,
+        "limit": limit,
+        "data": data.iloc[start:end].to_dict(orient="records")
+    }
+
+
 @app.get("/vehicles/search")
 def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
     data = load_vehicles()
@@ -38,7 +56,3 @@ def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
     results = data[mask]
     return results.to_dict(orient="records")
 
-@app.get("/vehicles")
-def get_vehicles():
-    data = load_vehicles()
-    return data.to_dict(orient="records")
