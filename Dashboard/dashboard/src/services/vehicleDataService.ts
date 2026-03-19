@@ -318,3 +318,4 @@ export async function searchVehiclesFromAPI(query: string): Promise<Vehicle[]> {
     return [];
   }
 }
+

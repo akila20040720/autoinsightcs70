@@ -10,6 +10,7 @@ type SortOption = 'default' | 'price-low' | 'price-high' | 'year-new' | 'year-ol
 import { SearchResultsSkeleton } from '../component/Skeleton';
 import { 
   searchVehicles, 
+  searchVehiclesFromAPI,  
   getMarketStats, 
   type Vehicle,
   type VehicleFilters
