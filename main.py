@@ -48,11 +48,47 @@ def get_vehicles(page: int = 1, limit: int = 20):
 def search_vehicles(q: str = Query(..., description="Search by Make or Model")):
     data = load_vehicles()
     
-   
     mask = (
         data["Make"].str.contains(q, case=False, na=False) |
         data["Model"].str.contains(q, case=False, na=False)
     )
     results = data[mask]
+    if results.empty:
+        raise HTTPException(status_code=404, detail=f"No vehicles found for '{q}'")
     return results.to_dict(orient="records")
 
+@app.get("/vehicles/filter")
+def filter_vehicles(
+    district: str = Query(None, description="Filter by district"),
+    make: str = Query(None, description="Filter by make"),
+    min_price: float = Query(None, description="Minimum price in LKR"),
+    max_price: float = Query(None, description="Maximum price in LKR"),
+):
+    data = load_vehicles()
+ 
+    if district:
+        data = data[data["District"].str.contains(district, case=False, na=False)]
+    if make:
+        data = data[data["Make"].str.contains(make, case=False, na=False)]
+    if min_price is not None:
+        data = data[pd.to_numeric(data["Price"], errors='coerce') >= min_price]
+    if max_price is not None:
+        data = data[pd.to_numeric(data["Price"], errors='coerce') <= max_price]
+ 
+    if data.empty:
+        raise HTTPException(status_code=404, detail="No vehicles found for the given filters")
+ 
+    return data.to_dict(orient="records")
+
+@app.get("/vehicles/stats")
+def get_stats():
+    data = load_vehicles()
+    numeric_price = pd.to_numeric(data["Price"], errors='coerce')
+    return {
+        "total_vehicles": len(data),
+        "average_price": round(numeric_price.mean(), 2),
+        "min_price": round(numeric_price.min(), 2),
+        "max_price": round(numeric_price.max(), 2),
+        "total_makes": data["Make"].nunique(),
+        "total_districts": data["District"].nunique(),
+    }
