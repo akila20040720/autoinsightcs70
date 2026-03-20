@@ -65,7 +65,6 @@ def filter_vehicles(
     max_price: float = Query(None, description="Maximum price in LKR"),
 ):
     data = load_vehicles()
-<<<<<<< HEAD
  
     if district:
         data = data[data["District"].str.contains(district, case=False, na=False)]
@@ -111,18 +110,21 @@ def get_districts():
     districts = sorted(data["District"].dropna().unique().tolist())
     return {"districts": districts, "total": len(districts)}    
 
-=======
-    return data.to_dict(orient="records")
-
->>>>>>> 7a16ebd6 (fix: add new endpoints to main)
 
 @app.get("/vehicles/makes")
 def get_makes():
     data = load_vehicles()
     makes = sorted(data["Make"].dropna().unique().tolist())
-<<<<<<< HEAD
-    return {"makes": makes, "total": len(makes)}  
+    return makes
 
+@app.get("/vehicles/models")
+def get_models(make: str = Query(...)):
+    data = load_vehicles()
+    models = sorted(
+        data[data["Make"].str.lower() == make.lower()]["Model"]
+        .dropna().unique().tolist()
+    )
+    return models
 
 @app.get("/vehicles/year/{year}")
 def get_vehicles_by_year(year: int):
@@ -135,8 +137,7 @@ def get_vehicles_by_year(year: int):
         "year": year,
         "total": len(result),
         "data": result.to_dict(orient="records")
-    }      
-
+    }
 
 @app.get("/vehicles/price-summary")
 def price_summary():
@@ -151,15 +152,3 @@ def price_summary():
     summary.columns = ["Make", "Average Price", "Min Price", "Max Price", "Count"]
     summary = summary.sort_values("Count", ascending=False).head(20)
     return summary.to_dict(orient="records")
-=======
-    return makes
-
-@app.get("/vehicles/models")
-def get_models(make: str = Query(...)):
-    data = load_vehicles()
-    models = sorted(
-        data[data["Make"].str.lower() == make.lower()]["Model"]
-        .dropna().unique().tolist()
-    )
-    return models
->>>>>>> 7a16ebd6 (fix: add new endpoints to main)
