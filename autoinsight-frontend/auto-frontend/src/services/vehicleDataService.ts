@@ -31,6 +31,8 @@ export interface MarketAnalysis {
   avgPriceLkr: number;
   avgMileage: number;
   priceTrend: MarketTrendPoint[];
+  available?: boolean;
+  reason?: string;
 }
 
 export interface VehicleFilters {
