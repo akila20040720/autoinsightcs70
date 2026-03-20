@@ -43,6 +43,13 @@ function formatPrice(price: number): string {
   return `${price.toFixed(2)}M`;
 }
 
+function formatListingDate(dateValue: string | null | undefined): string {
+  if (!dateValue) return 'N/A';
+  const date = new Date(dateValue);
+  if (Number.isNaN(date.getTime())) return dateValue;
+  return date.toLocaleDateString();
+}
+
 function toStored(vehicle: Vehicle): StoredVehicleSummary {
   return {
     id: vehicle.id,
@@ -111,6 +118,27 @@ const VehicleComparison: React.FC = () => {
         setFacets(DEFAULT_FACETS);
       });
   }, []);
+
+  useEffect(() => {
+    if (!showAddModal || searchMake === 'All') {
+      return;
+    }
+
+    let active = true;
+    fetchFacets({ ...EMPTY_FILTERS, vehicleType: ['Car'], make: [searchMake] })
+      .then((payload) => {
+        if (!active) return;
+        setFacets(payload);
+      })
+      .catch(() => {
+        if (!active) return;
+        setFacets(DEFAULT_FACETS);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [showAddModal, searchMake]);
 
   useEffect(() => {
     if (!showAddModal || searchMake === 'All') {
@@ -195,6 +223,17 @@ const VehicleComparison: React.FC = () => {
                     <MapPin size={14} /> {vehicle.district}
                   </span>
                 </div>
+                <div className="comparison-card-details">
+                  <p>
+                    <strong>Condition:</strong> {vehicle.condition}
+                  </p>
+                  <p>
+                    <strong>Validation:</strong> {vehicle.validationStatus} ({Math.round(vehicle.confidence * 100)}%)
+                  </p>
+                  <p>
+                    <strong>Published:</strong> {formatListingDate(vehicle.publishedDate)}
+                  </p>
+                </div>
               </div>
               <div className="value-score-circle">
                 <div className="score-text">
@@ -222,64 +261,93 @@ const VehicleComparison: React.FC = () => {
             </h2>
 
             <div className="comparison-table">
-              <div className="comparison-row comparison-header-row">
-                <div className="comparison-label">Metric</div>
+              <div className="ct-row ct-header">
+                <div className="ct-label">Metric</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="comparison-cell">
-                    {vehicle.make} {vehicle.model}
+                  <div key={vehicle.id} className="ct-cell ct-cell-header">
+                    <strong>
+                      {vehicle.make} {vehicle.model}
+                    </strong>
+                    <span className="ct-sub">{vehicle.year}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Price</div>
+              <div className="ct-row">
+                <div className="ct-label">Price</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className={`comparison-cell ${bestPrice === vehicle.price ? 'best-value' : ''}`}>
-                    {formatPrice(vehicle.price)}
+                  <div key={vehicle.id} className={`ct-cell ${bestPrice === vehicle.price ? 'ct-best' : ''}`}>
+                    <span className="ct-value">{formatPrice(vehicle.price)}</span>
+                    {bestPrice === vehicle.price ? <span className="ct-badge">Best Price</span> : null}
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Mileage</div>
+              <div className="ct-row">
+                <div className="ct-label">Mileage</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className={`comparison-cell ${bestMileage === vehicle.mileage ? 'best-value' : ''}`}>
-                    {vehicle.mileage.toLocaleString()} km
+                  <div key={vehicle.id} className={`ct-cell ${bestMileage === vehicle.mileage ? 'ct-best' : ''}`}>
+                    <span className="ct-value">{vehicle.mileage.toLocaleString()} km</span>
+                    {bestMileage === vehicle.mileage ? <span className="ct-badge">Best Mileage</span> : null}
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Year</div>
+              <div className="ct-row">
+                <div className="ct-label">Year</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className={`comparison-cell ${bestYear === vehicle.year ? 'best-value' : ''}`}>
-                    <Calendar size={14} /> {vehicle.year}
+                  <div key={vehicle.id} className={`ct-cell ${bestYear === vehicle.year ? 'ct-best' : ''}`}>
+                    <span className="ct-value">
+                      <Calendar size={14} /> {vehicle.year}
+                    </span>
+                    {bestYear === vehicle.year ? <span className="ct-badge">Newest</span> : null}
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Condition</div>
+              <div className="ct-row">
+                <div className="ct-label">Condition</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="comparison-cell">
-                    {vehicle.condition}
+                  <div key={vehicle.id} className="ct-cell">
+                    <span className="ct-value">{vehicle.condition}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Validation</div>
+              <div className="ct-row">
+                <div className="ct-label">Validation</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className={`comparison-cell ${bestConfidence === vehicle.confidence ? 'best-value' : ''}`}>
-                    {vehicle.validationStatus} ({Math.round(vehicle.confidence * 100)}%)
+                  <div key={vehicle.id} className={`ct-cell ${bestConfidence === vehicle.confidence ? 'ct-best' : ''}`}>
+                    <span className="ct-value">
+                      {vehicle.validationStatus} ({Math.round(vehicle.confidence * 100)}%)
+                    </span>
+                    {bestConfidence === vehicle.confidence ? <span className="ct-badge">Top Confidence</span> : null}
                   </div>
                 ))}
               </div>
 
-              <div className="comparison-row">
-                <div className="comparison-label">Source</div>
+              <div className="ct-row">
+                <div className="ct-label">District</div>
                 {hydratedVehicles.map((vehicle) => (
-                  <div key={vehicle.id} className="comparison-cell">
+                  <div key={vehicle.id} className="ct-cell">
+                    <span className="ct-value">{vehicle.district || 'N/A'}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ct-row">
+                <div className="ct-label">Published</div>
+                {hydratedVehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="ct-cell">
+                    <span className="ct-value">{formatListingDate(vehicle.publishedDate)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ct-row">
+                <div className="ct-label">Source</div>
+                {hydratedVehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="ct-cell">
                     <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="comparison-link">
                       <ExternalLink size={14} /> Open listing
                     </a>

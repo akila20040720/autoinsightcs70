@@ -1,8 +1,0 @@
-# Models directory
-# Place trained model files here:
-# - best_model.pkl
-# - random_forest_model.pkl
-# - xgboost_model.pkl
-# - label_encoders.pkl
-# - scaler.pkl
-# - model_metadata.json
