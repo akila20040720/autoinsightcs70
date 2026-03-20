@@ -32,3 +32,11 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Ignore backend generated data files
+autoinsight-frontend/backend/data/*.json
+autoinsight-frontend/backend/data/og_image_cache.json
+
+# If you want to ignore the entire data folder content but keep the folder:
+autoinsight-frontend/backend/data/*
+!autoinsight-frontend/backend/data/.gitkeep
