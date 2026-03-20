@@ -1,219 +1,245 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Gauge, Settings2, Flame,
-  Search, Car, MapPin, Calendar, DollarSign, SlidersHorizontal,
-  ChevronDown, RotateCcw, Heart, Trash2, BookmarkX
+import React, { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+  BookmarkX,
+  Calendar,
+  Car,
+  ChevronDown,
+  DollarSign,
+  Flame,
+  Gauge,
+  Heart,
+  MapPin,
+  RotateCcw,
+  Search,
+  Settings2,
+  SlidersHorizontal,
+  Trash2,
 } from 'lucide-react';
-import { MarketplaceSkeleton } from '../component/Skeleton';
 import OgImage from '../component/OgImage';
+import { MarketplaceSkeleton } from '../component/Skeleton';
 import customBannerImage from '../images/banner.png';
-import { 
-  getAllVehicles, 
-  getTopMakes, 
-  getPopularModels, 
-  getUniqueDistricts,
-  searchVehiclesLive,
-  type Vehicle
+import {
+  EMPTY_FILTERS,
+  type FacetOption,
+  type FacetsResponse,
+  type Vehicle,
+  type VehicleFilters,
+  fetchFacets,
+  fetchListings,
 } from '../services/vehicleDataService';
+import {
+  getFavorites,
+  listenToStoredVehicles,
+  toggleFavorite,
+  type StoredVehicleSummary,
+} from '../services/marketplaceStorage';
 import '../styles/CarMarketplace.css';
 
-interface Car {
-  id: string;
+interface HomeFilterState {
   brand: string;
   model: string;
-  price: number;
-  mileage: number;
-  transmission: string;
   condition: string;
-  imageUrl?: string;
-  vehicleUrl?: string;
-  tag: string;
-  tagColor: string;
-  trend: string;
+  priceRange: string;
+  city: string;
+  mileageRange: string;
+  yearRange: string;
 }
 
-// Get top makes from real data
-const TOP_MAKES = getTopMakes(15); 
-const BRANDS = TOP_MAKES.map(m => m.make);
+const DEFAULT_FILTERS: HomeFilterState = {
+  brand: 'All',
+  model: 'All',
+  condition: 'All',
+  priceRange: 'All',
+  city: 'All',
+  mileageRange: 'All',
+  yearRange: 'All',
+};
 
-// Cache for models per brand
-const MODELS_CACHE: { [key: string]: string[] } = {};
-const getModelsForBrand = (brand: string): string[] => {
-  if (brand === 'All') return [];
-  if (!MODELS_CACHE[brand]) {
-    MODELS_CACHE[brand] = getPopularModels(brand, 20).map(m => m.model);
+const DEFAULT_FACETS: FacetsResponse = {
+  vehicleTypes: [],
+  makes: [],
+  models: [],
+  conditions: [],
+  districts: [],
+};
+
+function toVehicleFilters(filters: HomeFilterState): VehicleFilters {
+  const next: VehicleFilters = {
+    ...EMPTY_FILTERS,
+    vehicleType: ['Car'],
+  };
+
+  if (filters.brand !== 'All') next.make = [filters.brand];
+  if (filters.model !== 'All') next.model = [filters.model];
+  if (filters.city !== 'All') next.district = [filters.city];
+
+  if (filters.condition === 'Registered') next.condition = ['Used'];
+  if (filters.condition === 'Recondition') next.condition = ['Recondition'];
+  if (filters.condition === 'Unregistered') next.condition = ['Brand New'];
+
+  if (filters.priceRange === 'Below10M') next.priceMax = 10_000_000;
+  if (filters.priceRange === '10Mto20M') {
+    next.priceMin = 10_000_000;
+    next.priceMax = 20_000_000;
   }
-  return MODELS_CACHE[brand];
-};
+  if (filters.priceRange === 'Above20M') next.priceMin = 20_000_000;
 
-// Get top districts from real data
-const ALL_DISTRICTS = getUniqueDistricts();
-const CITIES = ALL_DISTRICTS.slice(0, 25); // Top 25 cities
+  if (filters.mileageRange === 'Below50k') next.mileageMax = 50_000;
+  if (filters.mileageRange === '50kto100k') {
+    next.mileageMin = 50_000;
+    next.mileageMax = 100_000;
+  }
+  if (filters.mileageRange === 'Above100k') next.mileageMin = 100_000;
 
-const YEARS = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString());
+  if (filters.yearRange !== 'All') {
+    const year = Number(filters.yearRange);
+    if (Number.isFinite(year)) {
+      next.yearMin = year;
+      next.yearMax = year;
+    }
+  }
 
-// Use real data for saved vehicles lookup
-const FAVORITES_KEY = 'autoinsight_favorites';
+  return next;
+}
 
-// Get total listing count from real data (live count is dynamic, use static fallback for now or fetch)
-const TOTAL_LISTINGS = 67000; // approximation since getAllVehicles() is empty now
+function formatPrice(price: number): string {
+  return `${price.toFixed(2)}M`;
+}
 
-const DEFAULT_FILTERS = {
-  brand: 'All', model: 'All', condition: 'All', priceRange: 'All', city: 'All', mileageRange: 'All', yearRange: 'All'
-};
+function findFacetValues(options: FacetOption[], limit: number): string[] {
+  return options.slice(0, limit).map((option) => option.value);
+}
 
 const CarMarketplace: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const savedFilters = (location.state as { filters?: HomeFilterState } | null)?.filters;
+
   const [loading, setLoading] = useState(true);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  // Get all vehicles from real data (empty because unlinked, but needed for types/refs)
-  const allVehicles = useMemo(() => getAllVehicles(), []);
-
-  // Fetch featured vehicles from live api or use empty list
-  useEffect(() => {
-    // Initial fetch for featured/recent items
-    const fetchInitialData = async () => {
-      setLoading(true);
-      try {
-        // Fetch some recent listings to populate "featured" if needed
-        // For now, searchVehiclesLive with empty filters returns recent items
-        const results = await searchVehiclesLive({ max_results: 10 });
-        setVehicles(results);
-      } catch (err) {
-        console.error("Failed to fetch initial vehicles", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchInitialData();
-  }, []);
-  
-  // Get featured/top selling cars from live data
-  const topSellingCars = useMemo(() => {
-    // If we have fetched vehicles, use them as "featured"
-    const featured = vehicles.slice(0, 6);
-    const tags = ['Popular', 'Budget Friendly', 'Great Value', 'Hot Deal', 'Best Seller', 'Trending'];
-    const tagColors = ['#3b82f6', '#f472b6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444'];
-    
-    return featured.map((v, i) => ({
-      id: v.id,
-      brand: v.make,
-      model: v.model,
-      price: v.price,
-      mileage: v.mileage,
-      transmission: 'Auto',
-      condition: v.condition,
-      imageUrl: v.imageUrl,
-      vehicleUrl: v.vehicleUrl,
-      tag: tags[i % tags.length],
-      tagColor: tagColors[i % tagColors.length],
-      trend: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 10 + 1).toFixed(1)}%`,
-    }));
-  }, [vehicles]);
-
-  // Favorites with localStorage persistence
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem(FAVORITES_KEY);
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  // Get saved vehicles from IDs using real data
-  const savedVehicles = useMemo(() => {
-    return allVehicles.filter(car => favorites.includes(car.id));
-  }, [allVehicles, favorites]);
-
-  const removeFavorite = (carId: string) => {
-    setFavorites(prev => prev.filter(id => id !== carId));
-  };
-
-  // Persist favorites to localStorage
-  useEffect(() => {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-  }, [favorites]);
-
-  // Restore filters from navigation state (e.g. when coming back from SearchResults)
-  const savedFilters = (location.state as { filters?: typeof DEFAULT_FILTERS } | null)?.filters;
-  const [filters, setFilters] = useState(savedFilters ?? DEFAULT_FILTERS);
+  const [filters, setFilters] = useState<HomeFilterState>(savedFilters ?? DEFAULT_FILTERS);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [featuredVehicles, setFeaturedVehicles] = useState<Vehicle[]>([]);
+  const [facets, setFacets] = useState<FacetsResponse>(DEFAULT_FACETS);
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+  const [totalListings, setTotalListings] = useState(0);
+  const [favorites, setFavorites] = useState<StoredVehicleSummary[]>(() => getFavorites());
 
   useEffect(() => {
-    // Simulate data fetch — replace with real API call
-    const timer = setTimeout(() => setLoading(false), 800);
-    return () => clearTimeout(timer);
+    return listenToStoredVehicles(() => {
+      setFavorites(getFavorites());
+    });
   }, []);
 
-  if (loading) return <MarketplaceSkeleton />;
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFilters(prev => {
-      const newFilters = { ...prev, [name]: value };
-      if (name === 'brand') newFilters.model = 'All'; 
-      return newFilters;
+    Promise.all([
+      fetchFacets({ ...EMPTY_FILTERS, vehicleType: ['Car'] }),
+      fetchListings({ ...EMPTY_FILTERS, vehicleType: ['Car'] }, { sort: 'newest', page: 1, limit: 6 }),
+    ])
+      .then(([facetPayload, listingsPayload]) => {
+        if (!active) return;
+        setFacets(facetPayload);
+        setFeaturedVehicles(listingsPayload.items);
+        setTotalListings(listingsPayload.meta.total);
+      })
+      .catch(() => {
+        if (!active) return;
+        setFacets(DEFAULT_FACETS);
+        setFeaturedVehicles([]);
+        setTotalListings(0);
+      })
+      .finally(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const brands = useMemo(() => findFacetValues(facets.makes, 15), [facets.makes]);
+  const cities = useMemo(() => findFacetValues(facets.districts, 25), [facets.districts]);
+  const years = useMemo(() => Array.from({ length: 30 }, (_, index) => String(new Date().getFullYear() - index)), []);
+  useEffect(() => {
+    if (filters.brand === 'All') {
+      setModelOptions([]);
+      return;
+    }
+
+    let active = true;
+    fetchFacets({ ...EMPTY_FILTERS, vehicleType: ['Car'], make: [filters.brand] })
+      .then((payload) => {
+        if (!active) return;
+        setModelOptions(payload.models.map((option) => option.value).slice(0, 20));
+      })
+      .catch(() => {
+        if (!active) return;
+        setModelOptions([]);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [filters.brand]);
+
+  const savedVehicles = favorites;
+
+  const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFilters((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === 'brand') next.model = 'All';
+      return next;
     });
   };
 
   const handleSearch = () => {
-    navigate('/results', { state: { filters } }); 
+    navigate('/results', { state: { filters: toVehicleFilters(filters) } });
   };
 
   const handleViewAnalysis = (brand: string, model: string) => {
-    navigate('/results', { state: { filters: { ...filters, brand, model } } });
-  };
-
-  const formatCardPrice = (price: number) => {
-    if (price >= 1000) return price.toLocaleString();
-    return `${price}M`;
-  };
-
-  const handleNeedInspection = (vehicleName: string, vehicleUrl?: string) => {
-    const subject = encodeURIComponent(`Inspection request: ${vehicleName}`);
-    const body = encodeURIComponent(
-      [
-        'Hi AutoInsight team,',
-        '',
-        `I need a pre-purchase inspection for this vehicle: ${vehicleName}.`,
-        vehicleUrl ? `Listing: ${vehicleUrl}` : '',
-        '',
-        'Please contact me with available inspection slots and pricing.',
-      ]
-        .filter(Boolean)
-        .join('\n')
-    );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    const nextFilters = { ...filters, brand, model };
+    navigate('/results', { state: { filters: toVehicleFilters(nextFilters) } });
   };
 
   const handleReset = () => {
     setFilters(DEFAULT_FILTERS);
   };
 
-  const handleConditionSelect = (condition: 'All' | 'Unregistered' | 'Registered' | 'Recondition') => {
-    setFilters(prev => ({ ...prev, condition }));
+  const handleNeedInspection = (vehicle: Vehicle | StoredVehicleSummary) => {
+    const subject = encodeURIComponent(`Inspection request: ${vehicle.make} ${vehicle.model}`);
+    const body = encodeURIComponent(
+      [
+        'Hi AutoInsight team,',
+        '',
+        `I need a pre-purchase inspection for this vehicle: ${vehicle.year} ${vehicle.make} ${vehicle.model}.`,
+        vehicle.vehicleUrl ? `Listing: ${vehicle.vehicleUrl}` : '',
+        '',
+        'Please contact me with available inspection slots and pricing.',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    );
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   };
 
-  const activeFilterCount = Object.values(filters).filter(v => v !== 'All').length;
-  const availableModels = getModelsForBrand(filters.brand);
+  const activeFilterCount = Object.values(filters).filter((value) => value !== 'All').length;
+
+  if (loading) return <MarketplaceSkeleton />;
 
   return (
     <div className="marketplace-wrapper">
       <section className="home-hero-banner">
-        <img
-          src={customBannerImage}
-          alt="AutoInsight custom banner"
-          className="home-hero-image"
-        />
+        <img src={customBannerImage} alt="AutoInsight custom banner" className="home-hero-image" />
         <div className="home-hero-overlay">
           <span className="home-hero-badge">Featured Marketplace</span>
           <h1>Find the right car faster with smarter filters</h1>
           <p>
-            Search across {TOTAL_LISTINGS.toLocaleString()} live listings from {BRANDS.length}+ makes in {ALL_DISTRICTS.length} locations.
+            Search across {totalListings.toLocaleString()} live listings from {brands.length}+ makes in {cities.length} locations.
           </p>
         </div>
       </section>
@@ -228,10 +254,7 @@ const CarMarketplace: React.FC = () => {
                 Clear all
               </button>
             )}
-            <button
-              className="toggle-filters-btn"
-              onClick={() => setShowAdvancedFilters(prev => !prev)}
-            >
+            <button className="toggle-filters-btn" onClick={() => setShowAdvancedFilters((value) => !value)}>
               <SlidersHorizontal size={14} />
               {showAdvancedFilters ? 'Less filters' : 'More filters'}
             </button>
@@ -240,27 +263,43 @@ const CarMarketplace: React.FC = () => {
 
         <div className="marketplace-search-grid">
           <div className="search-strip-item">
-            <label><Car size={14} /> Make</label>
+            <label>
+              <Car size={14} /> Make
+            </label>
             <div className="select-wrapper">
               <select name="brand" value={filters.brand} onChange={handleFilterChange}>
                 <option value="All">Any Make</option>
-                {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
+                {brands.map((brand) => (
+                  <option key={brand} value={brand}>
+                    {brand}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
+
           <div className="search-strip-item">
-            <label><Settings2 size={14} /> Model</label>
+            <label>
+              <Settings2 size={14} /> Model
+            </label>
             <div className="select-wrapper">
               <select name="model" value={filters.model} onChange={handleFilterChange} disabled={filters.brand === 'All'}>
                 <option value="All">Any Model</option>
-                {availableModels.map(model => <option key={model} value={model}>{model}</option>)}
+                {modelOptions.map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
+
           <div className="search-strip-item">
-            <label><Gauge size={14} /> KMs (Max)</label>
+            <label>
+              <Gauge size={14} /> KMs (Max)
+            </label>
             <div className="select-wrapper">
               <select name="mileageRange" value={filters.mileageRange} onChange={handleFilterChange}>
                 <option value="All">Any Mileage</option>
@@ -271,8 +310,11 @@ const CarMarketplace: React.FC = () => {
               <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
+
           <div className="search-strip-item">
-            <label><DollarSign size={14} /> Price (Max)</label>
+            <label>
+              <DollarSign size={14} /> Price (Max)
+            </label>
             <div className="select-wrapper">
               <select name="priceRange" value={filters.priceRange} onChange={handleFilterChange}>
                 <option value="All">Any Price</option>
@@ -283,16 +325,24 @@ const CarMarketplace: React.FC = () => {
               <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
+
           <div className="search-strip-item">
-            <label><MapPin size={14} /> Suburb/Postcode</label>
+            <label>
+              <MapPin size={14} /> District
+            </label>
             <div className="select-wrapper">
               <select name="city" value={filters.city} onChange={handleFilterChange}>
                 <option value="All">Any City</option>
-                {CITIES.map(city => <option key={city} value={city}>{city}</option>)}
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
               </select>
               <ChevronDown size={16} className="select-chevron" />
             </div>
           </div>
+
           <div className="search-strip-item search-strip-submit">
             <button className="btn-glow-blue search-btn" onClick={handleSearch}>
               <Search size={18} />
@@ -302,40 +352,31 @@ const CarMarketplace: React.FC = () => {
         </div>
 
         <div className="condition-chip-row">
-          <button
-            className={`condition-chip${filters.condition === 'All' ? ' active' : ''}`}
-            onClick={() => handleConditionSelect('All')}
-          >
-            All
-          </button>
-          <button
-            className={`condition-chip${filters.condition === 'Unregistered' ? ' active' : ''}`}
-            onClick={() => handleConditionSelect('Unregistered')}
-          >
-            New
-          </button>
-          <button
-            className={`condition-chip${filters.condition === 'Registered' ? ' active' : ''}`}
-            onClick={() => handleConditionSelect('Registered')}
-          >
-            Used
-          </button>
-          <button
-            className={`condition-chip${filters.condition === 'Recondition' ? ' active' : ''}`}
-            onClick={() => handleConditionSelect('Recondition')}
-          >
-            Recondition
-          </button>
+          {['All', 'Unregistered', 'Registered', 'Recondition'].map((condition) => (
+            <button
+              key={condition}
+              className={`condition-chip${filters.condition === condition ? ' active' : ''}`}
+              onClick={() => setFilters((prev) => ({ ...prev, condition }))}
+            >
+              {condition === 'Unregistered' ? 'New' : condition === 'Registered' ? 'Used' : condition}
+            </button>
+          ))}
         </div>
 
         {showAdvancedFilters && (
           <div className="marketplace-advanced-row">
             <div className="search-strip-item">
-              <label><Calendar size={14} /> Year</label>
+              <label>
+                <Calendar size={14} /> Year
+              </label>
               <div className="select-wrapper">
                 <select name="yearRange" value={filters.yearRange} onChange={handleFilterChange}>
                   <option value="All">Any Year</option>
-                  {YEARS.map(year => <option key={year} value={year}>{year}</option>)}
+                  {years.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
                 </select>
                 <ChevronDown size={16} className="select-chevron" />
               </div>
@@ -346,58 +387,46 @@ const CarMarketplace: React.FC = () => {
 
       <section className="inventory-section">
         <div className="section-title">
-          <h3><Flame size={22} className="inline-icon" /> Top Selling Vehicles</h3>
+          <h3>
+            <Flame size={22} className="inline-icon" /> Latest Marketplace Listings
+          </h3>
         </div>
         <div className="car-showcase-grid">
-          {topSellingCars.map(car => (
-            <div key={car.id} className="glass-card">
+          {featuredVehicles.map((vehicle) => (
+            <div key={vehicle.id} className="glass-card">
               <div className="card-image-wrapper">
-                <OgImage
-                  listingUrl={car.vehicleUrl}
-                  alt={`${car.brand} ${car.model}`}
-                  className="car-image"
-                />
+                <OgImage listingUrl={vehicle.vehicleUrl} fallbackSrc={vehicle.imageUrl ?? undefined} alt={`${vehicle.make} ${vehicle.model}`} className="car-image" />
               </div>
-              
+
               <div className="card-content">
                 <div className="market-card-price-row">
-                  <div className="market-card-price">{formatCardPrice(car.price)}</div>
-                  <div className="market-card-mileage">{car.mileage.toLocaleString()} km</div>
+                  <div className="market-card-price">{formatPrice(vehicle.price)}</div>
+                  <div className="market-card-mileage">{vehicle.mileage.toLocaleString()} km</div>
                 </div>
 
-                <a href={car.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
-                  Refer the Advertisment for more details
+                <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                  View original listing
                 </a>
 
-                <h4 className="market-card-title">{car.brand} {car.model}</h4>
+                <h4 className="market-card-title">
+                  {vehicle.year} {vehicle.make} {vehicle.model}
+                </h4>
 
                 <div className="market-card-meta-row">
-                  <span>Dealer: Used</span>
-                  <span>Top seller</span>
+                  <span>{vehicle.condition}</span>
+                  <span>{vehicle.district || 'Sri Lanka'}</span>
                 </div>
 
                 <div className="market-card-actions-row">
-                  <button
-                    className="market-card-check-btn"
-                    onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
-                    disabled={!car.vehicleUrl}
-                    title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
-                  >
-                    Check Availability
+                  <button className="market-card-check-btn" onClick={() => navigate(`/vehicle/${encodeURIComponent(vehicle.id)}`)}>
+                    View Details
                   </button>
-                  <button
-                    className="market-card-more-btn"
-                    onClick={() => handleViewAnalysis(car.brand, car.model)}
-                    title="View market analysis"
-                  >
+                  <button className="market-card-more-btn" onClick={() => handleViewAnalysis(vehicle.make, vehicle.model)} title="View market analysis">
                     ...
                   </button>
                 </div>
 
-                <button
-                  className="market-need-inspection-btn"
-                  onClick={() => handleNeedInspection(`${car.brand} ${car.model}`, car.vehicleUrl)}
-                >
+                <button className="market-need-inspection-btn" onClick={() => handleNeedInspection(vehicle)}>
                   Need Inspection
                 </button>
               </div>
@@ -406,12 +435,13 @@ const CarMarketplace: React.FC = () => {
         </div>
       </section>
 
-      {/* Saved Vehicles Section */}
       <section className="inventory-section saved-section">
         <div className="section-title">
-          <h3><Heart size={22} className="inline-icon heart-icon" /> Saved Vehicles ({savedVehicles.length})</h3>
+          <h3>
+            <Heart size={22} className="inline-icon heart-icon" /> Saved Vehicles ({savedVehicles.length})
+          </h3>
         </div>
-        
+
         {savedVehicles.length === 0 ? (
           <div className="empty-saved-state">
             <div className="empty-saved-icon">
@@ -426,63 +456,45 @@ const CarMarketplace: React.FC = () => {
           </div>
         ) : (
           <div className="car-showcase-grid saved-grid">
-            {savedVehicles.map(car => (
-              <div key={car.id} className="glass-card saved-card">
-                <button 
-                  className="remove-saved-btn" 
-                  onClick={() => removeFavorite(car.id)}
-                  title="Remove from saved"
-                >
+            {savedVehicles.map((vehicle) => (
+              <div key={vehicle.id} className="glass-card saved-card">
+                <button className="remove-saved-btn" onClick={() => toggleFavorite(vehicle)} title="Remove from saved">
                   <Trash2 size={16} />
                 </button>
-                
+
                 <div className="card-image-wrapper">
-                  <OgImage
-                    listingUrl={car.vehicleUrl}
-                    alt={`${car.make} ${car.model}`}
-                    className="car-image"
-                  />
+                  <OgImage listingUrl={vehicle.vehicleUrl} fallbackSrc={vehicle.imageUrl ?? undefined} alt={`${vehicle.make} ${vehicle.model}`} className="car-image" />
                 </div>
-                
+
                 <div className="card-content">
                   <div className="market-card-price-row">
-                    <div className="market-card-price">{formatCardPrice(car.price)}</div>
-                    <div className="market-card-mileage">{car.mileage.toLocaleString()} km</div>
+                    <div className="market-card-price">{formatPrice(vehicle.price)}</div>
+                    <div className="market-card-mileage">{vehicle.mileage.toLocaleString()} km</div>
                   </div>
 
-                  <a href={car.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
-                    Excl. Gov. Charges
+                  <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                    View original listing
                   </a>
 
-                  <h4 className="market-card-title">{car.year} {car.make} {car.model}</h4>
+                  <h4 className="market-card-title">
+                    {vehicle.year} {vehicle.make} {vehicle.model}
+                  </h4>
 
                   <div className="market-card-meta-row">
-                    <span>Dealer: {car.condition === 'Brand New' ? 'New' : 'Used'}</span>
-                    <span>{car.district || 'Saved vehicle'}</span>
+                    <span>{vehicle.condition}</span>
+                    <span>{vehicle.district || 'Saved vehicle'}</span>
                   </div>
 
                   <div className="market-card-actions-row">
-                    <button
-                      className="market-card-check-btn"
-                      onClick={() => car.vehicleUrl && window.open(car.vehicleUrl, '_blank', 'noopener,noreferrer')}
-                      disabled={!car.vehicleUrl}
-                      title={car.vehicleUrl ? 'Check availability on listing site' : 'Link not available'}
-                    >
-                      Check Availability
+                    <button className="market-card-check-btn" onClick={() => navigate(`/vehicle/${encodeURIComponent(vehicle.id)}`)}>
+                      View Details
                     </button>
-                    <button
-                      className="market-card-more-btn"
-                      onClick={() => handleViewAnalysis(car.make, car.model)}
-                      title="View market analysis"
-                    >
+                    <button className="market-card-more-btn" onClick={() => handleViewAnalysis(vehicle.make, vehicle.model)} title="View market analysis">
                       ...
                     </button>
                   </div>
 
-                  <button
-                    className="market-need-inspection-btn"
-                    onClick={() => handleNeedInspection(`${car.year} ${car.make} ${car.model}`, car.vehicleUrl)}
-                  >
+                  <button className="market-need-inspection-btn" onClick={() => handleNeedInspection(vehicle)}>
                     Need Inspection
                   </button>
                 </div>

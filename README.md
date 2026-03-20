@@ -50,6 +50,39 @@ AutoInsight is a React + TypeScript single-page experience built with Vite that 
 4) Production build: npm run build
 5) Preview built assets locally: npm run preview
 
+## Marketplace Pipeline and API
+The production marketplace flow now lives under `autoinsight-frontend/`.
+
+### Frontend
+1. `cd autoinsight-frontend/auto-frontend`
+2. `npm install`
+3. `npm run dev`
+
+### Backend
+1. `cd autoinsight-frontend/backend`
+2. `python3 -m venv .venv && source .venv/bin/activate`
+3. `pip install -r requirements.txt`
+4. `python3 server.py`
+
+### Optional environment variables
+- `PIPELINE_SOURCE_MODE=scrape|manual|prefer-manual`
+- `PIPELINE_SOURCE_JSON=/absolute/path/to/manual_snapshot.json`
+- `MODEL_REPORT_PATH=/absolute/path/to/Model_Data_Report.xlsx`
+- `ENABLE_PIPELINE_SCHEDULER=true`
+- `PIPELINE_REFRESH_INTERVAL_SECONDS=21600`
+- `STALE_RETENTION_SECONDS=259200`
+- `MONGODB_URI=mongodb://localhost:27017`
+- `MONGODB_DATABASE=autoinsight`
+- `MONGODB_COLLECTION=vehicle_listings`
+- `MONGODB_FAVORITES_COLLECTION=favorites`
+- `QUERY_CACHE_TTL_SECONDS=300`
+- `OG_IMAGE_CACHE_TTL_SECONDS=21600`
+
+### Data refresh
+- Manual refresh: `curl -X POST http://127.0.0.1:5000/api/admin/refresh`
+- Scheduled refresh: set `ENABLE_PIPELINE_SCHEDULER=true`
+- Missing listings from a new scrape are marked stale immediately and hidden from API responses; stale records are purged after `STALE_RETENTION_SECONDS`.
+
 ## NPM Scripts
 - npm run dev — start Vite dev server
 - npm run lint — run ESLint across the project

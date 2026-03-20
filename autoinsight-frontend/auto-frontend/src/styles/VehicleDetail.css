@@ -474,3 +474,13 @@
     height: 250px;
   }
 }
+
+.detail-description {
+  margin-top: 1.5rem;
+}
+
+.primary-link {
+  display: inline-flex;
+  margin-top: 0.85rem;
+  color: var(--accent-blue);
+}
