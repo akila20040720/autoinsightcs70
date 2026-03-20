@@ -15,6 +15,7 @@ import {
   Info,
   MapPin,
   RotateCcw,
+  Scissors,
   Settings2,
   SlidersHorizontal,
   TrendingDown,
@@ -774,8 +775,8 @@ const SearchResults: React.FC = () => {
               <div key={vehicle.id} className="compare-tray-car">
                 <OgImage listingUrl={vehicle.vehicleUrl} fallbackSrc={vehicle.imageUrl ?? undefined} alt={vehicleName(vehicle)} />
                 <span className="compare-tray-car-name">{vehicleName(vehicle)}</span>
-                <button className="compare-tray-remove" onClick={() => toggleCompareVehicle(vehicle)}>
-                  remove
+                <button className="compare-tray-remove" onClick={() => toggleCompareVehicle(vehicle)} title="Remove from compare" aria-label="Remove from compare">
+                  <Scissors size={11} />
                 </button>
               </div>
             ))}
