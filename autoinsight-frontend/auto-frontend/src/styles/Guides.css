@@ -1,0 +1,117 @@
+.guides-page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  color: var(--text-main);
+}
+
+.guides-hero {
+  background: var(--bg-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-panel);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.guides-badge {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--bg-input);
+  border: 1px solid var(--glass-border);
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 0.78rem;
+  margin-bottom: 0.85rem;
+}
+
+.guides-hero h1 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 0.7rem;
+}
+
+.guides-hero p {
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.guides-section {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.guides-section h2 {
+  color: var(--text-main);
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.guides-section ul {
+  list-style: disc;
+  margin-left: 1.25rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.guides-section li {
+  color: var(--text-label);
+  line-height: 1.55;
+}
+
+.guides-section strong {
+  color: var(--text-main);
+}
+
+.guides-cta {
+  background: var(--bg-panel);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-panel);
+  padding: 1.5rem;
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.guides-cta h3 {
+  font-size: 1.1rem;
+}
+
+.guides-cta p {
+  color: var(--text-muted);
+}
+
+.guides-home-btn {
+  width: fit-content;
+  text-decoration: none;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--gradient-blue);
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.guides-home-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+@media (max-width: 768px) {
+  .guides-page {
+    padding: 1.25rem 0.9rem 2.5rem;
+  }
+
+  .guides-hero,
+  .guides-section,
+  .guides-cta {
+    padding: 1rem;
+  }
+}
