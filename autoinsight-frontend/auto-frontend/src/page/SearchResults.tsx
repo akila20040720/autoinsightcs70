@@ -654,7 +654,10 @@ const SearchResults: React.FC = () => {
             </div>
             <div className="tip-content">
               <strong>Compare Vehicles</strong>
-              <p>Use the compare button on any card to keep up to 3 vehicles synced across pages and reloads.</p>
+              <p>
+                Use the compare button <kbd aria-label="Compare button icon"><GitCompare size={12} /></kbd> on any card to keep up to 3 vehicles
+                synced across pages and reloads.
+              </p>
             </div>
           </div>
 
