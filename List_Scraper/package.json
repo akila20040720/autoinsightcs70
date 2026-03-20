@@ -1,0 +1,14 @@
+{
+  "name": "riyasewana-scraper",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "tough-cookie": "^4.1.3"
+  }
+}
