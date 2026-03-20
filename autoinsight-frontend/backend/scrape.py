@@ -14,12 +14,10 @@ import csv
 import os
 import shutil
 from datetime import datetime
-from urllib.parse import urlparse, parse_qs, urljoin
-from urllib.request import Request, urlopen
+from urllib.parse import urlparse, parse_qs
 import signal
 import sys
 import json
-from html import unescape
 from flask import Flask, Response, jsonify, request, stream_with_context
 
 try:
@@ -44,11 +42,6 @@ except Exception:
 CSV_FILENAME = 'riyasewana_vehicles.csv'
 FIELD_NAMES = ['Vehicle Type', 'Make', 'Model', 'Year', 'Price', 'Milleage', 'District', 'published date', 'Vehicle URL']
 ALLOWED_TYPE_SLUGS = ['cars', 'vans', 'pickups', 'suvs']
-OG_CACHE_TTL_SECONDS = 6 * 60 * 60
-
-_og_cache = {}
-META_TAG_RE = re.compile(r"<meta\\s+[^>]*>", re.IGNORECASE)
-ATTR_RE = re.compile(r"([a-zA-Z_:][-a-zA-Z0-9_:.]*)\\s*=\\s*([\"'])(.*?)\\2", re.IGNORECASE | re.DOTALL)
 
 # Global stop flag (used by Ctrl+C handler)
 stop_flag = False
@@ -64,20 +57,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 
 app = Flask(__name__)
-
-_raw_origins = os.environ.get(
-    'ALLOWED_ORIGINS',
-    'https://analytics-autoinsight.vercel.app,http://localhost:5173,http://localhost:4173'
-)
-_origins = [o.strip() for o in _raw_origins.split(',') if o.strip()]
-
-CORS(app, resources={
-    r"/api/*": {
-        "origins": _origins,
-        "allow_headers": ["Content-Type"],
-        "methods": ["GET", "POST", "OPTIONS"]
-    }
-})
+CORS(app)
 
 
 
@@ -113,88 +93,6 @@ def build_search_url_template(filters):
     query_parts.append('page={page_num}')
 
     return f"{'/'.join(path_parts)}?{'&'.join(query_parts)}"
-
-
-def validate_riyasewana_url(raw_url):
-    if not raw_url:
-        return None
-
-    try:
-        parsed = urlparse(raw_url.strip())
-    except ValueError:
-        return None
-
-    if parsed.scheme not in {'http', 'https'}:
-        return None
-
-    host = parsed.netloc.lower()
-    if not (host.endswith('riyasewana.com') or host.endswith('www.riyasewana.com')):
-        return None
-
-    return raw_url.strip()
-
-
-def get_cached_og_image(url):
-    cached = _og_cache.get(url)
-    if not cached:
-        return None
-
-    ts, image_url = cached
-    if (time.time() - ts) > OG_CACHE_TTL_SECONDS:
-        _og_cache.pop(url, None)
-        return None
-
-    return image_url
-
-
-def set_cached_og_image(url, image_url):
-    _og_cache[url] = (time.time(), image_url)
-
-
-def extract_og_image(html, page_url):
-    for tag in META_TAG_RE.findall(html):
-        attrs = {k.lower(): unescape(v).strip() for k, _, v in ATTR_RE.findall(tag)}
-        prop = attrs.get('property', '').lower()
-        name = attrs.get('name', '').lower()
-
-        if prop == 'og:image' or name in {'og:image', 'twitter:image', 'twitter:image:src'}:
-            content = attrs.get('content')
-            if content:
-                return urljoin(page_url, content)
-
-    fallback = re.search(
-        r'<meta[^>]+(?:property|name)=[\"\'](?:og:image|twitter:image|twitter:image:src)[\"\'][^>]+content=[\"\']([^\"\']+)[\"\']',
-        html,
-        re.IGNORECASE,
-    )
-    if fallback:
-        return urljoin(page_url, unescape(fallback.group(1)).strip())
-    return None
-
-
-def fetch_og_image(listing_url):
-    cached = get_cached_og_image(listing_url)
-    if cached is not None:
-        return cached
-
-    req = Request(
-        listing_url,
-        headers={
-            'User-Agent': 'Mozilla/5.0 (compatible; AutoInsightOgBot/1.0)',
-            'Accept': 'text/html,application/xhtml+xml',
-        },
-    )
-
-    with urlopen(req, timeout=10) as response:
-        content_type = response.headers.get('Content-Type', '')
-        if 'text/html' not in content_type:
-            set_cached_og_image(listing_url, None)
-            return None
-
-        html = response.read().decode('utf-8', errors='replace')
-        image_url = extract_og_image(html, listing_url)
-        set_cached_og_image(listing_url, image_url)
-        return image_url
 
 
 def parse_search_filters(url):
@@ -851,20 +749,6 @@ def api_health():
     return jsonify({'ok': True, 'service': 'riyasewana-scraper-api'})
 
 
-@app.get('/')
-def api_root():
-    return jsonify({
-        'ok': True,
-        'service': 'riyasewana-scraper-api',
-        'health': '/api/health',
-    })
-
-
-@app.get('/healthz')
-def api_healthz():
-    return api_health()
-
-
 @app.get('/api/vehicle-types')
 def api_vehicle_types():
     return jsonify({'vehicle_types': ALLOWED_TYPE_SLUGS})
@@ -897,20 +781,6 @@ def api_search():
         return jsonify({'error': f'Browser setup failed: {exc}'}), 500
     except Exception as exc:
         return jsonify({'error': f'Unexpected error: {exc}'}), 500
-
-
-@app.get('/api/og-image')
-def api_og_image():
-    raw_url = request.args.get('url', '')
-    valid_url = validate_riyasewana_url(raw_url)
-    if not valid_url:
-        return jsonify({'error': 'Only valid Riyasewana URLs are supported'}), 400
-
-    try:
-        image_url = fetch_og_image(valid_url)
-        return jsonify({'image': image_url, 'url': valid_url})
-    except Exception as exc:
-        return jsonify({'error': 'Failed to fetch listing page', 'details': str(exc)}), 502
 
 
 @app.get('/api/search/stream')
