@@ -5,11 +5,19 @@ package-lock.json
 # Build outputs
 dist/
 build/
+Dashboard/dashboard/dist/
 
 # Environment
 .env
 .env.local
 .env.*.local
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
 
 # IDE
 .vscode/
@@ -24,9 +32,3 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
-
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
