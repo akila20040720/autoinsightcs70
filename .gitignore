@@ -1,14 +1,34 @@
-Database
-bode_modules/
+# Dependencies
 node_modules/
+package-lock.json
+
+# Build outputs
 dist/
-.venv/
-.venv/
-__pycache__/
-node_modules/
-Dashboard/dashboard/node_modules/
+build/
 Dashboard/dashboard/dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.venv/
+venv/
+
+# Python
 __pycache__/
+*.py[cod]
 *.pyc
-.venv
-main
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
