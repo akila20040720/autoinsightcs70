@@ -121,6 +121,27 @@ const VehicleComparison: React.FC = () => {
 
   useEffect(() => {
     if (!showAddModal || searchMake === 'All') {
+      return;
+    }
+
+    let active = true;
+    fetchFacets({ ...EMPTY_FILTERS, vehicleType: ['Car'], make: [searchMake] })
+      .then((payload) => {
+        if (!active) return;
+        setFacets(payload);
+      })
+      .catch(() => {
+        if (!active) return;
+        setFacets(DEFAULT_FACETS);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [showAddModal, searchMake]);
+
+  useEffect(() => {
+    if (!showAddModal || searchMake === 'All') {
       setSearchResults([]);
       return;
     }
