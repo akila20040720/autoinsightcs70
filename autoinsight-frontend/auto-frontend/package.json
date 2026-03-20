@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "og-server": "py -3 og_image_server.py",
+    "og-server": "python3 og_image_server.py",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
