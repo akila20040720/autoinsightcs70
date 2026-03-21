@@ -6,6 +6,7 @@ import {
   ExternalLink,
   Gauge,
   GitCompare,
+  Info,
   MapPin,
   Plus,
   Search,
@@ -119,6 +120,18 @@ const VehicleComparison: React.FC = () => {
     }
 
     let active = true;
+
+    // Fetch facets with the selected make to get only models for that make
+    fetchFacets({ ...EMPTY_FILTERS, vehicleType: ['Car'], make: [searchMake] })
+      .then((facetsPayload) => {
+        if (!active) return;
+        // Update facets to reflect only models for the selected make
+        setFacets(facetsPayload);
+      })
+      .catch(() => {
+        if (!active) return;
+      });
+
     fetchListings(
       {
         ...EMPTY_FILTERS,
@@ -173,9 +186,6 @@ const VehicleComparison: React.FC = () => {
         <div className="comparison-cards-grid">
           {hydratedVehicles.map((vehicle) => (
             <div key={vehicle.id} className="comparison-vehicle-card glass-panel-small">
-              <button className="remove-vehicle-btn" onClick={() => toggleCompareVehicle(vehicle)} title="Remove">
-                <X size={16} />
-              </button>
               <div className="comparison-card-image">
                 <OgImage listingUrl={vehicle.vehicleUrl} fallbackSrc={vehicle.imageUrl ?? undefined} alt={`${vehicle.make} ${vehicle.model}`} />
               </div>
@@ -194,6 +204,16 @@ const VehicleComparison: React.FC = () => {
                   <span>
                     <MapPin size={14} /> {vehicle.district}
                   </span>
+                </div>
+                <div className="comparison-card-details">
+                  <div className="detail-item">
+                    <span className="detail-label">Condition</span>
+                    <span className="detail-value condition-badge">{vehicle.condition}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Validation</span>
+                    <span className="detail-value">{vehicle.validationStatus}</span>
+                  </div>
                 </div>
               </div>
               <div className="value-score-circle">
@@ -277,6 +297,33 @@ const VehicleComparison: React.FC = () => {
               </div>
 
               <div className="comparison-row">
+                <div className="comparison-label">Location</div>
+                {hydratedVehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="comparison-cell">
+                    {vehicle.district || 'N/A'}
+                  </div>
+                ))}
+              </div>
+
+              <div className="comparison-row">
+                <div className="comparison-label">Listed</div>
+                {hydratedVehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="comparison-cell">
+                    {new Date(vehicle.publishedDate).toLocaleDateString()}
+                  </div>
+                ))}
+              </div>
+
+              <div className="comparison-row">
+                <div className="comparison-label">Match Status</div>
+                {hydratedVehicles.map((vehicle) => (
+                  <div key={vehicle.id} className="comparison-cell">
+                    <span className={`status-badge status-${vehicle.validationStatus}`}>{vehicle.validationStatus}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="comparison-row">
                 <div className="comparison-label">Source</div>
                 {hydratedVehicles.map((vehicle) => (
                   <div key={vehicle.id} className="comparison-cell">
@@ -310,7 +357,13 @@ const VehicleComparison: React.FC = () => {
         <div className="compare-modal-overlay" onClick={() => setShowAddModal(false)}>
           <div className="compare-modal" onClick={(event) => event.stopPropagation()}>
             <div className="compare-modal-header">
-              <h2>Add Vehicles</h2>
+              <div className="compare-modal-title-group">
+                <h2>Add Vehicles</h2>
+                <div className="compare-modal-info">
+                  <Info size={16} />
+                  <p>Use the compare button on any card to keep up to 3 vehicles synced across pages and reloads.</p>
+                </div>
+              </div>
               <button className="compare-modal-close" onClick={() => setShowAddModal(false)}>
                 <X size={18} />
               </button>
