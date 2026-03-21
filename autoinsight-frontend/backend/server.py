@@ -20,11 +20,11 @@ except ModuleNotFoundError:  # pragma: no cover
 try:
     from .config import Settings, load_settings
     from .pipeline import run_refresh_pipeline
-    from .repository import FileListingRepository, build_repository
+    from .repository import FileListingRepository, MongoListingRepository, build_repository
 except ImportError:  # pragma: no cover
     from config import Settings, load_settings  # type: ignore
     from pipeline import run_refresh_pipeline  # type: ignore
-    from repository import FileListingRepository, build_repository  # type: ignore
+    from repository import FileListingRepository, MongoListingRepository, build_repository  # type: ignore
 
 
 class QueryCache:
@@ -259,11 +259,14 @@ def create_app(
 
     @app.get("/api/health")
     def health() -> Any:
+        storage = "mongo" if isinstance(repository, MongoListingRepository) else "file-fallback"
         return jsonify(
             {
                 "ok": True,
                 "service": "autoinsight-marketplace-api",
                 "schedulerEnabled": settings.enable_scheduler,
+                "sourceMode": settings.source_mode,
+                "storage": storage,
             }
         )
 
