@@ -6,6 +6,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:  # pragma: no cover
+    def load_dotenv(*_args: Any, **_kwargs: Any) -> bool:
+        return False
+
 
 def _env_bool(name: str, default: bool) -> bool:
     raw = os.getenv(name)
@@ -36,6 +42,7 @@ def _load_json_env(name: str, default: dict[str, Any]) -> dict[str, Any]:
 
 
 BACKEND_DIR = Path(__file__).resolve().parent
+load_dotenv(BACKEND_DIR / ".env")
 PROJECT_DIR = BACKEND_DIR.parent
 FRONTEND_DATA_DIR = PROJECT_DIR / "auto-frontend" / "src" / "data"
 DATA_DIR = BACKEND_DIR / "data"
