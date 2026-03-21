@@ -10,6 +10,7 @@ import Guides from './page/Guides';
 import Features from './page/Features';
 import FAQPage from './page/FAQPage';
 import Contact from './page/Contact';
+import DataSources from './page/DataSources';
 import Footer from './component/Footer';
 import './styles/App.css'; 
 
@@ -58,6 +59,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/features" element={<Features />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/data-sources" element={<DataSources />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
