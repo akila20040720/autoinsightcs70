@@ -8,6 +8,7 @@ import VehicleDetail from './page/VehicleDetail';
 import VehicleComparison from './page/VehicleComparison';
 import Guides from './page/Guides';
 import Features from './page/Features';
+import FAQPage from './page/FAQPage';
 import Footer from './component/Footer';
 import './styles/App.css'; 
 
@@ -54,6 +55,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/compare" element={<VehicleComparison />} />
           <Route path="/guides" element={<Guides />} />
           <Route path="/features" element={<Features />} />
+          <Route path="/faq" element={<FAQPage />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

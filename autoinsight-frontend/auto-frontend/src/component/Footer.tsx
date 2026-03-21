@@ -23,7 +23,6 @@ const Footer: React.FC = () => {
             <h4>PRODUCT</h4>
             <ul>
               <li><Link to="/features">Features</Link></li>
-              <li><Link to="/pricing">Pricing</Link></li>
               <li><Link to="/api">API</Link></li>
               <li><Link to="/guides">Guides</Link></li>
             </ul>

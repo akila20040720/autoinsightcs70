@@ -6,7 +6,6 @@ import {
   Calendar,
   Car,
   ChevronLeft,
-  ChevronRight,
   ClipboardCheck,
   DollarSign,
   Gauge,
@@ -17,8 +16,6 @@ import {
   Scissors,
   Settings2,
   SlidersHorizontal,
-  TrendingDown,
-  TrendingUp,
 } from 'lucide-react';
 import MultiSelectFilter from '../component/MultiSelectFilter';
 import OgImage from '../component/OgImage';
