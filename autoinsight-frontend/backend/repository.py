@@ -4,6 +4,7 @@ import base64
 import json
 import threading
 from copy import deepcopy
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
 
@@ -130,7 +131,10 @@ class FileListingRepository:
     def _load_snapshot(self) -> None:
         if not self.snapshot_path.exists():
             return
-        payload = json.loads(self.snapshot_path.read_text(encoding="utf-8"))
+        try:
+            payload = json.loads(self.snapshot_path.read_text(encoding="utf-8"))
+        except (OSError, JSONDecodeError):
+            return
         items = payload.get("items", [])
         meta = payload.get("meta", {})
         if not isinstance(items, list):
@@ -140,7 +144,10 @@ class FileListingRepository:
     def _load_favorites(self) -> None:
         if not self.favorites_path.exists():
             return
-        payload = json.loads(self.favorites_path.read_text(encoding="utf-8"))
+        try:
+            payload = json.loads(self.favorites_path.read_text(encoding="utf-8"))
+        except (OSError, JSONDecodeError):
+            return
         if isinstance(payload, dict):
             self._favorites = {
                 str(key): [str(item) for item in value if item]
