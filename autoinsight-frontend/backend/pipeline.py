@@ -15,12 +15,6 @@ except ImportError:  # pragma: no cover
     from config import Settings  # type: ignore
     from model_validation import ModelValidator  # type: ignore
 
-try:
-    from .scrape import scrape_filtered_vehicles
-except ImportError:  # pragma: no cover
-    from scrape import scrape_filtered_vehicles  # type: ignore
-
-
 def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = path.with_suffix(path.suffix + ".tmp")
@@ -142,6 +136,11 @@ def load_raw_source(settings: Settings) -> tuple[list[dict[str, Any]], dict[str,
 
     if settings.source_mode == "manual" and not manual_exists:
         raise FileNotFoundError(f"Manual source JSON not found: {settings.manual_source_json}")
+
+    try:
+        from .scrape import scrape_filtered_vehicles
+    except ImportError:  # pragma: no cover
+        from scrape import scrape_filtered_vehicles  # type: ignore
 
     scraped = scrape_filtered_vehicles(settings.scrape_filters, max_results=settings.scrape_max_results)
     items = scraped.get("results", [])
