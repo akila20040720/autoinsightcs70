@@ -24,7 +24,7 @@ EXCEL_FILE = Path("isolated-scraper/output/Template_for_Model_Filled (1).xlsx")
 JSON_FILE = Path("isolated-scraper/output/Template_for_Model_Filled.json")
 MONGO_URI = ""
 MONGO_DB = "autoinsight"
-MONGO_COLLECTION = "vehicle_listings"
+MONGO_COLLECTION = "model_training_data"
 SHEET_NAME = None  # Example: "Sheet1". Keep None to use the first sheet.
 # ===========================
 
