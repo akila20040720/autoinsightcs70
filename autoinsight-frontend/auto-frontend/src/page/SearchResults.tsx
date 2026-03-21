@@ -350,9 +350,17 @@ const SearchResults: React.FC = () => {
       const current = new Set((prev[key] as string[]).map((item) => item.toLowerCase()));
       const nextValues = [...(prev[key] as string[])];
       if (current.has(value.toLowerCase())) {
+        const updatedValues = nextValues.filter((item) => item.toLowerCase() !== value.toLowerCase());
+        if (key === 'make') {
+          return {
+            ...prev,
+            make: updatedValues,
+            model: [],
+          };
+        }
         return {
           ...prev,
-          [key]: nextValues.filter((item) => item.toLowerCase() !== value.toLowerCase()),
+          [key]: updatedValues,
         };
       }
       if (key === 'make') {
@@ -374,6 +382,30 @@ const SearchResults: React.FC = () => {
       ...prev,
       [key]: value ? Number(value) : undefined,
     }));
+  };
+
+  const updateSingleSelectFilter = (key: 'make' | 'model' | 'district', value: string) => {
+    setFilters((prev) => {
+      if (key === 'make') {
+        return {
+          ...prev,
+          make: value ? [value] : [],
+          model: [],
+        };
+      }
+
+      if (key === 'district') {
+        return {
+          ...prev,
+          district: value ? [value] : [],
+        };
+      }
+
+      return {
+        ...prev,
+        model: value ? [value] : [],
+      };
+    });
   };
 
   const resetFilters = () => {
@@ -531,22 +563,44 @@ const SearchResults: React.FC = () => {
             onToggle={(value) => toggleArrayFilter('vehicleType', value)}
           />
 
-          <MultiSelectFilter
-            label="Make"
-            icon={Car}
-            options={facets.makes}
-            selected={filters.make}
-            onToggle={(value) => toggleArrayFilter('make', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <Car size={14} /> Make
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.make[0] ?? ''}
+              onChange={(event) => updateSingleSelectFilter('make', event.target.value)}
+            >
+              <option value="">All Makes</option>
+              {facets.makes.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} ({option.count})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <MultiSelectFilter
-            label="Model"
-            icon={Settings2}
-            options={facets.models}
-            selected={filters.model}
-            emptyLabel={filters.make.length > 0 ? 'No models match the selected makes' : 'Pick a make to narrow models'}
-            onToggle={(value) => toggleArrayFilter('model', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <Settings2 size={14} /> Model
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.model[0] ?? ''}
+              disabled={filters.make.length === 0}
+              onChange={(event) => updateSingleSelectFilter('model', event.target.value)}
+            >
+              <option value="">{filters.make.length > 0 ? 'All Models' : 'Pick a make first'}</option>
+              {filters.make.length > 0
+                ? facets.models.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value} ({option.count})
+                    </option>
+                  ))
+                : null}
+            </select>
+          </div>
 
           <MultiSelectFilter
             label="Condition"
@@ -556,13 +610,23 @@ const SearchResults: React.FC = () => {
             onToggle={(value) => toggleArrayFilter('condition', value)}
           />
 
-          <MultiSelectFilter
-            label="District"
-            icon={MapPin}
-            options={facets.districts}
-            selected={filters.district}
-            onToggle={(value) => toggleArrayFilter('district', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <MapPin size={14} /> District
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.district[0] ?? ''}
+              onChange={(event) => updateSingleSelectFilter('district', event.target.value)}
+            >
+              <option value="">All Districts</option>
+              {facets.districts.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} ({option.count})
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="results-filter-group">
             <label>
