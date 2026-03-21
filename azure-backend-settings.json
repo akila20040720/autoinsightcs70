@@ -1,0 +1,27 @@
+[
+  {
+    "name": "MONGODB_URI",
+    "value": "mongodb+srv://wijerama2004_db_user:z3dpmFW8Id8qnAjy@autoinsightml.cmgrdyk.mongodb.net/autoinsight?retryWrites=true&w=majority",
+    "slotSetting": false
+  },
+  {
+    "name": "MONGODB_DATABASE",
+    "value": "autoinsight",
+    "slotSetting": false
+  },
+  {
+    "name": "MONGODB_COLLECTION",
+    "value": "vehicle_listings",
+    "slotSetting": false
+  },
+  {
+    "name": "MONGODB_FAVORITES_COLLECTION",
+    "value": "favorites",
+    "slotSetting": false
+  },
+  {
+    "name": "MONGODB_MODEL_REFERENCE_COLLECTION",
+    "value": "model_reference_rows",
+    "slotSetting": false
+  }
+]
