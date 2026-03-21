@@ -32,3 +32,10 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+# Backend Data
+autoinsight-frontend/backend/data/*.json
+autoinsight-frontend/backend/data/raw_source_snapshot.json
+autoinsight-frontend/backend/data/normalized_listings.fallback.json
+autoinsight-frontend/backend/data/normalized_listings.json
+autoinsight-frontend/backend/data/og_image_cache.json
