@@ -2046,3 +2046,291 @@
   color: #94a3b8;
   padding: 0 0.25rem;
 }
+
+/* --- FINAL RESPONSIVE TUNING --- */
+@media (max-width: 1024px) {
+  .analytics-main,
+  .analytics-sidebar {
+    flex: 1 1 100%;
+  }
+
+  .predictions-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .results-content-layout {
+    grid-template-columns: 1fr !important;
+    gap: 0.9rem !important;
+  }
+
+  .analytics-dashboard {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  .analytics-main,
+  .analytics-sidebar {
+    width: 100%;
+  }
+
+  .listings-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sort-container,
+  .sort-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .flex-results-grid {
+    gap: 1rem !important;
+  }
+
+  .flex-card {
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .listings-section .card-image-wrapper {
+    height: 230px !important;
+  }
+
+  .result-price {
+    font-size: 1.55rem !important;
+  }
+
+  .result-mileage {
+    font-size: 1rem !important;
+  }
+
+  .result-card-title {
+    font-size: 1.2rem !important;
+  }
+
+  .result-meta-row {
+    font-size: 0.82rem !important;
+  }
+
+  .glass-panel-small {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .graph-header-minimal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .graph-title-minimal {
+    font-size: 1.2rem;
+  }
+
+  .trend-indicator-minimal {
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+  }
+
+  .compare-tray {
+    width: calc(100% - 1.25rem);
+    padding: 0.8rem;
+  }
+
+  .compare-tray.visible {
+    bottom: 12px;
+  }
+
+  .compare-tray-actions {
+    width: 100%;
+  }
+
+  .compare-clear-btn,
+  .compare-now-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-wrapper {
+    padding: 0.9rem 0.6rem !important;
+  }
+
+  .results-header h2 {
+    font-size: 1.15rem !important;
+    line-height: 1.3;
+  }
+
+  .results-header p {
+    font-size: 0.84rem !important;
+  }
+
+  .stats-overview-flex {
+    gap: 0.7rem !important;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
+  }
+
+  .graph-title-minimal {
+    font-size: 1.05rem;
+  }
+
+  .trend-indicator-minimal {
+    font-size: 0.85rem;
+    gap: 0.35rem;
+  }
+
+  .filter-chips {
+    gap: 0.35rem;
+  }
+
+  .filter-chip {
+    font-size: 0.72rem;
+    padding: 0.22rem 0.56rem;
+  }
+
+  .sort-container,
+  .sort-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sort-select {
+    padding-left: 2.45rem;
+    padding-right: 2.35rem;
+    font-size: 0.85rem;
+  }
+
+  .results-filters-sidebar {
+    padding: 0.72rem !important;
+  }
+
+  .range-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .listings-section .card-image-wrapper {
+    height: 205px !important;
+  }
+
+  .listings-section .card-content {
+    padding: 0.82rem 0.8rem 0.75rem !important;
+  }
+
+  .price-mileage-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .result-price {
+    font-size: 1.38rem !important;
+  }
+
+  .result-mileage {
+    font-size: 0.86rem !important;
+  }
+
+  .result-card-title {
+    font-size: 1rem !important;
+    margin-bottom: 0.55rem;
+  }
+
+  .result-meta-row {
+    margin-bottom: 0.62rem;
+  }
+
+  .result-card-actions-row {
+    grid-template-columns: 1fr 48px;
+    margin-bottom: 0.52rem;
+  }
+
+  .result-check-btn,
+  .result-more-btn {
+    min-height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .need-inspection-btn {
+    padding: 0.56rem 0.72rem;
+    font-size: 0.8rem;
+  }
+
+  .result-meta-row {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.55rem;
+  }
+
+  .result-meta-row span:last-child {
+    text-align: left;
+  }
+
+  .compare-tray {
+    border-radius: 14px;
+  }
+
+  .compare-tray-car {
+    min-width: 110px;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .compare-tray-car-name {
+    max-width: 62px;
+    font-size: 0.72rem;
+  }
+
+  .compare-clear-btn,
+  .compare-now-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.78rem;
+  }
+
+  .pagination-container {
+    margin-top: 2rem;
+    margin-bottom: 2.2rem;
+    gap: 0.8rem;
+    padding: 0.85rem;
+    flex-direction: column;
+  }
+
+  .pagination-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pagination-pages {
+    order: -1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .results-wrapper {
+    padding: 0.82rem 0.5rem !important;
+  }
+
+  .listings-section .card-image-wrapper {
+    height: 188px !important;
+  }
+
+  .result-price {
+    font-size: 1.25rem !important;
+  }
+
+  .result-card-title {
+    font-size: 0.94rem !important;
+  }
+
+  .compare-tray {
+    width: calc(100% - 0.8rem);
+  }
+}
