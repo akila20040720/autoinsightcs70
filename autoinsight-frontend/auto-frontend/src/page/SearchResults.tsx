@@ -392,7 +392,7 @@ const SearchResults: React.FC = () => {
           Back to Search
         </button>
         <h2>
-          Market Analysis for <span className="gradient-text">{searchQuery}</span>
+          Market Analysis for <span className="highlight-text">{searchQuery}</span>
         </h2>
         <p>Server-side filtering, pagination, and validation-backed listings for large marketplace datasets.</p>
         {filterChips.length > 0 && (
@@ -424,16 +424,19 @@ const SearchResults: React.FC = () => {
           </div>
 
           <div className="graph-card glass-panel-small">
-            <div className="graph-header">
-              <h4>{searchQuery} price trend</h4>
-              <span
-                className={`trend-badge ${
-                  marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'positive' : 'negative'
-                }`}
-              >
-                {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? ' Next week up' : ' Next week down'}
-              </span>
+            <div className="graph-header-minimal">
+              <h4 className="graph-title-minimal">{searchQuery} price trend</h4>
+              <div className="trend-indicator-minimal">
+                <span className="trend-label">Forecast:</span>
+                <span
+                  className={`trend-value ${
+                    marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'up' : 'down'
+                  }`}
+                >
+                  {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'Rising' : 'Falling'}
+                </span>
+                <span className="trend-period">next week</span>
+              </div>
             </div>
             {chartData ? (
               <div className="svg-graph-container" style={{ paddingLeft: '20px' }}>
@@ -746,7 +749,6 @@ const SearchResults: React.FC = () => {
 
               <button className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={currentPage === totalPages}>
                 Next
-                <ChevronRight size={18} />
               </button>
             </div>
           )}

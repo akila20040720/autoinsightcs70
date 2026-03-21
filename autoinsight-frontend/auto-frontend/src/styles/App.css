@@ -111,10 +111,8 @@ body, html {
 .app-layout .add-vehicle-btn,
 .app-layout .winner-view-btn,
 .app-layout .add-vehicle-select-btn,
-.app-layout .compare-now-btn,
 .app-layout .btn-glass-purple,
-.app-layout .contact-seller-btn,
-.app-layout .pagination-page.active {
+.app-layout .contact-seller-btn {
   background: linear-gradient(135deg, var(--primary-blue), var(--theme-accent)) !important;
   color: #ffffff !important;
   border-color: transparent !important;
@@ -124,11 +122,19 @@ body, html {
 .app-layout .add-vehicle-btn:hover,
 .app-layout .winner-view-btn:hover,
 .app-layout .add-vehicle-select-btn:hover,
-.app-layout .compare-now-btn:hover,
 .app-layout .btn-glass-purple:hover,
-.app-layout .contact-seller-btn:hover,
-.app-layout .pagination-page.active:hover {
+.app-layout .contact-seller-btn:hover {
   background: linear-gradient(135deg, var(--primary-blue-hover), var(--theme-accent-hover)) !important;
+}
+
+.app-layout .compare-now-btn,
+.app-layout .pagination-page.active,
+.app-layout .compare-now-btn:hover,
+.app-layout .pagination-page.active:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .app-layout .action-btn,

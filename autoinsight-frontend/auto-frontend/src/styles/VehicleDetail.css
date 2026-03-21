@@ -145,12 +145,11 @@
 }
 
 .price-section .price {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  background: var(--gradient-purple);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #101828; /* Modern dark color */
+  letter-spacing: -0.03em;
+  display: block;
 }
 
 .price-section .price-change {
