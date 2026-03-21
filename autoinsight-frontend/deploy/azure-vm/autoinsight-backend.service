@@ -1,0 +1,16 @@
+[Unit]
+Description=AutoInsight Flask backend
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/autoinsight/app/autoinsight-frontend/backend
+EnvironmentFile=/etc/autoinsight/backend.env
+ExecStart=/var/www/autoinsight/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 wsgi:app
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

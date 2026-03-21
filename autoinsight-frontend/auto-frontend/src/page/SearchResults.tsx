@@ -6,7 +6,6 @@ import {
   Calendar,
   Car,
   ChevronLeft,
-  ChevronRight,
   ClipboardCheck,
   DollarSign,
   Gauge,
@@ -17,8 +16,6 @@ import {
   Scissors,
   Settings2,
   SlidersHorizontal,
-  TrendingDown,
-  TrendingUp,
 } from 'lucide-react';
 import MultiSelectFilter from '../component/MultiSelectFilter';
 import OgImage from '../component/OgImage';
@@ -350,9 +347,17 @@ const SearchResults: React.FC = () => {
       const current = new Set((prev[key] as string[]).map((item) => item.toLowerCase()));
       const nextValues = [...(prev[key] as string[])];
       if (current.has(value.toLowerCase())) {
+        const updatedValues = nextValues.filter((item) => item.toLowerCase() !== value.toLowerCase());
+        if (key === 'make') {
+          return {
+            ...prev,
+            make: updatedValues,
+            model: [],
+          };
+        }
         return {
           ...prev,
-          [key]: nextValues.filter((item) => item.toLowerCase() !== value.toLowerCase()),
+          [key]: updatedValues,
         };
       }
       if (key === 'make') {
@@ -376,6 +381,30 @@ const SearchResults: React.FC = () => {
     }));
   };
 
+  const updateSingleSelectFilter = (key: 'make' | 'model' | 'district', value: string) => {
+    setFilters((prev) => {
+      if (key === 'make') {
+        return {
+          ...prev,
+          make: value ? [value] : [],
+          model: [],
+        };
+      }
+
+      if (key === 'district') {
+        return {
+          ...prev,
+          district: value ? [value] : [],
+        };
+      }
+
+      return {
+        ...prev,
+        model: value ? [value] : [],
+      };
+    });
+  };
+
   const resetFilters = () => {
     setFilters(EMPTY_FILTERS);
   };
@@ -392,7 +421,7 @@ const SearchResults: React.FC = () => {
           Back to Search
         </button>
         <h2>
-          Market Analysis for <span className="gradient-text">{searchQuery}</span>
+          Market Analysis for <span className="highlight-text">{searchQuery}</span>
         </h2>
         <p>Server-side filtering, pagination, and validation-backed listings for large marketplace datasets.</p>
         {filterChips.length > 0 && (
@@ -424,16 +453,19 @@ const SearchResults: React.FC = () => {
           </div>
 
           <div className="graph-card glass-panel-small">
-            <div className="graph-header">
-              <h4>{searchQuery} price trend</h4>
-              <span
-                className={`trend-badge ${
-                  marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'positive' : 'negative'
-                }`}
-              >
-                {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? ' Next week up' : ' Next week down'}
-              </span>
+            <div className="graph-header-minimal">
+              <h4 className="graph-title-minimal">{searchQuery} price trend</h4>
+              <div className="trend-indicator-minimal">
+                <span className="trend-label">Forecast:</span>
+                <span
+                  className={`trend-value ${
+                    marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'up' : 'down'
+                  }`}
+                >
+                  {marketAnalysis.nextWeekPriceLkr >= marketAnalysis.previousMonthPriceLkr ? 'Rising' : 'Falling'}
+                </span>
+                <span className="trend-period">next week</span>
+              </div>
             </div>
             {chartData ? (
               <div className="svg-graph-container" style={{ paddingLeft: '20px' }}>
@@ -528,22 +560,44 @@ const SearchResults: React.FC = () => {
             onToggle={(value) => toggleArrayFilter('vehicleType', value)}
           />
 
-          <MultiSelectFilter
-            label="Make"
-            icon={Car}
-            options={facets.makes}
-            selected={filters.make}
-            onToggle={(value) => toggleArrayFilter('make', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <Car size={14} /> Make
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.make[0] ?? ''}
+              onChange={(event) => updateSingleSelectFilter('make', event.target.value)}
+            >
+              <option value="">All Makes</option>
+              {facets.makes.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} ({option.count})
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <MultiSelectFilter
-            label="Model"
-            icon={Settings2}
-            options={facets.models}
-            selected={filters.model}
-            emptyLabel={filters.make.length > 0 ? 'No models match the selected makes' : 'Pick a make to narrow models'}
-            onToggle={(value) => toggleArrayFilter('model', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <Settings2 size={14} /> Model
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.model[0] ?? ''}
+              disabled={filters.make.length === 0}
+              onChange={(event) => updateSingleSelectFilter('model', event.target.value)}
+            >
+              <option value="">{filters.make.length > 0 ? 'All Models' : 'Pick a make first'}</option>
+              {filters.make.length > 0
+                ? facets.models.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value} ({option.count})
+                    </option>
+                  ))
+                : null}
+            </select>
+          </div>
 
           <MultiSelectFilter
             label="Condition"
@@ -553,13 +607,23 @@ const SearchResults: React.FC = () => {
             onToggle={(value) => toggleArrayFilter('condition', value)}
           />
 
-          <MultiSelectFilter
-            label="District"
-            icon={MapPin}
-            options={facets.districts}
-            selected={filters.district}
-            onToggle={(value) => toggleArrayFilter('district', value)}
-          />
+          <div className="results-filter-group">
+            <label>
+              <MapPin size={14} /> District
+            </label>
+            <select
+              className="results-filter-select"
+              value={filters.district[0] ?? ''}
+              onChange={(event) => updateSingleSelectFilter('district', event.target.value)}
+            >
+              <option value="">All Districts</option>
+              {facets.districts.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} ({option.count})
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="results-filter-group">
             <label>
@@ -746,7 +810,6 @@ const SearchResults: React.FC = () => {
 
               <button className="pagination-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={currentPage === totalPages}>
                 Next
-                <ChevronRight size={18} />
               </button>
             </div>
           )}

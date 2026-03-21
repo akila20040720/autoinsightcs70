@@ -23,6 +23,8 @@ SORT_MAP: dict[str, tuple[str, int]] = {
     "mileage": ("mileage", 1),
 }
 
+_LAST_REPOSITORY_BUILD_ERROR: str | None = None
+
 
 def encode_cursor(offset: int) -> str:
     payload = json.dumps({"offset": max(offset, 0)}).encode("utf-8")
@@ -117,7 +119,7 @@ def _sort_items(items: list[dict[str, Any]], sort_by: str, direction: str | None
 
 
 class FileListingRepository:
-    def __init__(self, snapshot_path: Path, favorites_path: Path):
+    def __init__(self, snapshot_path: Path, favorites_path: Path, *, load_snapshot: bool = True):
         self.snapshot_path = snapshot_path
         self.favorites_path = favorites_path
         self._lock = threading.RLock()
@@ -125,7 +127,8 @@ class FileListingRepository:
         self._items_by_id: dict[str, dict[str, Any]] = {}
         self._meta: dict[str, Any] = {}
         self._favorites: dict[str, list[str]] = {}
-        self._load_snapshot()
+        if load_snapshot:
+            self._load_snapshot()
         self._load_favorites()
 
     def _load_snapshot(self) -> None:
@@ -359,14 +362,15 @@ class MongoListingRepository(FileListingRepository):
         snapshot_path: Path,
         favorites_path: Path,
     ):
-        super().__init__(snapshot_path=snapshot_path, favorites_path=favorites_path)
         if not mongodb_uri or MongoClient is None:
             raise RuntimeError("MongoDB support requires pymongo and MONGODB_URI.")
         self.client = MongoClient(mongodb_uri)
+        self.client.admin.command("ping")
         self.collection = self.client[database_name][collection_name]
         self.favorites_collection = self.client[database_name][favorites_collection_name]
+        super().__init__(snapshot_path=snapshot_path, favorites_path=favorites_path, load_snapshot=False)
         self._ensure_indexes()
-        self._mirror_snapshot_to_memory()
+        self._bootstrap_from_mongo_or_snapshot()
 
     def _ensure_indexes(self) -> None:
         self.collection.create_index([("id", ASCENDING)], unique=True)
@@ -376,10 +380,17 @@ class MongoListingRepository(FileListingRepository):
         self.collection.create_index([("mileage", ASCENDING), ("listedAt", DESCENDING)])
         self.favorites_collection.create_index([("userKey", ASCENDING)], unique=True)
 
-    def _mirror_snapshot_to_memory(self) -> None:
+    def _mirror_snapshot_to_memory(self) -> bool:
         items = list(self.collection.find({}, {"_id": 0}))
         if items:
             self.replace_all(items, self._meta)
+            return True
+        return False
+
+    def _bootstrap_from_mongo_or_snapshot(self) -> None:
+        if self._mirror_snapshot_to_memory():
+            return
+        self._load_snapshot()
 
     def replace_all(self, items: list[dict[str, Any]], meta: dict[str, Any]) -> None:
         super().replace_all(items, meta)
@@ -412,6 +423,8 @@ def build_repository(
     snapshot_path: Path,
     favorites_path: Path,
 ) -> FileListingRepository:
+    global _LAST_REPOSITORY_BUILD_ERROR
+    _LAST_REPOSITORY_BUILD_ERROR = None
     if mongodb_uri and MongoClient is not None:
         try:
             return MongoListingRepository(
@@ -422,6 +435,10 @@ def build_repository(
                 snapshot_path=snapshot_path,
                 favorites_path=favorites_path,
             )
-        except Exception:
-            pass
+        except Exception as exc:
+            _LAST_REPOSITORY_BUILD_ERROR = str(exc)
     return FileListingRepository(snapshot_path=snapshot_path, favorites_path=favorites_path)
+
+
+def get_last_repository_build_error() -> str | None:
+    return _LAST_REPOSITORY_BUILD_ERROR

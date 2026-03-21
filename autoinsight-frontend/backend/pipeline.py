@@ -4,6 +4,7 @@ import json
 import re
 import shutil
 from datetime import UTC, datetime, timedelta
+from json import JSONDecodeError
 from pathlib import Path
 from typing import Any
 
@@ -101,7 +102,10 @@ def _parse_published_at(value: object, now: datetime) -> str:
 
 
 def _load_manual_source(source_path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    payload = json.loads(source_path.read_text(encoding="utf-8"))
+    try:
+        payload = json.loads(source_path.read_text(encoding="utf-8"))
+    except (OSError, JSONDecodeError) as exc:
+        raise ValueError(f"Invalid JSON in manual source file: {source_path}") from exc
     if isinstance(payload, dict):
         results = payload.get("results", [])
         meta = payload.get("meta", {})
@@ -115,7 +119,10 @@ def _load_manual_source(source_path: Path) -> tuple[list[dict[str, Any]], dict[s
 def _load_existing_snapshot(snapshot_path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     if not snapshot_path.exists():
         return [], {}
-    payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    try:
+        payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except (OSError, JSONDecodeError):
+        return [], {}
     items = payload.get("items", [])
     meta = payload.get("meta", {})
     if not isinstance(items, list):

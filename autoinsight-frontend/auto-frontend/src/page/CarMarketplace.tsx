@@ -449,8 +449,7 @@ const CarMarketplace: React.FC = () => {
             </div>
             <h4>No saved vehicles yet</h4>
             <p>Browse search results and tap the heart icon to save cars you're interested in.</p>
-            <button className="btn-glass-purple" onClick={handleSearch}>
-              <Search size={16} />
+            <button className="btn-modern-action" onClick={handleSearch}>
               Start Searching
             </button>
           </div>

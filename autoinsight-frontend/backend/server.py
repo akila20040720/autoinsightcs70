@@ -20,11 +20,21 @@ except ModuleNotFoundError:  # pragma: no cover
 try:
     from .config import Settings, load_settings
     from .pipeline import run_refresh_pipeline
-    from .repository import FileListingRepository, MongoListingRepository, build_repository
+    from .repository import (
+        FileListingRepository,
+        MongoListingRepository,
+        build_repository,
+        get_last_repository_build_error,
+    )
 except ImportError:  # pragma: no cover
     from config import Settings, load_settings  # type: ignore
     from pipeline import run_refresh_pipeline  # type: ignore
-    from repository import FileListingRepository, MongoListingRepository, build_repository  # type: ignore
+    from repository import (  # type: ignore
+        FileListingRepository,
+        MongoListingRepository,
+        build_repository,
+        get_last_repository_build_error,
+    )
 
 
 class QueryCache:
@@ -260,15 +270,18 @@ def create_app(
     @app.get("/api/health")
     def health() -> Any:
         storage = "mongo" if isinstance(repository, MongoListingRepository) else "file-fallback"
-        return jsonify(
-            {
-                "ok": True,
-                "service": "autoinsight-marketplace-api",
-                "schedulerEnabled": settings.enable_scheduler,
-                "sourceMode": settings.source_mode,
-                "storage": storage,
-            }
-        )
+        payload = {
+            "ok": True,
+            "service": "autoinsight-marketplace-api",
+            "schedulerEnabled": settings.enable_scheduler,
+            "sourceMode": settings.source_mode,
+            "storage": storage,
+        }
+        if storage == "file-fallback":
+            fallback_reason = get_last_repository_build_error()
+            if fallback_reason:
+                payload["storageReason"] = fallback_reason
+        return jsonify(payload)
 
     @app.get("/api/facets")
     def facets() -> Any:
