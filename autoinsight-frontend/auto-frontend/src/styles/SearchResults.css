@@ -731,23 +731,28 @@
 
 .compare-tray-remove {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 20px;
-  height: 20px;
+  top: -8px;
+  right: -8px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #ff7a00;
+  background: #1f2937;
   color: white;
   border: 2px solid var(--bg-panel);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 0;
+  line-height: 1;
 }
 
 .compare-tray-remove:hover {
-  transform: scale(1.15);
+  transform: scale(1.2);
+  background: #111827;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
 }
 
 .compare-tray-actions {

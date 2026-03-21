@@ -12,9 +12,9 @@ import {
   Gauge,
   GitCompare,
   Heart,
-  Info,
   MapPin,
   RotateCcw,
+  Scissors,
   Settings2,
   SlidersHorizontal,
   TrendingDown,
@@ -650,7 +650,7 @@ const SearchResults: React.FC = () => {
 
           <div className="compare-feature-tip glass-panel-small">
             <div className="tip-icon-wrapper">
-              <Info size={18} />
+              <GitCompare size={18} />
             </div>
             <div className="tip-content">
               <strong>Compare Vehicles</strong>
@@ -771,8 +771,8 @@ const SearchResults: React.FC = () => {
               <div key={vehicle.id} className="compare-tray-car">
                 <OgImage listingUrl={vehicle.vehicleUrl} fallbackSrc={vehicle.imageUrl ?? undefined} alt={vehicleName(vehicle)} />
                 <span className="compare-tray-car-name">{vehicleName(vehicle)}</span>
-                <button className="compare-tray-remove" onClick={() => toggleCompareVehicle(vehicle)}>
-                  remove
+                <button className="compare-tray-remove" onClick={() => toggleCompareVehicle(vehicle)} title="Remove from comparison">
+                  <Scissors size={14} />
                 </button>
               </div>
             ))}
