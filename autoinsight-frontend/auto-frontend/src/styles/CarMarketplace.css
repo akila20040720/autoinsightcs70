@@ -807,7 +807,12 @@
 }
 
 .section-title {
-  margin-bottom: 2rem;
+  margin-bottom: 2.75rem;
+}
+
+.inventory-section:not(.saved-section) .section-title {
+  margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 .section-title h3 {
@@ -826,7 +831,8 @@
 .car-showcase-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 2rem;
+  column-gap: 2rem;
+  row-gap: 2.5rem;
 }
 
 /* --- GLASS CAR CARD --- */
@@ -1049,12 +1055,17 @@
   gap: 0.5rem;
 }
 
+.saved-section .section-title {
+  margin-bottom: 2.75rem;
+}
+
 .saved-section .heart-icon {
   color: #ff7a00;
 }
 
 .saved-grid {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  row-gap: 2.5rem;
 }
 
 .saved-card {
