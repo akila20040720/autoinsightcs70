@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "refreshedAt": "2026-03-20T12:05:53.092299+00:00",
+    "source": "live-scrape",
+    "pages_scraped": 1,
+    "elapsed_seconds": 23.37,
+    "result_count": 1
+  },
+  "items": [
+    {
+      "id": "https://riyasewana.com/buy/suzuki-swift-japan-sale-chilaw-11352921",
+      "vehicleType": "Car",
+      "make": "Suzuki",
+      "model": "Swift Japan",
+      "year": 2007,
+      "priceLkr": null,
+      "priceMillion": 0.0,
+      "mileage": 131000,
+      "district": "Chilaw",
+      "publishedDate": "Mar 16",
+      "vehicleUrl": "https://riyasewana.com/buy/suzuki-swift-japan-sale-chilaw-11352921",
+      "condition": "Used",
+      "rawPrice": "Negotiable"
+    }
+  ]
+}

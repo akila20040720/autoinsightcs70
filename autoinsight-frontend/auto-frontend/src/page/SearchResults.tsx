@@ -412,13 +412,13 @@ const SearchResults: React.FC = () => {
             <div className="stat-card glass-panel-small">
               <span className="stat-label">Average Price</span>
               <h3 className="stat-value">
-                {formatLkrMillions(marketAnalysis.avgPriceLkr || Math.round(avgPrice * 1_000_000))}<span className="currency"> LKR</span>
+                {avgPrice.toFixed(2)}M <span className="currency">LKR</span>
               </h3>
             </div>
             <div className="stat-card glass-panel-small">
               <span className="stat-label">Average Mileage</span>
               <h3 className="stat-value">
-                {(marketAnalysis.avgMileage || avgMileage).toLocaleString()}<span className="unit"> km</span>
+                {avgMileage.toLocaleString()} <span className="unit">km</span>
               </h3>
             </div>
           </div>
@@ -479,9 +479,9 @@ const SearchResults: React.FC = () => {
         </div>
 
         <div className="analytics-sidebar">
-          <div className="predictions-card glass-panel-small" style={marketAnalysis.available === false ? { position: 'relative' } : {}}>
+          <div className="predictions-card glass-panel-small">
             <h4>Market Analysis</h4>
-            <div className="prediction-list" style={marketAnalysis.available === false ? { opacity: 0.5, pointerEvents: 'none', filter: 'blur(4px)' } : {}}>
+            <div className="prediction-list">
               <div className="pred-item">
                 <span className="pred-time">Previous Month Price</span>
                 <span className="pred-price">{formatLkrMillions(marketAnalysis.previousMonthPriceLkr)}</span>
@@ -504,24 +504,6 @@ const SearchResults: React.FC = () => {
                 <span className="pred-price">{total.toLocaleString()}</span>
               </div>
             </div>
-            {marketAnalysis.available === false && (
-              <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                padding: '1rem',
-                borderRadius: '0.5rem',
-                backdropFilter: 'blur(10px)',
-                color: '#fff',
-                fontSize: '0.875rem',
-                zIndex: 10,
-              }}>
-                <p style={{ margin: '0.5rem 0' }}>{marketAnalysis.reason || 'Not sufficient data to analyze'}</p>
-              </div>
-            )}
           </div>
         </div>
       </section>
