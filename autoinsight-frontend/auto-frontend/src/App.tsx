@@ -6,6 +6,7 @@ import CarMarketplace from './page/CarMarketplace';
 import SearchResults from './page/SearchResults';
 import VehicleDetail from './page/VehicleDetail';
 import VehicleComparison from './page/VehicleComparison';
+import Guides from './page/Guides';
 import Footer from './component/Footer';
 import './styles/App.css'; 
 
@@ -50,6 +51,7 @@ const AnimatedRoutes: React.FC = () => {
           <Route path="/results" element={<SearchResults />} />
           <Route path="/vehicle/:id" element={<VehicleDetail />} />
           <Route path="/compare" element={<VehicleComparison />} />
+          <Route path="/guides" element={<Guides />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

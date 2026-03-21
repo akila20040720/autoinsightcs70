@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import base64
 import json
-import re
 import threading
 from copy import deepcopy
 from pathlib import Path
@@ -350,7 +349,6 @@ class MongoListingRepository(FileListingRepository):
         database_name: str,
         collection_name: str,
         favorites_collection_name: str,
-        model_reference_collection_name: str,
         snapshot_path: Path,
         favorites_path: Path,
     ):
@@ -360,7 +358,6 @@ class MongoListingRepository(FileListingRepository):
         self.client = MongoClient(mongodb_uri)
         self.collection = self.client[database_name][collection_name]
         self.favorites_collection = self.client[database_name][favorites_collection_name]
-        self.model_reference_collection = self.client[database_name][model_reference_collection_name]
         self._ensure_indexes()
         self._mirror_snapshot_to_memory()
 
@@ -371,123 +368,6 @@ class MongoListingRepository(FileListingRepository):
         self.collection.create_index([("priceLkr", ASCENDING), ("year", DESCENDING)])
         self.collection.create_index([("mileage", ASCENDING), ("listedAt", DESCENDING)])
         self.favorites_collection.create_index([("userKey", ASCENDING)], unique=True)
-        self.model_reference_collection.create_index(
-            [("makeNorm", ASCENDING), ("modelNorm", ASCENDING), ("yearMin", ASCENDING), ("yearMax", ASCENDING)]
-        )
-        try:
-            self.model_reference_collection.create_index([("rowId", ASCENDING)], unique=True)
-        except Exception:
-            # Keep repository usable even if imported reference data has duplicate row IDs.
-            pass
-
-    @staticmethod
-    def _normalize_lookup_text(value: object) -> str:
-        text = str(value or "").strip().lower()
-        text = text.replace("&", " and ").replace("-", " ")
-        text = re.sub(r"[^a-z0-9\s]", " ", text)
-        return re.sub(r"\s+", " ", text).strip()
-
-    @staticmethod
-    def _as_int(value: object) -> int | None:
-        if value is None or value == "":
-            return None
-        if isinstance(value, bool):
-            return None
-        if isinstance(value, (int, float)):
-            return int(value)
-        try:
-            return int(str(value).strip())
-        except (TypeError, ValueError):
-            return None
-
-    def _resolve_reference_market_analysis(
-        self,
-        *,
-        make_norm: str,
-        model_norm: str,
-        year: int | None,
-    ) -> dict[str, Any] | None:
-        if not make_norm or not model_norm:
-            return None
-
-        key_filter: dict[str, Any] = {
-            "makeNorm": make_norm,
-            "modelNorm": model_norm,
-        }
-        candidates = list(self.model_reference_collection.find(key_filter, {"_id": 0, "market_analysis": 1, "yearMin": 1, "yearMax": 1}))
-        if not candidates:
-            return None
-
-        def _score(candidate: dict[str, Any]) -> tuple[int, int, int]:
-            year_min = self._as_int(candidate.get("yearMin"))
-            year_max = self._as_int(candidate.get("yearMax"))
-            if year_min is None and year_max is None:
-                # Lowest priority: unconstrained rows.
-                return (2, 10_000, 10_000)
-
-            if year is None:
-                span = abs((year_max or year_min or 0) - (year_min or year_max or 0))
-                return (1, span, year_min or 0)
-
-            min_bound = year_min if year_min is not None else year
-            max_bound = year_max if year_max is not None else year
-            if min_bound <= year <= max_bound:
-                span = abs(max_bound - min_bound)
-                return (0, span, abs((min_bound + max_bound) // 2 - year))
-
-            distance = min(abs(year - min_bound), abs(year - max_bound))
-            return (3, distance, abs(max_bound - min_bound))
-
-        best = min(candidates, key=_score)
-        analysis = best.get("market_analysis")
-        return analysis if isinstance(analysis, dict) else None
-
-    def _market_analysis(
-        self,
-        items: list[dict[str, Any]],
-        *,
-        fallback_avg_price: int,
-        fallback_avg_mileage: int,
-    ) -> dict[str, Any]:
-        cache: dict[tuple[str, str, int | None], dict[str, Any] | None] = {}
-        mapped_items: list[dict[str, Any]] = []
-
-        for item in items:
-            make_norm = self._normalize_lookup_text(item.get("make"))
-            model_norm = self._normalize_lookup_text(item.get("model"))
-            year = self._as_int(item.get("year"))
-            cache_key = (make_norm, model_norm, year)
-
-            if cache_key not in cache:
-                cache[cache_key] = self._resolve_reference_market_analysis(
-                    make_norm=make_norm,
-                    model_norm=model_norm,
-                    year=year,
-                )
-
-            analysis = cache[cache_key]
-            if analysis:
-                mapped_items.append({"market_analysis": analysis})
-        
-        if not mapped_items:
-            return {
-                "available": False,
-                "reason": "Insufficient data to analyze",
-                "previousMonthPriceLkr": 0,
-                "nextWeekPriceLkr": 0,
-                "avgPriceLkr": 0,
-                "avgMileage": 0,
-                "priceTrend": [],
-            }
-        
-        result = FileListingRepository._market_analysis(
-            self,
-            mapped_items,
-            fallback_avg_price=0,
-            fallback_avg_mileage=0,
-        )
-        result["available"] = True
-        return result
 
     def _mirror_snapshot_to_memory(self) -> None:
         items = list(self.collection.find({}, {"_id": 0}))
@@ -524,7 +404,6 @@ def build_repository(
     mongodb_favorites_collection: str,
     snapshot_path: Path,
     favorites_path: Path,
-    mongodb_model_reference_collection: str = "model_reference_rows",
 ) -> FileListingRepository:
     if mongodb_uri and MongoClient is not None:
         try:
@@ -533,7 +412,6 @@ def build_repository(
                 database_name=mongodb_database,
                 collection_name=mongodb_collection,
                 favorites_collection_name=mongodb_favorites_collection,
-                model_reference_collection_name=mongodb_model_reference_collection,
                 snapshot_path=snapshot_path,
                 favorites_path=favorites_path,
             )

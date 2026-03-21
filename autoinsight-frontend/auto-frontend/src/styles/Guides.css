@@ -1,0 +1,122 @@
+.guides-page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+  color: var(--text-main);
+}
+
+.guides-hero {
+  background: var(--bg-panel);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-panel);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.guides-badge {
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(10, 44, 121, 0.12);
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.75rem;
+}
+
+.guides-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  margin-bottom: 0.75rem;
+}
+
+.guides-hero p {
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 900px;
+}
+
+.guides-section {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-card);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+}
+
+.guides-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+.guides-section ol,
+.guides-section ul {
+  margin-left: 1rem;
+  color: var(--text-label);
+}
+
+.guides-section li {
+  margin: 0.45rem 0;
+  line-height: 1.6;
+}
+
+.guides-section strong {
+  color: var(--text-main);
+}
+
+.guides-cta {
+  background: var(--bg-panel);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-panel);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.guides-cta h3 {
+  margin-bottom: 0.25rem;
+}
+
+.guides-cta p {
+  color: var(--text-muted);
+}
+
+.guides-cta-link {
+  text-decoration: none;
+  border: none;
+  border-radius: 10px;
+  padding: 0.68rem 1.1rem;
+  font-weight: 700;
+  background: var(--gradient-purple);
+  color: #ffffff;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.guides-cta-link:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+  .guides-page {
+    padding: 1.25rem 1rem 3rem;
+  }
+
+  .guides-hero,
+  .guides-section,
+  .guides-cta {
+    padding: 1rem;
+  }
+}
