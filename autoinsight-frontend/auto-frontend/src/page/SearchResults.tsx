@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ClipboardCheck,
   DollarSign,
+  ExternalLink,
   Gauge,
   GitCompare,
   Heart,
@@ -748,6 +749,7 @@ const SearchResults: React.FC = () => {
                     </div>
 
                     <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="result-gov-link">
+                      <ExternalLink size={15} />
                       View original listing
                     </a>
 

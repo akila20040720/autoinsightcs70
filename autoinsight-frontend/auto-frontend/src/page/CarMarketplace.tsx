@@ -6,6 +6,7 @@ import {
   Car,
   ChevronDown,
   DollarSign,
+  ExternalLink,
   Flame,
   Gauge,
   Heart,
@@ -405,6 +406,7 @@ const CarMarketplace: React.FC = () => {
                 </div>
 
                 <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                  <ExternalLink size={15} />
                   View original listing
                 </a>
 
@@ -472,6 +474,7 @@ const CarMarketplace: React.FC = () => {
                   </div>
 
                   <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="market-card-gov-link">
+                    <ExternalLink size={15} />
                     View original listing
                   </a>
 
