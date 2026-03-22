@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import OgImage from '../component/OgImage';
 import { MarketplaceSkeleton } from '../component/Skeleton';
-import customBannerImage from '../images/banner.png';
+import customBannerImage from '../images/banner.webp';
 import {
   EMPTY_FILTERS,
   type FacetOption,
