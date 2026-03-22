@@ -54,6 +54,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ needs.build.result == 'success' && secrets.AZUREAPPSERVICE_CLIENTID_702B276A3DBE4D45BB5CFCC6396C51E7 != '' && secrets.AZUREAPPSERVICE_TENANTID_F0143E00B07A40B4A8302D7BCCFFA016 != '' && secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_04CD2EFC83AD4025803BEAFD2FFE387D != '' }}
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
@@ -77,4 +78,5 @@ jobs:
         with:
           app-name: 'autoinsight-analytics'
           slot-name: 'Production'
+          package: autoinsight-frontend/backend
           

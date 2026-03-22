@@ -17,6 +17,7 @@ env:
 
 jobs:
   build_and_deploy:
+    if: ${{ secrets.AZURE_CREDENTIALS != '' }}
     runs-on: ubuntu-latest
 
     steps:

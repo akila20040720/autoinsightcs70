@@ -104,6 +104,22 @@ The production marketplace flow now lives under `autoinsight-frontend/`.
 - Static SPA: host dist on Vercel, Netlify, GitHub Pages, Azure Static Web Apps, or S3/CloudFront.
 - Ensure your host rewrites unknown routes to index.html to support client-side routing.
 
+## GitHub Actions CI/CD (Soft Mode)
+- Main CI workflow: `.github/workflows/main.yml`
+- CI is intentionally non-blocking for lint/build/tests to reduce pipeline breakage while the project is evolving.
+- Preview checks are time-limited to avoid hanging workflows.
+
+Optional deploy workflows (they auto-skip when required secrets are missing):
+- Backend container deploy: `.github/workflows/backend-appservice-deploy.yml`
+	- Required secret: `AZURE_CREDENTIALS`
+- Backend Python App Service deploy: `.github/workflows/main_autoinsight-analytics.yml`
+	- Required secrets:
+		- `AZUREAPPSERVICE_CLIENTID_702B276A3DBE4D45BB5CFCC6396C51E7`
+		- `AZUREAPPSERVICE_TENANTID_F0143E00B07A40B4A8302D7BCCFFA016`
+		- `AZUREAPPSERVICE_SUBSCRIPTIONID_04CD2EFC83AD4025803BEAFD2FFE387D`
+- Frontend Static Web Apps deploy: `.github/workflows/azure-static-web-apps-calm-beach-0445a0100.yml`
+	- Required secret: `AZURE_STATIC_WEB_APPS_API_TOKEN_CALM_BEACH_0445A0100`
+
 ## Data and Content Credits
 - Marketplace and industry acknowledgments: Riyasewana, Patpat.lk, Ikman.lk, and CMTA.
 - CSV samples and scripts in data_processing/ and web_scrapping/ are illustrative; comply with each source’s terms of service when collecting or using data.

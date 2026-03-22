@@ -55,10 +55,13 @@ jobs:
 						echo "No backend requirements.txt found. Skipping."
 					fi
 
+			- name: Install pytest (optional)
+				continue-on-error: true
+				run: pip install pytest
+
 			- name: Python syntax check (non-blocking)
 				continue-on-error: true
-				run: |
-					python -m compileall -q autoinsight-frontend/backend || true
+				run: python -m compileall -q autoinsight-frontend/backend || true
 
 			- name: Backend tests (non-blocking)
 				continue-on-error: true
@@ -114,7 +117,11 @@ jobs:
 				continue-on-error: true
 				run: npm run build --if-present
 
-			- name: Preview run check (non-blocking)
+			- name: Unit tests (non-blocking)
 				continue-on-error: true
-				run: npm run preview --if-present -- --host 127.0.0.1 --port 4173
+				run: npm run test --if-present
+
+			- name: Preview smoke check (non-blocking)
+				continue-on-error: true
+				run: timeout 20s npm run preview --if-present -- --host 127.0.0.1 --port 4173 || true
 
