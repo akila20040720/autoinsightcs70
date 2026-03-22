@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   ClipboardCheck,
+  ExternalLink,
   Gauge,
   Heart,
   MapPin,
@@ -114,6 +115,32 @@ const VehicleDetail: React.FC = () => {
     );
   }
 
+  const marketAnalysis = vehicle.marketAnalysis;
+  const trendPoints = marketAnalysis?.priceTrend ?? [];
+  const trendValues = trendPoints.map((point) => point.valueLkr);
+  const minTrendValue = trendValues.length > 0 ? Math.min(...trendValues) : 0;
+  const maxTrendValue = trendValues.length > 0 ? Math.max(...trendValues) : 0;
+
+  const trendPolyline =
+    trendPoints.length > 1
+      ? trendPoints
+          .map((point, index) => {
+            const x = (index / (trendPoints.length - 1)) * 100;
+            const y =
+              maxTrendValue === minTrendValue
+                ? 18
+                : 36 - ((point.valueLkr - minTrendValue) / (maxTrendValue - minTrendValue)) * 36;
+            return `${x},${y}`;
+          })
+          .join(' ')
+      : '';
+
+  const avgPriceLkr = marketAnalysis?.avgPriceLkr ?? 0;
+  const avgPriceMillion = avgPriceLkr > 0 ? avgPriceLkr / 1_000_000 : null;
+  const previousMonthPriceMillion = (marketAnalysis?.previousMonthPriceLkr ?? 0) > 0 ? (marketAnalysis?.previousMonthPriceLkr ?? 0) / 1_000_000 : null;
+  const nextWeekPriceMillion = (marketAnalysis?.nextWeekPriceLkr ?? 0) > 0 ? (marketAnalysis?.nextWeekPriceLkr ?? 0) / 1_000_000 : null;
+  const marketDiffPercent = avgPriceLkr > 0 ? ((vehicle.priceLkr - avgPriceLkr) / avgPriceLkr) * 100 : null;
+
   return (
     <div className="vehicle-detail-wrapper">
       <div className="detail-header">
@@ -193,11 +220,58 @@ const VehicleDetail: React.FC = () => {
 
           <div className="detail-description glass-panel-small">
             <h3>Listing Overview</h3>
-            <p>
-              This listing was normalized through the marketplace pipeline and matched against the model report workbook. Matched row:{' '}
-              {vehicle.matchedModelRowId ?? 'No confident match'}.
-            </p>
+            {marketAnalysis ? (
+              <>
+                <p>
+                  Market view for similar {vehicle.make} {vehicle.model} listings in your selected range.
+                </p>
+                <div className="market-grid">
+                  <div className="market-item">
+                    <span className="market-label">Market Avg Price</span>
+                    <span className="market-value">{avgPriceMillion ? formatPrice(avgPriceMillion) : 'N/A'}</span>
+                    {marketDiffPercent !== null && (
+                      <span className={`market-diff ${marketDiffPercent <= 0 ? 'below' : 'above'}`}>
+                        {Math.abs(marketDiffPercent).toFixed(1)}% {marketDiffPercent <= 0 ? 'below' : 'above'} average
+                      </span>
+                    )}
+                  </div>
+                  <div className="market-item">
+                    <span className="market-label">Expected Next Week</span>
+                    <span className="market-value">{nextWeekPriceMillion ? formatPrice(nextWeekPriceMillion) : 'N/A'}</span>
+                    {previousMonthPriceMillion && nextWeekPriceMillion && (
+                      <span className={`market-diff ${nextWeekPriceMillion <= previousMonthPriceMillion ? 'below' : 'above'}`}>
+                        {nextWeekPriceMillion <= previousMonthPriceMillion ? 'Cooling trend' : 'Rising trend'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {trendPolyline && (
+                  <div className="price-history-section">
+                    <div className="price-chart" aria-label="Price trend">
+                      <svg viewBox="0 0 100 40" preserveAspectRatio="none" role="img" aria-hidden="true">
+                        <polyline
+                          points={trendPolyline}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div className="price-range">
+                      <span>{trendPoints[0]?.label ?? 'Start'}</span>
+                      <span>{trendPoints[trendPoints.length - 1]?.label ?? 'Now'}</span>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p>Market insight is not available for this listing yet.</p>
+            )}
             <a href={vehicle.vehicleUrl} target="_blank" rel="noopener noreferrer" className="primary-link">
+              <ExternalLink size={16} />
               Open original listing
             </a>
           </div>

@@ -223,6 +223,17 @@
   margin: 0 0 1rem 0;
 }
 
+.glass-panel-small {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
 /* Price History */
 .price-history-section .price-chart {
   margin-bottom: 0.75rem;
@@ -478,8 +489,50 @@
   margin-top: 1.5rem;
 }
 
+.detail-description h3 {
+  margin: 0 0 0.75rem 0;
+  color: var(--text-main);
+}
+
+.detail-description p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.detail-description .market-grid {
+  margin-top: 1rem;
+}
+
+.detail-description .price-history-section {
+  margin-top: 1rem;
+}
+
+.detail-description .price-chart {
+  color: var(--primary-blue);
+}
+
 .primary-link {
   display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   margin-top: 0.85rem;
-  color: var(--accent-blue);
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(99, 102, 241, 0.14));
+  color: var(--primary-blue);
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.primary-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(59, 130, 246, 0.45);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.2));
+}
+
+.primary-link:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
 }

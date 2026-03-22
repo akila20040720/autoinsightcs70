@@ -423,7 +423,7 @@ const SearchResults: React.FC = () => {
         <h2>
           Market Analysis for <span className="highlight-text">{searchQuery}</span>
         </h2>
-        <p>Server-side filtering, pagination, and validation-backed listings for large marketplace datasets.</p>
+        <p>Explore accurate vehicle data with powerful search and smart insights.</p>
         {filterChips.length > 0 && (
           <div className="filter-chips">
             {filterChips.map((chip) => (
