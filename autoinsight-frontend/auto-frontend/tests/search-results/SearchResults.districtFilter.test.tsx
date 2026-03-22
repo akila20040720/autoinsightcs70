@@ -1,6 +1,6 @@
 import React from 'react';
-import '@testing-library/jest-dom/vitest';
 import { cleanup, render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SearchResults from '../../src/page/SearchResults';
 import {
@@ -66,7 +66,10 @@ const facetsFixture: FacetsResponse = {
     { value: 'Civic', count: 2 },
   ],
   conditions: [{ value: 'Used', count: 9 }],
-  districts: [{ value: 'Colombo', count: 6 }],
+  districts: [
+    { value: 'Colombo', count: 6 },
+    { value: 'Gampaha', count: 4 },
+  ],
 };
 
 const listingsFixture: ListingsResponse = {
@@ -112,7 +115,7 @@ const listingsFixture: ListingsResponse = {
   },
 };
 
-describe('SearchResults model filter behavior', () => {
+describe('SearchResults district filter behavior', () => {
   afterEach(() => {
     cleanup();
   });
@@ -123,26 +126,24 @@ describe('SearchResults model filter behavior', () => {
     mockedFetchListings.mockResolvedValue(listingsFixture);
   });
 
-  it('keeps model disabled until make is selected', async () => {
+  it('applies selected district value to listing filters', async () => {
+    const user = userEvent.setup();
     render(<SearchResults />);
 
     await waitFor(() => {
-      expect(document.querySelectorAll('.results-filters-sidebar .results-filter-select').length).toBeGreaterThanOrEqual(2);
+      expect(document.querySelectorAll('.results-filters-sidebar .results-filter-select').length).toBeGreaterThanOrEqual(3);
     });
 
     const filterSelects = document.querySelectorAll<HTMLSelectElement>('.results-filters-sidebar .results-filter-select');
-    const modelSelect = filterSelects[1];
+    const districtSelect = filterSelects[2];
 
-    expect(modelSelect).toBeDefined();
-    expect(modelSelect).toBeDisabled();
-    expect(modelSelect).toHaveValue('');
+    expect(districtSelect).toBeDefined();
 
-    const options = Array.from(modelSelect.options).map((option) => option.textContent?.trim() ?? '');
-    expect(options).toEqual(['Pick a make first']);
+    await user.selectOptions(districtSelect, 'Colombo');
 
     await waitFor(() => {
       expect(mockedFetchListings).toHaveBeenLastCalledWith(
-        expect.objectContaining({ make: [], model: [] }),
+        expect.objectContaining({ district: ['Colombo'] }),
         expect.objectContaining({ page: 1 }),
       );
     });
