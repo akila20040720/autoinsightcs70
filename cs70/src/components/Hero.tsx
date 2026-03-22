@@ -66,11 +66,11 @@ export default function Hero({ center }: HeroProps) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.75, delay: 0.3 }}
         >
-          <a className="hero-btn hero-btn-primary" href="https://autoinsight-bay.vercel.app/Login">
+          <a className="hero-btn hero-btn-primary" href="http://app.autoinsight.website/">
             Get Started Now
             <span className="hero-btn-icon">→</span>
           </a>
-          <a className="hero-btn hero-btn-secondary" href="https://autoinsight-bay.vercel.app/Login">
+          <a className="hero-btn hero-btn-secondary" href="#demo">
             <span className="hero-play-icon" aria-hidden>
               ►
             </span>
