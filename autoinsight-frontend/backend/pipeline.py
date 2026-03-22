@@ -189,6 +189,16 @@ def normalize_listing(
     return listing
 
 
+def _dedupe_listings_by_id(listings: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    deduped_by_id: dict[str, dict[str, Any]] = {}
+    for listing in listings:
+        listing_id = str(listing.get("id") or "").strip()
+        if not listing_id:
+            continue
+        deduped_by_id[listing_id] = listing
+    return list(deduped_by_id.values())
+
+
 def run_refresh_pipeline(
     settings: Settings,
     repository: Any | None = None,
@@ -216,6 +226,9 @@ def run_refresh_pipeline(
         listing["staleAt"] = None
         listing["staleReason"] = None
         normalized_items.append(listing)
+
+    normalized_items = _dedupe_listings_by_id(normalized_items)
+    current_ids = {str(item.get("id")) for item in normalized_items if item.get("id")}
 
     stale_items: list[dict[str, Any]] = []
     retention_deadline = refreshed_at - timedelta(seconds=max(settings.stale_retention_seconds, 0))
