@@ -249,7 +249,7 @@
   <div class="container">
     <!-- ========== PAGE 1 : THUMBNAIL VIEW (car picture + make/model/city/price) ========= -->
     <div id="thumbnailView" class="view">
-      <!-- the whole thumbnail-card is clickable — simulates "click thumbnail" -->
+      
       <div class="thumbnail-card" id="thumbnailClickArea">
         <!-- vehicle picture (icon) + make / model / city / price (static from listing) -->
         <div class="thumbnail-image">
@@ -280,7 +280,7 @@
         <h2>📋 2025 • Live Scrape <span class="scrape-status"><i class="fas fa-bolt"></i> REAL‑TIME</span></h2>
       </div>
 
-      <!-- dynamic content will be injected by JavaScript after scraping -->
+      
       <div id="detailsContent">
         <!-- fallback / loading is shown while fetching, then replaced -->
         <div style="display: flex; align-items: center; gap: 16px; background: white; border-radius: 30px; padding: 2rem;">
@@ -298,7 +298,6 @@
       // ----- THE TARGET RIYASEWANA URL (exact listing) -----
       const TARGET_URL = "https://riyasewana.com/buy/toyota-chr-ngx-sale-kandy-11198404";
 
-      // ----- CORS PROXY (real‑time fetching without server) -----
       // Using codetabs CORS proxy – returns raw HTML (lightweight)
       const PROXY_URL = "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(TARGET_URL);
 
@@ -448,30 +447,27 @@
           if (!response.ok) throw new Error(`Proxy HTTP ${response.status}`);
           const html = await response.text();
           
-          // Parse HTML string into DOM
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
           
-          // Extract all fields
           const scrapedData = parseRiyasewanaPage(doc);
           
-          // Check if we got meaningful data (at least some fields)
           const hasData = Object.values(scrapedData).some(v => v && v.length > 3);
           if (!hasData) throw new Error('Parsed data is incomplete');
           
           return scrapedData;
         } catch (error) {
           console.error('Scrape error:', error);
-          return null; // will trigger fallback
+          return null; 
         }
       }
 
-      // ----- RENDER DETAILS PAGE (populate grid with scraped or fallback) -----
+
       function renderDetailsPage(data) {
-        // use fallback if data is null
+        
         const finalData = data || FALLBACK_DETAILS;
         
-        // create fresh HTML
+        
         let html = `
           <div class="fallback-note" style="margin-bottom: 1.5rem;">
             <i class="fas fa-flask"></i> 
@@ -481,7 +477,7 @@
           <div class="details-grid">
         `;
 
-        // Helper to add a field row
+        
         function addField(icon, label, value) {
           if (!value || value.trim() === '') value = '—';
           return `
@@ -512,7 +508,7 @@
             </span>
           </div>
         `;
-        html += `</div>`; // close grid
+        html += `</div>`; 
 
         // add extra footer with scraped url reference
         html += `<p style="margin-top: 1.8rem; color: #475569; border-top: 1px solid #cbd5e1; padding-top: 1rem;">
@@ -529,7 +525,7 @@
         thumbnailView.classList.add('hidden');
         detailsView.classList.remove('hidden');
 
-        // show loading state
+        
         detailsContent.innerHTML = `
           <div style="display: flex; align-items: center; gap: 20px; background: white; border-radius: 30px; padding: 2.5rem; flex-direction: column;">
             <i class="fas fa-circle-notch fa-spin" style="font-size: 3rem; color: #2563eb;"></i>
@@ -569,14 +565,13 @@
       // 2. Back button
       backBtn.addEventListener('click', backToThumbnail);
 
-      // 3. (optional) pre-hydrate – if someone wants to click back and forth
+      // 3.pre-hydrate – if someone wants to click back and forth
 
       // small style: ensure thumbnail card cursor indicates click
       thumbnailCard.style.cursor = 'pointer';
     })();
   </script>
 
-  <!-- Additional note: this page uses a free CORS proxy to respect same-origin policy. 
-       In a production environment, a backend proxy is recommended. -->
+ 
 </body>
 </html>
