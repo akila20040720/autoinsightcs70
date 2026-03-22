@@ -441,13 +441,13 @@ const SearchResults: React.FC = () => {
             <div className="stat-card glass-panel-small">
               <span className="stat-label">Average Price</span>
               <h3 className="stat-value">
-                {avgPrice.toFixed(2)}M <span className="currency">LKR</span>
+               {formatLkrMillions(marketAnalysis.avgPriceLkr || Math.round(avgPrice * 1_000_000))}M <span className="currency">LKR</span>
               </h3>
             </div>
             <div className="stat-card glass-panel-small">
               <span className="stat-label">Average Mileage</span>
               <h3 className="stat-value">
-                {avgMileage.toLocaleString()} <span className="unit">km</span>
+                {(marketAnalysis.avgMileage || avgMileage).toLocaleString()}<span className="unit">km</span>
               </h3>
             </div>
           </div>
