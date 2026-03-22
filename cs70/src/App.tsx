@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useEffect, useState } from "react";
 import React from "react";
 import { Routes, Route} from "react-router-dom";
@@ -6,7 +5,7 @@ import Navbar from "./components/Navbar";
 import AnalyticalBaseBackground from "./components/VehicleBackground";
 import Footer from "./components/Footer";
 import SplashScreen from "./components/SplashScreen";
-// import CookieConsent from "./components/CookieConsent"; // add back if you use it
+
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -24,7 +23,7 @@ export default function App(): React.ReactElement {
   useEffect(() => {
     
 
-    // Add overflow hidden to body when splash is showing
+    
     if (showSplash) {
       document.body.style.overflow = 'hidden';
     }
@@ -35,20 +34,20 @@ export default function App(): React.ReactElement {
   }, [showSplash]);
 
   const handleSplashComplete = () => {
-    // Mark splash as shown for this session
+    
     sessionStorage.setItem('splashShown', 'true');
     
-    // Hide splash screen
+  
     setShowSplash(false);
     
-    // Small delay before showing content for smooth transition
+   
     setTimeout(() => {
       setAppReady(true);
       document.body.style.overflow = '';
     }, 100);
   };
 
-  // Show only splash screen while loading
+  
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
@@ -65,14 +64,14 @@ export default function App(): React.ReactElement {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
 
-          {/* Any unknown route -> show 404 page */}
+         
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
       <CustomCursor />
       <ScrollToTop />
-      {/* <CookieConsent /> */}
+      
     </>
   );
 }
