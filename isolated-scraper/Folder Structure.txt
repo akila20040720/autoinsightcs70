@@ -1,0 +1,91 @@
+d:\AutoInsight Dashboard\autoinsightcs70\
+├── 📄 File: az_deploy_status.json
+├── 📄 File: clean.json
+├── 📄 File: LICENSE
+├── 📄 File: main.py
+├── 📄 File: ML_DOCKER_SETUP.md
+├── 📄 File: README.md
+├── 📄 File: requirements.txt
+├── 📄 File: riyasewana_vehicles_2026-02-10.csv
+├── 📄 File: test.html
+├── 📄 File: vehicles_export_20260225_223138.csv
+│
+├── 📁 autoinsight-frontend/
+│   ├── 📁 auto-frontend/
+│   │   ├── eslint.config.js
+│   │   ├── index.html
+│   │   ├── og_image_server.py
+│   │   ├── package.json
+│   │   ├── tsconfig files...
+│   │   ├── vite.config.ts
+│   │   ├── public/
+│   │   └── src/
+│   ├── 📁 backend/
+│   │   ├── Python files (.py)
+│   │   ├── config.py
+│   │   ├── requirements.txt
+│   │   ├── data/
+│   │   └── tests/
+│   └── 📁 deploy/
+│       └── azure-vm/
+│
+├── 📁 cs70/ (Main Frontend)
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig files...
+│   ├── public/
+│   │   ├── assets/
+│   │   ├── images/
+│   │   ├── pages/
+│   │   └── Vehicles/
+│   └── src/
+│       ├── App.tsx
+│       ├── main.tsx
+│       ├── assets/
+│       ├── components/
+│       ├── hooks/
+│       ├── pages/
+│       └── styles/
+│
+├── 📁 Dashboard/
+│   └── dashboard/
+│
+├── 📁 Database/
+│   ├── CSV files
+│   └── firestore-import/
+│
+├── 📁 debug_info/
+│   └── HTML files
+│
+├── 📁 isolated-scraper/
+│   └── output/ (CSV files)
+│
+├── 📁 List_Scraper/
+│   ├── scraper.py
+│   ├── server.js
+│   ├── package.json
+│   └── public/
+│
+├── 📁 ML_Model/ (ML Pipeline)
+│   ├── app.py
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   ├── test_api.py
+│   ├── models/
+│   ├── logs/
+│   └── data/
+│
+├── 📁 model_training/ (Jupyter notebooks)
+│   ├── *.ipynb files
+│   └── CSV files
+│
+├── 📁 STR_DATA_Riyasewana/
+│   ├── riyasewana_vehicles.csv
+│   └── riyasewana.ipynb
+│
+└── 📁 web_scrapping/
+    └── TestDashboard/
+        └── ...
