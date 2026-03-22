@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./styles.css";
 
-// Early theme init to avoid flash of wrong theme
 (() => {
   try {
     const stored = localStorage.getItem("theme");
@@ -13,7 +12,7 @@ import "./styles.css";
       : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.dataset.theme = theme;
   } catch {
-    // fail silently
+   
   }
 })();
 
