@@ -510,7 +510,7 @@
         `;
         html += `</div>`; 
 
-        // add extra footer with scraped url reference
+        
         html += `<p style="margin-top: 1.8rem; color: #475569; border-top: 1px solid #cbd5e1; padding-top: 1rem;">
                   <i class="fas fa-link"></i> Source: <span style="background: #eef2f6; padding: 0.2rem 0.6rem; border-radius: 12px;">${TARGET_URL}</span> 
                   <span style="margin-left: 1rem;"><i class="fas fa-shield-alt"></i> No redirect – scraper via CORS proxy</span>
@@ -519,9 +519,9 @@
         detailsContent.innerHTML = html;
       }
 
-      // ----- MAIN: triggered by thumbnail click (or button) -----
+     
       async function onThumbnailClick() {
-        // switch to details view (simulate new page)
+       
         thumbnailView.classList.add('hidden');
         detailsView.classList.remove('hidden');
 
@@ -534,40 +534,37 @@
           </div>
         `;
 
-        // perform real scraping
+        
         const scrapedResult = await scrapeFromRiyasewana();
         
-        // render details (with scraped or fallback)
+        
         renderDetailsPage(scrapedResult);
       }
 
-      // ----- BACK TO THUMBNAIL (no redirect to original link) -----
+      
       function backToThumbnail() {
         detailsView.classList.add('hidden');
         thumbnailView.classList.remove('hidden');
       }
 
       // ----- EVENT LISTENERS -----
-      // 1. Click on thumbnail card (picture + info + price) triggers scrape & redirect to new page (our detail view)
-      thumbnailCard.addEventListener('click', function(e) {
-        // avoid triggering when clicking on the inner button (but it's fine either way)
+            thumbnailCard.addEventListener('click', function(e) {
+        
         onThumbnailClick();
       });
 
-      // also the explicit button
+      
       if (viewDetailsBtn) {
         viewDetailsBtn.addEventListener('click', function(e) {
-          e.stopPropagation();  // prevent double fire if needed
+          e.stopPropagation();  
           onThumbnailClick();
         });
       }
 
-      // 2. Back button
+      
       backBtn.addEventListener('click', backToThumbnail);
 
-      // 3.pre-hydrate – if someone wants to click back and forth
-
-      // small style: ensure thumbnail card cursor indicates click
+     
       thumbnailCard.style.cursor = 'pointer';
     })();
   </script>
