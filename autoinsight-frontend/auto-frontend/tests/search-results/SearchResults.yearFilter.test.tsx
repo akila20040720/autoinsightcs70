@@ -1,6 +1,6 @@
 import React from 'react';
-import '@testing-library/jest-dom/vitest';
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import SearchResults from '../../src/page/SearchResults';
 import {
@@ -112,7 +112,7 @@ const listingsFixture: ListingsResponse = {
   },
 };
 
-describe('SearchResults model filter behavior', () => {
+describe('SearchResults year filter behavior', () => {
   afterEach(() => {
     cleanup();
   });
@@ -123,26 +123,22 @@ describe('SearchResults model filter behavior', () => {
     mockedFetchListings.mockResolvedValue(listingsFixture);
   });
 
-  it('keeps model disabled until make is selected', async () => {
+  it('applies year range values to listing filters', async () => {
+    const user = userEvent.setup();
     render(<SearchResults />);
 
-    await waitFor(() => {
-      expect(document.querySelectorAll('.results-filters-sidebar .results-filter-select').length).toBeGreaterThanOrEqual(2);
-    });
+    const yearFromInput = await screen.findByPlaceholderText('From');
+    const yearToInput = await screen.findByPlaceholderText('To');
 
-    const filterSelects = document.querySelectorAll<HTMLSelectElement>('.results-filters-sidebar .results-filter-select');
-    const modelSelect = filterSelects[1];
-
-    expect(modelSelect).toBeDefined();
-    expect(modelSelect).toBeDisabled();
-    expect(modelSelect).toHaveValue('');
-
-    const options = Array.from(modelSelect.options).map((option) => option.textContent?.trim() ?? '');
-    expect(options).toEqual(['Pick a make first']);
+    await user.type(yearFromInput, '2018');
+    await user.type(yearToInput, '2022');
 
     await waitFor(() => {
       expect(mockedFetchListings).toHaveBeenLastCalledWith(
-        expect.objectContaining({ make: [], model: [] }),
+        expect.objectContaining({
+          yearMin: 2018,
+          yearMax: 2022,
+        }),
         expect.objectContaining({ page: 1 }),
       );
     });
