@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 import '../styles/Navbar.css';
@@ -21,6 +21,10 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
   return (
     <header className="main-header glass-header">
       <div className="header-content">
@@ -30,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className={`nav-links ${mobileOpen ? 'nav-open' : ''}`}>
+        <nav id="site-navigation" className={`nav-links ${mobileOpen ? 'nav-open' : ''}`}>
           {NAV_LINKS.map(link => (
             <Link
               key={link.path}
@@ -58,6 +62,8 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
             className="mobile-menu-btn"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="site-navigation"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
