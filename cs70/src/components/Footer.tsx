@@ -62,7 +62,7 @@ export default function Footer() {
 
                 <a
                   className="social"
-                  href="https://www.facebook.com/share/1AnksNyKh6/"
+                  href="https://www.facebook.com/share/1Cc2B5xK2D/"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
@@ -93,7 +93,7 @@ export default function Footer() {
 
                 <a
                   className="social"
-                  href="https://www.linkedin.com/company/infoautoinsight/"
+                  href="https://www.linkedin.com/company/infoautoinsight"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"

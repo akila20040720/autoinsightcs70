@@ -66,11 +66,11 @@ export default function Hero({ center }: HeroProps) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.75, delay: 0.3 }}
         >
-          <a className="hero-btn hero-btn-primary" href="http://app.autoinsight.website/">
+          <a className="hero-btn hero-btn-primary" href="https://app.autoinsight.website/" target="_blank" rel="noopener noreferrer">
             Get Started Now
             <span className="hero-btn-icon">→</span>
           </a>
-          <a className="hero-btn hero-btn-secondary" href="#demo">
+          <a className="hero-btn hero-btn-secondary" href="https://youtu.be/EDJ1dAsHaEY" target="_blank" rel="noopener noreferrer">
             <span className="hero-play-icon" aria-hidden>
               ►
             </span>
