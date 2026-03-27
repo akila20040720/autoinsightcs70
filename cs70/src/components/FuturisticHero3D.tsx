@@ -220,18 +220,18 @@ export default function FuturisticHero3D() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <button className="btn-primary">
+            <a href="https://app.autoinsight.website/" target="_blank" rel="noopener noreferrer" className="btn-primary">
               <span>Start Exploring</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M5 12h14M12 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </button>
-            <button className="btn-secondary">
+            </a>
+            <a href="https://youtu.be/EDJ1dAsHaEY" target="_blank" rel="noopener noreferrer" className="btn-secondary">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
               </svg>
               <span>Watch Demo</span>
-            </button>
+            </a>
           </motion.div>
 
           {/* Stats */}
