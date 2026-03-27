@@ -29,7 +29,7 @@ def test_scrape_lambda():
             mock_s3.return_value = s3_mock
             
             # Import after patching
-            from lambda_scrape_to_s3 import lambda_handler
+            from scrape_package.lambda_scrape_to_s3 import lambda_handler
             
             # Test event
             test_event = {
