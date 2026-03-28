@@ -1,0 +1,11 @@
+services:
+  scraper-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: autoinsight-scraper-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./output:/app/output
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+Build the Docker image
+docker build -t autoinsight-scraper-api:local .
+
+Run a container from that image
+docker run -d --name autoinsight-scraper-api -p 8000:8000 -v "${PWD}\output:/app/output" autoinsight-scraper-api:local
+
+Test it
+Open http://localhost:8000/health
+
+How it appears in Docker Desktop:
