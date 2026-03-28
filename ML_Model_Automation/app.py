@@ -1,5 +1,16 @@
-from __future__ import annotations
+from fastapi.responses import JSONResponse
 
+# Path to the predictions JSON file
+PREDICTIONS_JSON = Path(__file__).resolve().parent / "output" / "vehicle_statistics_with_predictions.json"
+
+@app.get("/predictions")
+def get_predictions():
+    if not PREDICTIONS_JSON.exists():
+        raise HTTPException(status_code=404, detail="Predictions file not found. Please run train_and_predict.py first.")
+    with PREDICTIONS_JSON.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    return JSONResponse(content=data)
+from __future__ import annotations
 import json
 import threading
 from collections import Counter
