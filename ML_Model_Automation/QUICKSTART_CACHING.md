@@ -267,3 +267,5 @@ Modified files:
 2. Test manually: `curl http://localhost:8000/health`
 3. Read docs: `CACHING_GUIDE.md`
 4. Review source: `database.py` and `app.py`
+
+<!-- sudo docker compose up --build -->
