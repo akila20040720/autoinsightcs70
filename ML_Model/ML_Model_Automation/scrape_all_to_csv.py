@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import os
 import re
 import signal
 import shutil
@@ -478,11 +479,19 @@ def main() -> int:
     parser.add_argument("--max-pages-per-type", type=int, default=0, help="0 means scrape until no pages remain")
     parser.add_argument("--delay-seconds", type=float, default=1.5, help="Delay between pages")
     parser.add_argument("--headless", default="true", help="true or false")
+    parser.add_argument(
+        "--output-dir",
+        default=os.environ.get("OUTPUT_DIR", ""),
+        help="Directory to write CSVs (defaults to OUTPUT_DIR env var or ./output)",
+    )
 
     args = parser.parse_args()
 
     types = parse_types(args.types)
-    output_dir = Path(__file__).resolve().parent / "output"
+    if args.output_dir:
+        output_dir = Path(args.output_dir).expanduser().resolve()
+    else:
+        output_dir = Path(__file__).resolve().parent / "output"
 
     print("Starting isolated scrape")
     print(f"Types: {types}")
