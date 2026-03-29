@@ -101,7 +101,10 @@
   max-width: 1200px;
   margin: 2rem auto 0 auto;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;     
+  align-items: center;        
+  justify-content: center;
+  text-align: center;
 }
 
 .footer-bottom-links {
