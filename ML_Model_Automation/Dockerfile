@@ -31,6 +31,8 @@ RUN pip install --no-cache-dir -r requirements-api.txt
 
 COPY . .
 
-EXPOSE 8000
+# Add entrypoint script (already copied above)
+RUN chmod +x entrypoint.sh
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8000
+ENTRYPOINT ["./entrypoint.sh"]

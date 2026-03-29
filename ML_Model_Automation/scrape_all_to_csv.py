@@ -295,11 +295,15 @@ def scrape_page(driver: webdriver.Remote, search_template: str, page_num: int, t
     try:
         driver.get(url)
         WebDriverWait(driver, 25).until(
-            lambda d: len(d.find_elements(By.CSS_SELECTOR, "li.v-card, li.item")) > 0
+            lambda d: (
+                len(d.find_elements(By.CSS_SELECTOR, "li.v-card, li.item")) > 0
+                or "no results" in d.page_source.lower()
+                or "no vehicles" in d.page_source.lower()
+            )
         )
         time.sleep(1)
     except TimeoutException:
-        return rows
+        pass
     except WebDriverException:
         return rows
 
@@ -404,6 +408,9 @@ def scrape_all(
     headless: bool,
     output_dir: Path,
 ) -> list[dict[str, Any]]:
+    global STOP_REQUESTED
+    STOP_REQUESTED = False
+
     driver = setup_driver(headless=headless)
     seen_urls: set[str] = set()
     all_rows: list[dict[str, Any]] = []
@@ -427,8 +434,12 @@ def scrape_all(
                 page_rows = scrape_page(driver, search_template, page, vehicle_type)
 
                 if not page_rows:
-                    print(f"[{vehicle_type}] no more results at page {page}")
-                    break
+                    print(f"[{vehicle_type}] empty page {page}, retrying once...")
+                    time.sleep(max(delay_seconds, 0.0))
+                    page_rows = scrape_page(driver, search_template, page, vehicle_type)
+                    if not page_rows:
+                        print(f"[{vehicle_type}] no more results at page {page}")
+                        break
 
                 added = 0
                 for row in page_rows:
