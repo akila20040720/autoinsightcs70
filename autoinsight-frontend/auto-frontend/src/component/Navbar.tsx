@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { label: 'Home', path: '/' },
   { label: 'Search', path: '/results' },
   { label: 'Compare', path: '/compare' },
-  { label: 'About', path: '/about' },
+  { label: 'About', path: '/about', external: true, url: 'https://www.autoinsight.website/' },
   { label: 'Contact', path: '/contact' },
 ];
 
@@ -34,16 +34,29 @@ const Navbar: React.FC<NavbarProps> = ({ darkMode, setDarkMode }) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav id="site-navigation" className={`nav-links ${mobileOpen ? 'nav-open' : ''}`}>
+        <nav id="site-navigation" className={`nav-links ${mobileOpen ? 'nav-open' : ''}`}> 
           {NAV_LINKS.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`nav-link ${location.pathname === link.path ? 'nav-active' : ''}`}
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
+            link.label === 'About' && link.external ? (
+              <a
+                key={link.label}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`nav-link${location.pathname === link.path ? ' nav-active' : ''}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`nav-link ${location.pathname === link.path ? 'nav-active' : ''}`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            )
           ))}
         </nav>
 
