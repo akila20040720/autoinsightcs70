@@ -86,25 +86,6 @@ function vehicleName(vehicle: Vehicle | StoredVehicleSummary): string {
   return `${vehicle.make} ${vehicle.model}`.trim();
 }
 
-function createMailto(vehicle: Vehicle | StoredVehicleSummary): string {
-  const subject = encodeURIComponent(`Inspection request: ${vehicleName(vehicle)} (${vehicle.year})`);
-  const body = encodeURIComponent(
-    [
-      'Hi AutoInsight team,',
-      '',
-      `I need a pre-purchase inspection for this vehicle: ${vehicleName(vehicle)} (${vehicle.year}).`,
-      `Price: LKR ${vehicle.price.toFixed(2)}M`,
-      `Mileage: ${vehicle.mileage.toLocaleString()} km`,
-      vehicle.vehicleUrl ? `Listing: ${vehicle.vehicleUrl}` : '',
-      '',
-      'Please contact me with available inspection slots and pricing.',
-    ]
-      .filter(Boolean)
-      .join('\n'),
-  );
-  return `mailto:?subject=${subject}&body=${body}`;
-}
-
 function applyPresetFilters(base: VehicleFilters, incoming?: HomeFilters | VehicleFilters): VehicleFilters {
   if (!incoming) return base;
   if (Array.isArray((incoming as VehicleFilters).make)) {
@@ -781,7 +762,10 @@ const SearchResults: React.FC = () => {
                       </button>
                     </div>
 
-                    <button className="need-inspection-btn" onClick={() => { window.location.href = createMailto(vehicle); }}>
+                    <button
+                      className="need-inspection-btn"
+                      onClick={() => navigate('/inspection', { state: { vehicle } })}
+                    >
                       Need Inspection
                     </button>
                   </div>

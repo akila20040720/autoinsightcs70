@@ -212,20 +212,7 @@ const CarMarketplace: React.FC = () => {
   };
 
   const handleNeedInspection = (vehicle: Vehicle | StoredVehicleSummary) => {
-    const subject = encodeURIComponent(`Inspection request: ${vehicle.make} ${vehicle.model}`);
-    const body = encodeURIComponent(
-      [
-        'Hi AutoInsight team,',
-        '',
-        `I need a pre-purchase inspection for this vehicle: ${vehicle.year} ${vehicle.make} ${vehicle.model}.`,
-        vehicle.vehicleUrl ? `Listing: ${vehicle.vehicleUrl}` : '',
-        '',
-        'Please contact me with available inspection slots and pricing.',
-      ]
-        .filter(Boolean)
-        .join('\n'),
-    );
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    navigate('/inspection', { state: { vehicle } });
   };
 
   const activeFilterCount = Object.values(filters).filter((value) => value !== 'All').length;
