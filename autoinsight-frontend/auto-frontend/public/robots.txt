@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
+# Block sensitive or useless areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /private/
+
+# Block query parameters (optional)
+Disallow: /*?*
+
+# Sitemap location
 Sitemap: https://app.autoinsight.website/sitemap.xml
