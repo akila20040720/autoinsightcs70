@@ -338,12 +338,12 @@ export default function FuturisticHero3D() {
                 </div>
               </div>
 
-              <button className="view-details-btn">
+              <a className="view-details-btn" href={`https://app.autoinsight.website`} target="_blank" rel="noopener noreferrer">
                 View Full Analysis
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M5 12h14M12 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </button>
+              </a>
             </div>
           </motion.div>
 
