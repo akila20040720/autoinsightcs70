@@ -31,27 +31,27 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
         padding: '32px 24px',
         position: 'relative',
         overflow: 'hidden',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-        border: '1px solid rgba(54, 129, 247, 0.1)',
+        background: 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)',
+        border: '1px solid rgba(54, 129, 247, 0.15)',
         borderRadius: '16px',
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)',
         transition: 'all 0.3s ease',
         backdropFilter: 'blur(10px)',
         height: '100%',
         cursor: 'pointer'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = '0 12px 40px rgba(54, 129, 247, 0.15)';
-        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.3)';
-        e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%)';
+        e.currentTarget.style.boxShadow = '0 12px 48px rgba(54, 129, 247, 0.25)';
+        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.5)';
+        e.currentTarget.style.background = 'linear-gradient(145deg, #0d0d0d 0%, #1a1a2e 100%)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.06)';
-        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.1)';
-        e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)';
+        e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.6)';
+        e.currentTarget.style.borderColor = 'rgba(54, 129, 247, 0.15)';
+        e.currentTarget.style.background = 'linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 100%)';
       }}
     >
-      {/* Top accent line */}
+      {/* Top accent line - Blue gradient */}
       <motion.div
         style={{
           position: 'absolute',
@@ -59,12 +59,28 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
           left: 0,
           right: 0,
           height: '3px',
-          background: 'linear-gradient(90deg, #3681f7 0%, #8b5cf6 100%)',
+          background: 'linear-gradient(90deg, #3681f7 0%, #5b9cf7 50%, #3681f7 100%)',
           opacity: 0,
           borderRadius: '3px'
         }}
         whileHover={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
+      />
+
+      {/* Glow effect on hover */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '-50%',
+          left: '-50%',
+          width: '200%',
+          height: '200%',
+          background: 'radial-gradient(circle, rgba(54, 129, 247, 0.03) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          opacity: 0
+        }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       />
 
       {/* Icon Container */}
@@ -75,7 +91,8 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
           display: 'inline-flex',
           padding: '16px',
           borderRadius: '12px',
-          background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%)',
+          background: 'linear-gradient(135deg, rgba(54, 129, 247, 0.15) 0%, rgba(54, 129, 247, 0.05) 100%)',
+          border: '1px solid rgba(54, 129, 247, 0.1)',
           width: 'fit-content',
           position: 'relative'
         }}
@@ -85,20 +102,20 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
         {icon || "🔗"}
       </motion.div>
 
-      {/* Title */}
+      {/* Title - White */}
       <h3 style={{ 
         fontSize: 18, 
         marginBottom: 10, 
         fontWeight: 700, 
-        color: '#0b0c10',
+        color: '#ffffff',
         letterSpacing: '-0.3px'
       }}>
         {name}
       </h3>
 
-      {/* Description */}
+      {/* Description - Light gray/white */}
       <p style={{ 
-        color: '#3a3d43', 
+        color: '#c8c8c8', 
         fontSize: 14, 
         lineHeight: 1.7,
         marginBottom: 16,
@@ -107,7 +124,7 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
         {description}
       </p>
 
-      {/* Visit Link */}
+      {/* Visit Link - Blue accent */}
       <motion.div 
         style={{ 
           color: '#3681f7', 
@@ -131,21 +148,35 @@ export default function DataSourceCard({ name, url, description, delay = 0, icon
         </motion.span>
       </motion.div>
 
-      {/* Bottom gradient accent */}
+      {/* Bottom gradient accent - Blue glow */}
       <motion.div
         style={{
           position: 'absolute',
           bottom: 0,
           right: 0,
-          width: '120px',
-          height: '120px',
-          background: 'radial-gradient(circle, rgba(54, 129, 247, 0.08) 0%, transparent 70%)',
+          width: '150px',
+          height: '150px',
+          background: 'radial-gradient(circle, rgba(54, 129, 247, 0.12) 0%, transparent 70%)',
           borderRadius: '50%',
           pointerEvents: 'none',
-          filter: 'blur(30px)'
+          filter: 'blur(40px)'
+        }}
+      />
+
+      {/* Additional subtle blue accent ring */}
+      <motion.div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '200px',
+          height: '200px',
+          border: '1px solid rgba(54, 129, 247, 0.03)',
+          borderRadius: '50%',
+          pointerEvents: 'none'
         }}
       />
     </motion.a>
   );
 }
-

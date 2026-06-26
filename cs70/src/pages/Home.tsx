@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import FuturisticHero3D from "../components/FuturisticHero3D";
-import ProjectCard from "../components/ProjectCard";
 import FeatureCard from "../components/FeatureCard";
 import WhyChooseCard from "../components/WhyChooseCard";
-import RatingCard from "../components/RatingSystem";
 import DataSourceCard from "../components/DataSourceCard";
 import ChatbotButton from "../components/ChatbotButton";
 
@@ -27,13 +25,7 @@ import ikmanLogo from "../assets/logos/ikman.png";
 import cmtaLogo from "../assets/logos/cmta.png";
 
 export default function Home() {
-  const projects = [
-    { title: "Project Dashboard", tag: "Dashboard", desc: "Interactive analytics UI with clean layout." },
-    { title: "Marketing Site", tag: "Website", desc: "Landing pages, hero sections and documentation." },
-    { title: "Design System", tag: "Design", desc: "Tokens, components and motion guidelines." },
-    { title: "Task Manager", tag: "App", desc: "Productivity app with clear affordances." }
-  ];
-
+ 
   const howItWorks = [
     { step: "1", title: "Data Collection", desc: "Automated collection from multiple vehicle market platforms in real-time." },
     { step: "2", title: "Data Processing", desc: "Advanced algorithms analyze and clean the collected vehicle data." },
@@ -55,12 +47,6 @@ export default function Home() {
     { icon: <Zap size={48} strokeWidth={1.5} color="#3681f7" />, title: "Fast Updates", desc: "Real-time data synchronization ensures you always have the latest information." },
     { icon: <Shield size={48} strokeWidth={1.5} color="#3681f7" />, title: "Secure & Reliable", desc: "Enterprise-grade security with 99.9% uptime guarantee." },
     { icon: <Lightbulb size={48} strokeWidth={1.5} color="#3681f7" />, title: "Smart Insights", desc: "AI-powered analytics provide deeper understanding of market dynamics." }
-  ];
-
-  const ratings = [
-    { stars: 5, review: "AutoInsight has transformed how I research vehicle prices. The data is always up-to-date and the interface is intuitive.", author: "Kasun Perera", role: "Car Buyer" },
-    { stars: 5, review: "As a dealer, this platform helps me understand market trends better. The regional insights are particularly valuable.", author: "Nimal Fernando", role: "Vehicle Dealer" },
-    { stars: 5, review: "Excellent tool for market research. The visualization features make it easy to spot trends and opportunities.", author: "Samantha Jayasuriya", role: "Market Analyst" }
   ];
 
   const dataSources = [
@@ -254,82 +240,7 @@ export default function Home() {
         </div>
       </motion.section>
 
-      {/* Ratings Section */}
-      <motion.section 
-        className="full-section section-ratings"
-      >
-        <motion.div 
-          style={{ 
-            textAlign: 'center', 
-            marginBottom: 48,
-            position: 'relative',
-            zIndex: 1
-          }}
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}>What Our Users Say</h2>
-          <p style={{ color: 'var(--sys-gray)', fontSize: 18, maxWidth: 600, margin: '0 auto' }}>
-            Join thousands of satisfied users who trust AutoInsight for their vehicle market research
-          </p>
-        </motion.div>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24, position: 'relative', zIndex: 1 }}>
-          {ratings.map((rating, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 50, rotateX: -15 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.2, type: "spring", stiffness: 100 }}
-              whileHover={{ y: -10, scale: 1.03 }}
-              style={{ perspective: '1000px' }}
-            >
-              <RatingCard
-                stars={rating.stars}
-                review={rating.review}
-                author={rating.author}
-                role={rating.role}
-                delay={0}
-              />
-            </motion.div>
-          ))}
-        </div>
-        <motion.div 
-          style={{ 
-            textAlign: 'center', 
-            marginTop: 48,
-            position: 'relative',
-            zIndex: 1
-          }}
-          initial={{ scale: 0.8, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4, type: "spring", stiffness: 100 }}
-          whileHover={{ scale: 1.05 }}
-        >
-          <div style={{ fontSize: 56, fontWeight: 700, marginBottom: 12, background: 'linear-gradient(135deg, #023e8a 0%, #48CAE4 50%, #0077B6 100%)', backgroundSize: '200% 200%', backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent', animation: 'gradientShift 3s ease infinite' }}>
-            4.9/5
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 16 }}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <motion.span 
-                key={star} 
-                style={{ fontSize: 28, color: '#48CAE4' }}
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 + star * 0.1, type: "spring", stiffness: 200 }}
-                whileHover={{ scale: 1.3, rotate: 15 }}
-              >
-                ★
-              </motion.span>
-            ))}
-          </div>
-          <p style={{ color: '#0b0c10', fontSize: 16, fontWeight: 500 }}>Based on 1,247 user reviews</p>
-        </motion.div>
-      </motion.section>
+   
 
       {/* Data Sources Section */}
       <motion.section 
@@ -396,38 +307,6 @@ export default function Home() {
             All data is collected in compliance with platform terms of service and used solely for analytical purposes.
           </p>
         </motion.div>
-      </motion.section>
-
-      {/* Recent Work Section */}
-      <motion.section 
-        className="full-section section-recent-work"
-      >
-        <motion.div
-          style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}
-          initial={{ y: 30, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 style={{ fontSize: 36, marginBottom: 16, fontWeight: 700 }}>Recent Work</h2>
-          <p style={{ color: 'var(--sys-gray)', fontSize: 18, marginBottom: 48, maxWidth: 600, margin: '0 auto 48px' }}>
-            Explore our latest projects and features
-          </p>
-        </motion.div>
-        <div className="grid centered" style={{ position: 'relative', zIndex: 1 }}>
-          {projects.map((p, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.8, y: 50 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1, type: "spring", stiffness: 100 }}
-              whileHover={{ scale: 1.05, y: -5 }}
-            >
-              <ProjectCard title={p.title} tag={p.tag} desc={p.desc} />
-            </motion.div>
-          ))}
-        </div>
       </motion.section>
 
       {/* Chatbot Button */}
