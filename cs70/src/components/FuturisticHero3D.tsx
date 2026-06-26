@@ -187,7 +187,7 @@ export default function FuturisticHero3D() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="badge-icon">🚀</span>
+            <span className="badge-icon"></span>
             <span>Sri Lanka's #1 Vehicle Analytics Platform</span>
           </motion.div>
 
@@ -316,21 +316,21 @@ export default function FuturisticHero3D() {
               {/* Quick Stats */}
               <div className="quick-stats">
                 <div className="quick-stat">
-                  <div className="stat-icon">📊</div>
+                  <div className="stat-icon"></div>
                   <div className="stat-info">
                     <div className="stat-value">{activeVehicle.stats.listings}</div>
                     <div className="stat-text">Listings</div>
                   </div>
                 </div>
                 <div className="quick-stat">
-                  <div className="stat-icon">💰</div>
+                  <div className="stat-icon"></div>
                   <div className="stat-info">
                     <div className="stat-value">{activeVehicle.stats.avgPrice}</div>
                     <div className="stat-text">Avg Price</div>
                   </div>
                 </div>
                 <div className="quick-stat">
-                  <div className="stat-icon">📈</div>
+                  <div className="stat-icon"></div>
                   <div className="stat-info">
                     <div className="stat-value">{activeVehicle.stats.trend}</div>
                     <div className="stat-text">Trend</div>
