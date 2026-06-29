@@ -53,7 +53,13 @@ def signal_handler(sig, frame):
     stop_flag = True
 
 
-signal.signal(signal.SIGINT, signal_handler)
+import threading
+if threading.current_thread() is threading.main_thread():
+    try:
+        signal.signal(signal.SIGINT, signal_handler)
+    except ValueError:
+        pass
+
 
 
 app = Flask(__name__)
@@ -202,6 +208,7 @@ def normalize_vehicle_for_api(vehicle, index=0):
         'publishedDate': (vehicle.get('published date') or '').strip(),
         'vehicleUrl': vehicle_url,
         'condition': infer_condition(source_text),
+        'imageUrl': (vehicle.get('imageUrl') or '').strip() or None,
         'rawPrice': vehicle.get('Price'),
     }
 
@@ -452,6 +459,15 @@ def scrape_page(driver, page_num, search_url_template):
                 title   = ''
                 classes = item.get('class', [])
 
+                img_src = None
+                img_el = item.find('img')
+                if img_el and img_el.get('src'):
+                    img_src = img_el.get('src').strip()
+                    if img_src.startswith('//'):
+                        img_src = 'https:' + img_src
+                    elif img_src.startswith('/'):
+                        img_src = 'https://riyasewana.com' + img_src
+
                 if 'v-card' in classes:
                     link = item.select_one('.v-card-title a') or item.find('a', href=True)
                     if not link:
@@ -532,6 +548,9 @@ def scrape_page(driver, page_num, search_url_template):
                     url_type = vehicle_type_from_slug(target_vehicle_type)
                     if url_type:
                         vd['Vehicle Type'] = url_type
+
+                if img_src:
+                    vd['imageUrl'] = img_src
 
                 vehicles.append(vd)
 

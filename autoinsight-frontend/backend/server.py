@@ -247,6 +247,15 @@ def _extract_og_image(html: str, page_url: str) -> str | None:
     return None
 
 
+def _normalize_og_image_url(image_url: str | None) -> str | None:
+    if not image_url:
+        return None
+    parsed = urlparse(image_url)
+    if parsed.scheme == "http":
+        return parsed._replace(scheme="https").geturl()
+    return image_url
+
+
 def _fetch_og_image(url: str, cache: OgImageCache) -> str | None:
     cached = cache.get(url)
     if cached is not _MISSING:
@@ -270,7 +279,7 @@ def _fetch_og_image(url: str, cache: OgImageCache) -> str | None:
         cache.set(url, None)
         return None
 
-    image_url = _extract_og_image(html, url)
+    image_url = _normalize_og_image_url(_extract_og_image(html, url))
 
     cache.set(url, image_url)
     return image_url
