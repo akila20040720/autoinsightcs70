@@ -1,3 +1,5 @@
+import { scrapeStream } from './scrapeStreamService';
+
 export interface Vehicle {
   id: string;
   vehicleType: string;
@@ -300,4 +302,11 @@ export async function saveRemoteFavorites(userKey: string, listingIds: string[])
 
 export function formatPrice(priceMillion: number): string {
   return `LKR ${priceMillion.toFixed(2)}M`;
+}
+export function onScrapeComplete(onRefresh: () => void): () => void {
+  return scrapeStream.subscribe((event) => {
+    if (event.type === 'scrape_done') {
+      onRefresh();
+    }
+  });
 }
