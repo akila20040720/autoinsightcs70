@@ -212,6 +212,11 @@ def _fetch_og_image(url: str, cache: OgImageCache) -> str | None:
         return None
 
     image_url = _extract_og_image(html, url)
+
+
+    if image_url and image_url.startswith("http://"):
+        image_url = "https://" + image_url[len("http://"):]
+
     cache.set(url, image_url)
     return image_url
 
